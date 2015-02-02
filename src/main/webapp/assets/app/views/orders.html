@@ -1,0 +1,22 @@
+<h1><span class="glyphicon glyphicon-plus btn btn-lg text-success plus" ng-click="newOrder()"></span></h1>
+<table class="table table-bordered">
+  <tr>
+    <th>№</th>
+    <th>Дата</th>
+    <th>Заявитель</th>
+    <th>Объект</th>
+    <th>Действия</th>
+    <th>Документы</th>
+    <th>Статус</th>
+  </tr>
+  <tr ng-repeat="order in orders" class="btn-default" ng-click='getOrderById("{{order.id}}")' >
+      <td>{{order.number}}</td>
+    <td>{{order.date}}</td>
+      <td>{{order.zaya}}</td>
+
+      <td>{{order.objects}}</td>
+      <td>{{order.actions}}</td>
+      <td>{{order.doc}}</td>
+    <td>{{order.status}}</td>
+  </tr>
+</table>
