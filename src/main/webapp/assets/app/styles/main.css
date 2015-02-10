@@ -127,3 +127,9 @@ body {
 .litle-right{
   margin-left: 10px;
 }
+
+
+
+.datepicker > input{
+  visibility: hidden !important;
+}

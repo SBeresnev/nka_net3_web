@@ -84,30 +84,33 @@
             <div class="panel-collapse collapse in">
               <div class="panel-body" ng-show="showPanel">
                 <div class="row">
-                  <div class="col-sm-6">
+                  <form>
+                    <div class="col-sm-6">
 
 
-                    <div class="input-group">
+                      <div class="input-group">
                          <span class="input-group-btn">
                           <select ng-model="typeSearch"
                                   ng-options="subjecttype as subjecttype.name for subjecttype in subjecttypes"
-                                  class="form-control col-sm-6 mySelect width150">
+                                  class="form-control col-sm-6 mySelect width150" required="required">
                           </select>
                          </span>
-                      <input type="text" class="form-control" placeholder="Номер">
+                        <input type="text" class="form-control" placeholder="Номер" ng-model="searchSubject.number">
+
+                      </div>
 
                     </div>
+                    <div class="col-sm-6">
 
-                  </div>
-                  <div class="col-sm-6">
-
-                    <div class="input-group">
-                      <input type="text" class="form-control" placeholder="ФИО/Наименование организации">
+                      <div class="input-group">
+                        <input type="text" class="form-control" placeholder="ФИО/Наименование организации"
+                               ng-model="searchSubject.fioAndName">
                        <span class="input-group-btn">
-                          <button class="btn btn-default" type="button" ng-click="searchSubjects()">Поиск</button>
+                          <button class="btn btn-default" type="submit" ng-click="searchSubjects()">Поиск</button>
                          </span>
+                      </div>
                     </div>
-                  </div>
+                  </form>
                   <div class="col-sm-12" ng-show="showSubjectsTable">
                     <table class="table table-bordered">
                       <tr>
@@ -117,23 +120,24 @@
                         <th>Адрес</th>
                       </tr>
                       <tr ng-repeat="subject in subjects" class="btn-default"
-                          ng-click='updateSubjectForm("{{subject.name}}","{{subject.number}}","{{subject.addr}}","{{subject.type}}")'>
-                        <td>{{subject.typeSubject}}</td>
-                        <td>{{subject.number}}</td>
-                        <td>{{subject.name}}</td>
-                        <td>{{subject.addr}}</td>
+                          ng-click="updateSubjectForm('{{subject}}')">
+                        <td>{{subject.subjectType}}</td>
+                        <td>{{subject.personalNumber}}</td>
+                        <td>{{subject.firstname}}</td>
+                        <td>{{subject.address}}</td>
                       </tr>
                     </table>
                   </div>
 
                   <ul class="nav nav-tabs distance-top padding-top">
 
-                    <li role="presentation" ng-click="client()" ng-class="clientActive">
+                    <li role="presentation" ng-click="clientActivate()" ng-class="clientActive">
                       <a>
                         Заказчик
                       </a>
                     </li>
-                    <li role="presentation" class="" ng-click="representative()" ng-class="representativeActive">
+                    <li role="presentation" class="" ng-click="representativeActivate()"
+                        ng-class="representativeActive">
                       <a>
                         Представитель
                       </a>
@@ -147,49 +151,49 @@
                         <span class="pull-right">Тип субъекта:</span>
                       </label>
                       <select ng-model="typeClient"
-                              ng-options="subjecttype as subjecttype.name for subjecttype in subjecttypes"
+                              ng-options="subjecttype as subjecttype.name for subjecttype in subjecttypes track by subjecttype.id"
                               class="form-control col-sm-6 mySelect width310"> </select>
                     </div>
 
                     <div class="form-group"
-                         ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '1'">
+                         ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
                       <label class="col-sm-3  control-label">
                         <span class="pull-right">Фамилия:</span>
                       </label>
 
                       <div class="col-sm-6">
-                        <input class="form-control">
+                        <input class="form-control" ng-model="client.firstname">
                       </div>
                     </div>
                     <div class="form-group"
-                         ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '1'">
+                         ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
                       <label class="col-sm-3  control-label">
                         <span class="pull-right">Имя:</span>
                       </label>
 
                       <div class="col-sm-6">
-                        <input class="form-control">
+                        <input class="form-control" ng-model="client.surname">
                       </div>
                     </div>
                     <div class="form-group"
-                         ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '1'">
+                         ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
                       <label class="col-sm-3  control-label">
                         <span class="pull-right">Отчество:</span>
                       </label>
 
                       <div class="col-sm-6">
-                        <input class="form-control">
+                        <input class="form-control" ng-model="client.fathername">
                       </div>
                     </div>
 
-                    <div class="form-group" ng-show="typeClient.id == '2'||typeClient.id == '1'">
+                    <div class="form-group" ng-show="typeClient.id == '2'||typeClient.id == '100'">
                       <label class="col-sm-3  control-label">
                         <span class="pull-right">Дата рождения:</span>
 
                       </label>
 
                       <div class="col-sm-6">
-                        <input ng-datepicker type="text" type="text" ng-options="options" ng-model="clientDateBorn">
+                        <input class="form-control" type="date" ng-model="client.bothRegDate">
                       </div>
                     </div>
 
@@ -204,17 +208,17 @@
                     </div>
 
 
-                    <div class="form-group" ng-show="typeClient.id == '1'">
+                    <div class="form-group" ng-show="typeClient.id == '100'">
                       <label class="col-sm-3  control-label">
                         <span class="pull-right">Идентификационный номер:</span>
                       </label>
 
                       <div class="col-sm-6">
-                        <input class="form-control">
+                        <input class="form-control" ng-model="client.personalNumber">
                       </div>
                     </div>
                     <div class="form-group"
-                         ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '1'">
+                         ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
                       <label class="col-sm-3  control-label">
                         <span class="pull-right">Адрес:</span>
                       </label>
@@ -232,7 +236,7 @@
 
                     </div>
                     <div class="form-group"
-                         ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '1'">
+                         ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
                       <div class="col-sm-9 col-sm-offset-3">
                         <div class="col-sm-6 litle-left">
                           <input class="form-control" placeholder="улица">
@@ -310,7 +314,8 @@
                       </div>
                     </div>
 
-                    <div class="form-group" ng-show="typeClient.id == '7'||typeClient.id == '6'||typeClient.id == '5'||typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '1'">
+                    <div class="form-group"
+                         ng-show="typeClient.id == '7'||typeClient.id == '6'||typeClient.id == '5'||typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
                       <label class="col-sm-3  control-label">
                         <span class="pull-right">Информация:</span>
                       </label>
@@ -325,7 +330,10 @@
                       </label>
 
                       <div class="col-sm-3">
-                        <div class="btn btn-primary">Добавить</div>
+                        <div class="btn btn-primary" ng-click="setClient()">Добавить</div>
+                      </div>
+                      <div class="col-sm-3">
+                        <div class="btn btn-primary" ng-click="updateSubject()">Изменить</div>
                       </div>
                     </div>
                   </div>
@@ -336,49 +344,49 @@
                         <span class="pull-right">Тип субъекта:</span>
                       </label>
                       <select ng-model="typeRepresent"
-                              ng-options="subjecttype as subjecttype.name for subjecttype in subjecttypes"
+                              ng-options="subjecttype as subjecttype.name for subjecttype in subjecttypes track by subjecttype.id"
                               class="form-control col-sm-6 mySelect width310"> </select>
 
                     </div>
 
                     <div class="form-group" ng-model="typeRepresent"
-                         ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '1'">
+                         ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '100'">
                       <label class="col-sm-3  control-label">
                         <span class="pull-right">Фамилия:</span>
                       </label>
 
                       <div class="col-sm-6">
-                        <input class="form-control">
+                        <input class="form-control" ng-model="represent.firstname">
                       </div>
                     </div>
                     <div class="form-group" ng-model="typeRepresent"
-                         ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '1'">
+                         ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '100'">
                       <label class="col-sm-3  control-label">
                         <span class="pull-right">Имя:</span>
                       </label>
 
                       <div class="col-sm-6">
-                        <input class="form-control">
+                        <input class="form-control" ng-model="represent.surname">
                       </div>
                     </div>
                     <div class="form-group" ng-model="typeRepresent"
-                         ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '1'">
+                         ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '100'">
                       <label class="col-sm-3  control-label">
                         <span class="pull-right">Отчество:</span>
                       </label>
 
                       <div class="col-sm-6">
-                        <input class="form-control">
+                        <input class="form-control" ng-model="represent.fathername">
                       </div>
                     </div>
-                    <div class="form-group" ng-show="typeRepresent.id == '2'||typeRepresent.id == '1'">
+                    <div class="form-group" ng-show="typeRepresent.id == '2'||typeRepresent.id == '100'">
                       <label class="col-sm-3  control-label">
                         <span class="pull-right">Дата рождения:</span>
 
                       </label>
 
                       <div class="col-sm-6">
-                        <input ng-datepicker type="text" type="text" ng-options="options" ng-model="representDateBorn">
+                        <input class="form-control" type="date" ng-model="represent.bothRegDate">
                       </div>
                     </div>
 
@@ -392,17 +400,17 @@
                       </div>
                     </div>
 
-                    <div class="form-group" ng-show="typeRepresent.id == '1'">
+                    <div class="form-group" ng-show="typeRepresent.id == '100'">
                       <label class="col-sm-3  control-label">
                         <span class="pull-right">Идентификационный номер:</span>
                       </label>
 
                       <div class="col-sm-6">
-                        <input class="form-control">
+                        <input class="form-control" ng-model="represent.personalNumber">
                       </div>
                     </div>
                     <div class="form-group"
-                         ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '1'">
+                         ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '100'">
                       <label class="col-sm-3  control-label">
                         <span class="pull-right">Адрес:</span>
                       </label>
@@ -420,7 +428,7 @@
 
                     </div>
                     <div class="form-group"
-                         ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '1'">
+                         ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '100'">
                       <div class="col-sm-9 col-sm-offset-3">
                         <div class="col-sm-6 litle-left">
                           <input class="form-control" placeholder="улица">
@@ -521,7 +529,6 @@
                       <div class="col-sm-3">
                         <div class="btn btn-primary">Добавить</div>
                       </div>
-
 
                     </div>
                   </div>

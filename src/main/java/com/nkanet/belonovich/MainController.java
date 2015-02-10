@@ -1,4 +1,4 @@
-package com.nakanet.belonovich;
+package com.nkanet.belonovich;
 
 /**
  * Created by belonovich on 20.01.2015.
