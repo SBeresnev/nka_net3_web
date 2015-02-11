@@ -5,7 +5,7 @@
 'use strict';
 
 angular.module('assetsApp')
-  .controller('OrderCtrl', function ($scope, $http, $routeParams) {
+  .controller('OrderCtrl',function ($scope, $http, $routeParams, httpServices) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -22,7 +22,7 @@ angular.module('assetsApp')
     $scope.subjecttypes = [
       {id: 100, name: 'Гражданин РБ'},
       {id: 2, name: 'Не Гражданин РБ'},
-      {id: 3, name: 'ИП Резидент РБ'},
+      {id: 200, name: 'ИП Резидент РБ'},
       {id: 4, name: 'ИП Не резидет РБ'},
       {id: 5, name: 'Республика Беларусь'},
       {id: 6, name: 'Иностранное государство'},
@@ -66,19 +66,8 @@ angular.module('assetsApp')
       $scope.showSubjectsTable = true;
       $scope.subjects = [];
       delete $http.defaults.headers.common['X-Requested-With'];
-      $http({
-        url: 'http://localhost:8080/nka_net3/subject/private',
-        type: "GET",
-        responseType: "jsonp",
-        params: {
-          "type": $scope.typeSearch.id,
-          "number": $scope.searchSubject.number,
-          "name": $scope.searchSubject.fioAndName
-        }
-      }).then(function (res) {
-        $scope.subjects = res.data;
-      })
-    };
+      httpServices.searchSubjects( $scope.typeSearch.id, $scope.searchSubject.number,  $scope.searchSubject.fioAndName, $scope);
+     };
 
     $scope.updateSubjectForm = function (subject) {
       $scope.subjects = [];
@@ -128,15 +117,15 @@ angular.module('assetsApp')
     };
 
     $scope.updateSubject = function () {
-
-        var url='http://localhost:8080/nka_net3/subject/update';
-        var params = "?";
-      for(var index in $scope.client){
-       if(index != "bothRegDate"  && index != "datestart" ){params+=""+index+"="+$scope.client[index]+"&";}
+      if ($scope.clientActive == 'active') {
+        httpServices.updateSubject($scope.client) ;
+        $scope.client = {};
+        $scope.typeClient =  null
       }
-        var method="PUT";
-        var http = new XMLHttpRequest();
-        http.open(method,url+params,true);
-        http.send();
+      if ($scope.representativeActive == 'active') {
+        httpServices.updateSubject($scope.represent);
+        $scope.represent = {};
+        $scope.typeRepresent =  null
+      }
     }
   })

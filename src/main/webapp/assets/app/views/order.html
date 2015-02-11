@@ -86,8 +86,6 @@
                 <div class="row">
                   <form>
                     <div class="col-sm-6">
-
-
                       <div class="input-group">
                          <span class="input-group-btn">
                           <select ng-model="typeSearch"
@@ -223,7 +221,11 @@
                         <span class="pull-right">Адрес:</span>
                       </label>
 
+
                       <div class="col-sm-6">
+                        <input class="form-control" ng-model="client.address">
+                      </div>
+                      <!--<div class="col-sm-6">
                         <div ng-class="openVar" ng-model="addrClient">
                           <input class="form-control dropdown-toggle" ng-value="addrClient" placeholder="АТЕ"
                                  ng-click="open()">
@@ -232,10 +234,10 @@
                                       on-select="addrClient = branch.id+'-'+branch.label"></abn-tree>
                           </ul>
                         </div>
-                      </div>
+                      </div>-->
 
                     </div>
-                    <div class="form-group"
+                    <!--<div class="form-group"
                          ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
                       <div class="col-sm-9 col-sm-offset-3">
                         <div class="col-sm-6 litle-left">
@@ -251,7 +253,7 @@
                           <input class="form-control" placeholder="кв">
                         </div>
                       </div>
-                    </div>
+                    </div>-->
                     <div class="form-group" ng-show="typeClient.id == '4'||typeClient.id == '3'">
                       <label class="col-sm-3  control-label">
                         <span class="pull-right">Свидетельство:</span>
@@ -415,7 +417,11 @@
                         <span class="pull-right">Адрес:</span>
                       </label>
 
+
                       <div class="col-sm-6">
+                        <input class="form-control" ng-model="represent.address">
+                      </div>
+                      <!--<div class="col-sm-6">
                         <div ng-class="openVar" ng-model="addrRepresent">
                           <input class="form-control dropdown-toggle" ng-value="addrRepresent" placeholder="АТЕ"
                                  ng-click="open()">
@@ -424,10 +430,10 @@
                                       on-select="addrRepresent = branch.id+'-'+branch.label"></abn-tree>
                           </ul>
                         </div>
-                      </div>
+                      </div>-->
 
                     </div>
-                    <div class="form-group"
+                    <!--<div class="form-group"
                          ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '100'">
                       <div class="col-sm-9 col-sm-offset-3">
                         <div class="col-sm-6 litle-left">
@@ -444,7 +450,7 @@
                         </div>
 
                       </div>
-                    </div>
+                    </div>-->
                     <div class="form-group" ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'">
                       <label class="col-sm-3  control-label">
                         <span class="pull-right">Свидетельство:</span>
@@ -530,6 +536,9 @@
                         <div class="btn btn-primary">Добавить</div>
                       </div>
 
+                      <div class="col-sm-3">
+                        <div class="btn btn-primary" ng-click="updateSubject()">Изменить</div>
+                      </div>
                     </div>
                   </div>
                 </div>
