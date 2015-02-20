@@ -1,607 +1,690 @@
-<div class="container" ng-init="init()">
-  <div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
-      <form class="form-horizontal">
-        <div class="form-group">
-          <label class="col-sm-2  control-label"><span class="pull-right">Номер заказа:</span></label>
+<div ng-init="init()" class="padding-top">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2  control-label"><span class="pull-right">Номер заказа:</span></label>
 
-          <div class="col-sm-8">
-            <input class="form-control">
-          </div>
-        </div>
+                    <div class="col-sm-8">
+                        <input class="form-control">
+                    </div>
+                </div>
+                <div class="form-group hidden">
 
-        <div class="form-group hidden">
+                    <div class="col-sm-8">
+                        <input name="orderId" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox col-lg-offset-2">
+                        <label class="control-label">
+                            <input type="checkbox" value="">
+                            Признак предварительности
+                        </label>
+                    </div>
+                </div>
+                <div class="panel-group col-sm-12" id="accordion">
+                    <div class="panel panel-default ">
+                        <div class="panel-heading ">
+                            <div class="row">
+                                <h4 class="btn btn-primary mybtn col-sm-3 litle-right" ng-click="showPanel=!showPanel">
+                                    ЗАКАЗЧИКИ
+                                </h4>
+                                <div class=" col-sm-8  ">
+                                    <div class="btn-block btn  width500">
+                                        <button class="btn btn-default mybtn litle-right " style="width: 88%"
+                                                ng-click="modal()">
+                                            <table class="table-bordered" width="100%">
+                                                <td width="30%">Заказчик</td>
+                                                <td width="70%">Иванов И И</td>
+                                            </table>
+                                        </button>
+                                        <button class="btn btn-danger  pull-right  mybtn   btn-block " style="width: 9%"
+                                                ng-click="modal()">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                    <div class="btn-block btn width500">
+                                        <button class="btn btn-default mybtn litle-right " style="width: 88%"
+                                                ng-click="modal()">
+                                            <table class="table-bordered" width="100%">
+                                                <td width="30%">Представитель</td>
+                                                <td width="70%">Петров И И</td>
+                                            </table>
+                                        </button>
+                                        <button class="btn  btn btn-danger  pull-right  mybtn   btn-block"
+                                                style="width: 9%"
+                                                ng-click="modal()">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-collapse collapse in">
+                            <div class="panel-body" ng-show="showPanel">
+                                <div class="row">
+                                    <form>
+                                        <div class="col-sm-6">
+                                            <div class="input-group">
+                                                 <span class="input-group-btn">
+                                                            <select ng-model="typeSearch" ng-options="subjecttype as subjecttype.name for subjecttype in subjecttypes" class="form-control col-sm-6 mySelect width150" required="required">
+                                                            </select>
+                                                 </span>
+                                                <input type="text" class="form-control" placeholder="Номер"
+                                                       ng-model="searchSubject.number">
 
-          <div class="col-sm-8">
-            <input name="orderId" class="form-control">
-          </div>
-        </div>
+                                            </div>
 
-        <div class="form-group">
-          <label class="col-sm-2  control-label"><span class="pull-right">Примечания:</span></label>
+                                        </div>
+                                        <div class="col-sm-6">
 
-          <div class="col-sm-8">
-            <textarea class="form-control" rows="4"></textarea>
-          </div>
-        </div>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control"
+                                                       placeholder="ФИО/Наименование организации"
+                                                       ng-model="searchSubject.fioAndName">
+                                                 <span class="input-group-btn">
+                                                      <button class="btn btn-default" type="submit" ng-click="searchSubjects()">Поиск</button>
+                                                 </span>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="col-sm-12" ng-show="showSubjectsTable">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <th>Тип</th>
+                                                <th>Регистрационный/Идентификационный номер</th>
+                                                <th>ФИО/Наименование</th>
+                                                <th>Адрес</th>
+                                            </tr>
+                                            <tr ng-repeat="subject in subjects" class="btn-default"
+                                                ng-click="updateSubjectForm('{{subject}}')">
+                                                <td>{{subject.subjectType.code_short_name}}</td>
+                                                <td>{{subject.personalNumber}}</td>
+                                                <td>{{subject.firstname}}</td>
+                                                <td>{{subject.address}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <ul class="nav nav-tabs distance-top padding-top">
 
-        <div class="form-group">
-          <div class="checkbox col-lg-offset-2">
-            <label class="control-label">
-              <input type="checkbox" value="">
-              Признак предварительности
-            </label>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-2  control-label"><span class="pull-right">Статус:</span></label>
+                                        <li role="presentation" ng-click="clientActivate()" ng-class="clientActive">
+                                            <a>
+                                                Заказчик
+                                            </a>
+                                        </li>
+                                        <li role="presentation" class="" ng-click="representativeActivate()"
+                                            ng-class="representativeActive">
+                                            <a>
+                                                Представитель
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <div class="form-horizontal distance-top" ng-show="clientActive == 'active'">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                <span class="pull-right">Тип субъекта:</span>
+                                            </label>
+                                            <select ng-model="typeClient"
+                                                    ng-options="subjecttype as subjecttype.name for subjecttype in subjecttypes track by subjecttype.id"
+                                                    class="form-control col-sm-6 mySelect width310"> </select>
+                                        </div>
+                                        <div class="form-group"
+                                             ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Фамилия:</span>
+                                            </label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" ng-model="client.firstname">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"
+                                             ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Имя:</span>
+                                            </label>
 
-          <div class="col-sm-8">
-            <select class="form-control">
-              <option>Поступил</option>
-              <option>Принят</option>
-              <option>Отказано в приеме</option>
-              <option>Выполнен</option>
-              <option>Отказанно в выполнении</option>
-              <option>Приостановлен</option>
-            </select>
-          </div>
-        </div>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" ng-model="client.surname">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"
+                                             ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Отчество:</span>
+                                            </label>
 
-        <div class="panel-group col-sm-12" id="accordion">
-          <div class="panel panel-default ">
-            <div class="panel-heading ">
-              <div class="row">
-                <h4 class="btn btn-primary mybtn col-sm-3 litle-right" ng-click="showPanel=!showPanel">
-                  ЗАКАЗЧИКИ
-                </h4>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" ng-model="client.fathername">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-show="typeClient.id == '2'||typeClient.id == '100'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Дата рождения:</span>
 
-                <div class=" col-sm-8  ">
-                  <div class="btn-block btn  width500">
-                    <button class="btn btn-default mybtn litle-right " style="width: 88%" ng-click="modal()">
-                      Заказчик: Иванов И И
-                    </button>
-                    <button class="btn btn-danger  pull-right  mybtn   btn-block " style="width: 9%" ng-click="modal()">
-                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    </button>
-                  </div>
+                                            </label>
 
-                  <div class="btn-block btn width500">
-                    <button class="btn btn-default mybtn litle-right " style="width: 88%" ng-click="modal()">
-                      Представитель: Петров А А
-                    </button>
-                    <button class="btn  btn btn-danger  pull-right  mybtn   btn-block" style="width: 9%"
-                            ng-click="modal()">
-                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    </button>
-                  </div>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" type="date" ng-model="client.bothRegDate">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-show="typeClient.id == '7' ">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Сокращенное наименование:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-show="typeClient.id == '100'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Идентификационный номер:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control" ng-model="client.personalNumber">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"
+                                             ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Адрес:</span>
+                                            </label>
+
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control" ng-model="client.address">
+                                            </div>
+
+
+                                        </div>
+                                        <div class="form-group" ng-show="typeClient.id == '4'||typeClient.id == '3'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Свидетельство:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-show="typeClient.id == '4'||typeClient.id == '3'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Дата регистрации:</span>
+
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input ng-datepicker type="text" type="text" ng-options="options"
+                                                       ng-model="dateClient">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"
+                                             ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '7'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">УНП:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-show="typeClient.id == '4'||typeClient.id == '3'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Регистрационный номер:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-show="typeClient.id == '5'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Административная териториальная еденица (АТЕ):</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <div class="btn-group" ng-class="openVar" ng-model="ateClient">
+                                                    <input class="btn btn-default dropdown-toggle  width310"
+                                                           ng-value="ateClient"
+                                                           ng-click="open()">
+                                                    <ul class="dropdown-menu width310">
+                                                        <abn-tree tree-data="ates"
+                                                                  on-select="ateClient = branch.id+'-'+branch.label"></abn-tree>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-show="typeClient.id == '6'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Страна:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"
+                                             ng-show="typeClient.id == '7'||typeClient.id == '6'||typeClient.id == '5'||typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Информация:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3  control-label">
+                                            </label>
+
+                                            <div class="col-sm-3">
+                                                <div class="btn btn-primary" ng-click="setClient()">Добавить</div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="btn btn-primary" ng-click="updateSubject()">Изменить</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-horizontal distance-top"
+                                         ng-show="representativeActive == 'active'">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 control-label">
+                                                <span class="pull-right">Тип субъекта:</span>
+                                            </label>
+                                            <select ng-model="typeRepresent"
+                                                    ng-options="subjecttype as subjecttype.name for subjecttype in subjecttypes track by subjecttype.id"
+                                                    class="form-control col-sm-6 mySelect width310"> </select>
+
+                                        </div>
+                                        <div class="form-group" ng-model="typeRepresent"
+                                             ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '100'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Фамилия:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control" ng-model="represent.firstname">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-model="typeRepresent"
+                                             ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '100'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Имя:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control" ng-model="represent.surname">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-model="typeRepresent"
+                                             ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '100'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Отчество:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control" ng-model="represent.fathername">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"
+                                             ng-show="typeRepresent.id == '2'||typeRepresent.id == '100'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Дата рождения:</span>
+
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control" type="date"
+                                                       ng-model="represent.bothRegDate">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-show="typeRepresent.id == '7'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Сокращенное наименование:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-show="typeRepresent.id == '100'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Идентификационный номер:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control" ng-model="represent.personalNumber">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"
+                                             ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '100'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Адрес:</span>
+                                            </label>
+
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control" ng-model="represent.address">
+                                            </div>
+
+
+                                        </div>
+                                        <div class="form-group"
+                                             ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Свидетельство:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"
+                                             ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Дата регистрации:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input ng-datepicker type="text" type="text" ng-options="options"
+                                                       ng-model="dateRepresent">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group"
+                                             ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">УНП:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"
+                                             ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Регистрационный номер:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-show="typeRepresent.id == '5'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Административная териториальная еденица (АТЕ):</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <div class="btn-group" ng-class="openVar" ng-model="ateRepresent">
+                                                    <input class="btn btn-default dropdown-toggle  width310"
+                                                           ng-value="ateRepresent"
+                                                           ng-click="open()">
+                                                    <ul class="dropdown-menu width310">
+                                                        <abn-tree tree-data="ates"
+                                                                  on-select="ateRepresent = branch.id+'-'+branch.label"></abn-tree>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-show="typeRepresent.id == '6'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Страна:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"
+                                             ng-show="typeRepresent.id == '7'||typeRepresent.id == '6'||typeRepresent.id == '5'||typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '1'">
+                                            <label class="col-sm-3  control-label">
+                                                <span class="pull-right">Информация:</span>
+                                            </label>
+
+                                            <div class="col-sm-6">
+                                                <input class="form-control">
+                                            </div>
+
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3  control-label">
+
+                                            </label>
+
+                                            <div class="col-sm-3">
+                                                <div class="btn btn-primary">Добавить</div>
+                                            </div>
+
+                                            <div class="col-sm-3">
+                                                <div class="btn btn-primary" ng-click="updateSubject()">Изменить</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <h4 class="btn btn-primary mybtn col-sm-3 litle-right"
+                                    ng-click="showPanelOperation=!showPanelOperation">
+                                    ОПЕРАЦИИ
+                                </h4>
+                                <div class=" col-sm-8  ">
+                                    <div class="btn-block btn  width500">
+                                        <button class="btn btn-default mybtn litle-right " style="width: 88%"
+                                                ng-click="modal()">
+                                            <table class="table-bordered" width="100%">
+                                                <td width="70%">Регистрация</td>
+                                                <td width="30%">12.12.12</td>
+                                            </table>
+                                        </button>
+                                        <button class="btn btn-danger  pull-right  mybtn   btn-block " style="width: 9%"
+                                                ng-click="modal()">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                    <div class="btn-block btn width500">
+                                        <button class="btn btn-default mybtn litle-right " style="width: 88%"
+                                                ng-click="modal()">
+                                            <table class="table-bordered" width="100%">
+                                                <td width="70%">Формирование</td>
+                                                <td width="30%">12.12.12</td>
+                                            </table>
+                                        </button>
+                                        <button class="btn  btn btn-danger  pull-right  mybtn   btn-block"
+                                                style="width: 9%"
+                                                ng-click="modal()">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-collapse collapse  in" ng-show="showPanelOperation">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="col-sm-3  control-label">
+                                        <span class="pull-right">Вид операции:</span>
+                                    </label>
+
+                                    <div class="col-sm-9">
+                                        <div class="btn-group" ng-class="operationTypeClass" ng-model="operationType">
+                                            <input class="btn btn-default dropdown-toggle  width310"
+                                                   ng-value="operationType.prelabel+' '+ operationType.label"
+                                                   ng-click="operationTypeClass == 'open'?operationTypeClass = '':operationTypeClass = 'open'">
+                                            <ul class="dropdown-menu width310">
+                                                <abn-tree tree-data="operationTypes"
+                                                          ng-click="operationTypeClass == 'open'?operationTypeClass = '':operationTypeClass = 'open'"
+                                                          on-select="operationType = {prelabel: branch.prelabel, label: branch.label}"></abn-tree>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3  control-label">
+                                        <span class="pull-right">Основание:</span>
+                                    </label>
+
+                                    <div class="col-sm-9">
+                                        <div class="btn-group" ng-class="baseClass" ng-model="base">
+                                            <input class="btn btn-default dropdown-toggle  width310"
+                                                   ng-value="base.prelabel+' '+ base.label"
+                                                   ng-click="baseClass == 'open'?baseClass = '':baseClass = 'open'">
+                                            <ul class="dropdown-menu width310"
+                                                    >
+                                                <abn-tree tree-data="bases"
+                                                          ng-click="baseClass == 'open'?baseClass = '':baseClass = 'open'"
+                                                          on-select="base = {prelabel: branch.prelabel, label: branch.label}"></abn-tree>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3  control-label">
+                                        <span class="pull-right">Дата:</span>
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input class="form-control" type="date" ng-model="operationDate">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <div class="panel-default col-lg-offset-1 col-lg-10">
+                                        <div class="panel-heading">Ссылки на объекты операции<button class="pull-right" onclick="window.open('#/object','_blank')"><span class="glyphicon glyphicon-plus"></span></button></div>
+                                        <table class="table table-bordered" title="Ссылки на объекты:">
+                                            <tr>
+                                                <td>участок</td><td>143412341234123</td><td>местоположение</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary col-lg-offset-3  col-lg-2">Сохранить операцию
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" ng-init="showPDoc">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <h4 class="btn btn-primary mybtn col-sm-3 litle-right" ng-click="showPDoc=!showPDoc">
+                                    ДОКУМЕНТЫ
+                                </h4>
+                                <div class=" col-sm-8  ">
+                                    <div class="btn-block btn  width500">
+                                        <button class="btn btn-default mybtn litle-right " style="width: 88%"
+                                                ng-click="modal()">
+                                            <table class="table-bordered" width="100%">
+                                                <td width="70%">Заявление</td>
+                                                <td width="30%">12.12.12</td>
+                                            </table>
+                                        </button>
+                                        <button class="btn btn-danger  pull-right  mybtn   btn-block " style="width: 9%"
+                                                ng-click="modal()">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                    <div class="btn-block btn width500">
+                                        <button class="btn btn-default mybtn litle-right " style="width: 88%"
+                                                ng-click="modal()">
+                                            <table class="table-bordered" width="100%">
+                                                <td width="70%">Бланк</td>
+                                                <td width="30%">12.12.12</td>
+                                            </table>
+                                        </button>
+                                        <button class="btn  btn btn-danger  pull-right  mybtn   btn-block"
+                                                style="width: 9%"
+                                                ng-click="modal()">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-collapse collapse in" ng-show="showPDoc">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        Номер документа:
+                                    </label>
+
+                                    <div class="col-sm-3 width310">
+                                        <input class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        <span class="pull-right">Тип документа:</span>
+                                    </label>
+                                    <select ng-model="typeDoc"
+                                            ng-options="doctype as doctype.name for doctype in doctypes track by doctype.id"
+                                            class="form-control col-sm-6 mySelect width310">
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3  control-label">
+                                        <span class="pull-right">Дата:</span>
+
+                                    </label>
+
+                                    <div class="col-sm-3">
+                                        <input class="form-control" type="date" ng-model="docDate">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3  control-label">
+                                        <span class="pull-right">Описание ораганизации:</span>
+                                    </label>
+
+                                    <div class="col-sm-6">
+                                        <input class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="panel-default col-lg-offset-1 col-lg-10">
+                                        <div class="panel-heading">Принадлежность документа<button class="pull-right" onclick="window.open('#/object','_blank')"><span class="glyphicon glyphicon-plus"></span></button></div>
+                                        <table class="table table-bordered" title="Ссылки на объекты:">
+                                            <tr>
+                                                <td>регистрация</td><td>14.12.12</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary col-lg-offset-3  col-lg-2">Сохранить документ </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2  control-label"><span class="pull-right">Примечания:</span></label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" rows="4"></textarea>
+                    </div>
                 </div>
 
-
-              </div>
-            </div>
-
-            <div class="panel-collapse collapse in">
-              <div class="panel-body" ng-show="showPanel">
-                <div class="row">
-                  <form>
-                    <div class="col-sm-6">
-                      <div class="input-group">
-                         <span class="input-group-btn">
-                          <select ng-model="typeSearch"
-                                  ng-options="subjecttype as subjecttype.name for subjecttype in subjecttypes"
-                                  class="form-control col-sm-6 mySelect width150" required="required">
-                          </select>
-                         </span>
-                        <input type="text" class="form-control" placeholder="Номер" ng-model="searchSubject.number">
-
-                      </div>
-
+                <div class=distance-top">
+                    <div class="form-inline">
+                        <button type="button" class="btn btn-primary col-sm-offset-2 margin-top">ПРИНЯТЬ</button>
+                        <button type="button" class="btn btn-primary  col-sm-offset-2 margin-top">ОТКАЗАТЬ</button>
                     </div>
-                    <div class="col-sm-6">
-
-                      <div class="input-group">
-                        <input type="text" class="form-control" placeholder="ФИО/Наименование организации"
-                               ng-model="searchSubject.fioAndName">
-                       <span class="input-group-btn">
-                          <button class="btn btn-default" type="submit" ng-click="searchSubjects()">Поиск</button>
-                         </span>
-                      </div>
-                    </div>
-                  </form>
-                  <div class="col-sm-12" ng-show="showSubjectsTable">
-                    <table class="table table-bordered">
-                      <tr>
-                        <th>Тип</th>
-                        <th>Регистрационный/Идентификационный номер</th>
-                        <th>ФИО/Наименование</th>
-                        <th>Адрес</th>
-                      </tr>
-                      <tr ng-repeat="subject in subjects" class="btn-default"
-                          ng-click="updateSubjectForm('{{subject}}')">
-                        <td>{{subject.subjectType}}</td>
-                        <td>{{subject.personalNumber}}</td>
-                        <td>{{subject.firstname}}</td>
-                        <td>{{subject.address}}</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                  <ul class="nav nav-tabs distance-top padding-top">
-
-                    <li role="presentation" ng-click="clientActivate()" ng-class="clientActive">
-                      <a>
-                        Заказчик
-                      </a>
-                    </li>
-                    <li role="presentation" class="" ng-click="representativeActivate()"
-                        ng-class="representativeActive">
-                      <a>
-                        Представитель
-                      </a>
-                    </li>
-                  </ul>
                 </div>
-                <div>
-                  <div class="form-horizontal distance-top" ng-show="clientActive == 'active'">
-                    <div class="form-group row">
-                      <label class="col-sm-3 control-label">
-                        <span class="pull-right">Тип субъекта:</span>
-                      </label>
-                      <select ng-model="typeClient"
-                              ng-options="subjecttype as subjecttype.name for subjecttype in subjecttypes track by subjecttype.id"
-                              class="form-control col-sm-6 mySelect width310"> </select>
-                    </div>
-
-                    <div class="form-group"
-                         ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Фамилия:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control" ng-model="client.firstname">
-                      </div>
-                    </div>
-                    <div class="form-group"
-                         ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Имя:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control" ng-model="client.surname">
-                      </div>
-                    </div>
-                    <div class="form-group"
-                         ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Отчество:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control" ng-model="client.fathername">
-                      </div>
-                    </div>
-
-                    <div class="form-group" ng-show="typeClient.id == '2'||typeClient.id == '100'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Дата рождения:</span>
-
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control" type="date" ng-model="client.bothRegDate">
-                      </div>
-                    </div>
-
-                    <div class="form-group" ng-show="typeClient.id == '7' ">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Сокращенное наименование:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control">
-                      </div>
-                    </div>
-
-
-                    <div class="form-group" ng-show="typeClient.id == '100'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Идентификационный номер:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control" ng-model="client.personalNumber">
-                      </div>
-                    </div>
-                    <div class="form-group"
-                         ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Адрес:</span>
-                      </label>
-
-
-                      <div class="col-sm-6">
-                        <input class="form-control" ng-model="client.address">
-                      </div>
-                      <!--<div class="col-sm-6">
-                        <div ng-class="openVar" ng-model="addrClient">
-                          <input class="form-control dropdown-toggle" ng-value="addrClient" placeholder="АТЕ"
-                                 ng-click="open()">
-                          <ul class="dropdown-menu width310">
-                            <abn-tree tree-data="ates"
-                                      on-select="addrClient = branch.id+'-'+branch.label"></abn-tree>
-                          </ul>
-                        </div>
-                      </div>-->
-
-                    </div>
-                    <!--<div class="form-group"
-                         ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
-                      <div class="col-sm-9 col-sm-offset-3">
-                        <div class="col-sm-6 litle-left">
-                          <input class="form-control" placeholder="улица">
-                        </div>
-                        <div class="  col-sm-2">
-                          <input class="form-control" placeholder="дом">
-                        </div>
-                        <div class="  col-sm-2">
-                          <input class="form-control" placeholder="корп">
-                        </div>
-                        <div class="  col-sm-2">
-                          <input class="form-control" placeholder="кв">
-                        </div>
-                      </div>
-                    </div>-->
-                    <div class="form-group" ng-show="typeClient.id == '4'||typeClient.id == '3'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Свидетельство:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control">
-                      </div>
-                    </div>
-                    <div class="form-group" ng-show="typeClient.id == '4'||typeClient.id == '3'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Дата регистрации:</span>
-
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input ng-datepicker type="text" type="text" ng-options="options" ng-model="dateClient">
-                      </div>
-                    </div>
-                    <div class="form-group" ng-show="typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '7'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">УНП:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control">
-                      </div>
-                    </div>
-                    <div class="form-group" ng-show="typeClient.id == '4'||typeClient.id == '3'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Регистрационный номер:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control">
-                      </div>
-                    </div>
-                    <div class="form-group" ng-show="typeClient.id == '5'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Административная териториальная еденица (АТЕ):</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <div class="btn-group" ng-class="openVar" ng-model="ateClient">
-                          <input class="btn btn-default dropdown-toggle  width310" ng-value="ateClient"
-                                 ng-click="open()">
-                          <ul class="dropdown-menu width310">
-                            <abn-tree tree-data="ates" on-select="ateClient = branch.id+'-'+branch.label"></abn-tree>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group" ng-show="typeClient.id == '6'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Страна:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control">
-                      </div>
-                    </div>
-
-                    <div class="form-group"
-                         ng-show="typeClient.id == '7'||typeClient.id == '6'||typeClient.id == '5'||typeClient.id == '4'||typeClient.id == '3'||typeClient.id == '2'||typeClient.id == '100'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Информация:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="col-sm-3  control-label">
-                      </label>
-
-                      <div class="col-sm-3">
-                        <div class="btn btn-primary" ng-click="setClient()">Добавить</div>
-                      </div>
-                      <div class="col-sm-3">
-                        <div class="btn btn-primary" ng-click="updateSubject()">Изменить</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="form-horizontal distance-top" ng-show="representativeActive == 'active'">
-                    <div class="form-group row">
-                      <label class="col-sm-3 control-label">
-                        <span class="pull-right">Тип субъекта:</span>
-                      </label>
-                      <select ng-model="typeRepresent"
-                              ng-options="subjecttype as subjecttype.name for subjecttype in subjecttypes track by subjecttype.id"
-                              class="form-control col-sm-6 mySelect width310"> </select>
-
-                    </div>
-
-                    <div class="form-group" ng-model="typeRepresent"
-                         ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '100'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Фамилия:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control" ng-model="represent.firstname">
-                      </div>
-                    </div>
-                    <div class="form-group" ng-model="typeRepresent"
-                         ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '100'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Имя:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control" ng-model="represent.surname">
-                      </div>
-                    </div>
-                    <div class="form-group" ng-model="typeRepresent"
-                         ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '100'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Отчество:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control" ng-model="represent.fathername">
-                      </div>
-                    </div>
-                    <div class="form-group" ng-show="typeRepresent.id == '2'||typeRepresent.id == '100'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Дата рождения:</span>
-
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control" type="date" ng-model="represent.bothRegDate">
-                      </div>
-                    </div>
-
-                    <div class="form-group" ng-show="typeRepresent.id == '7'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Сокращенное наименование:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control">
-                      </div>
-                    </div>
-
-                    <div class="form-group" ng-show="typeRepresent.id == '100'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Идентификационный номер:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control" ng-model="represent.personalNumber">
-                      </div>
-                    </div>
-                    <div class="form-group"
-                         ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '100'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Адрес:</span>
-                      </label>
-
-
-                      <div class="col-sm-6">
-                        <input class="form-control" ng-model="represent.address">
-                      </div>
-                      <!--<div class="col-sm-6">
-                        <div ng-class="openVar" ng-model="addrRepresent">
-                          <input class="form-control dropdown-toggle" ng-value="addrRepresent" placeholder="АТЕ"
-                                 ng-click="open()">
-                          <ul class="dropdown-menu width310">
-                            <abn-tree tree-data="ates"
-                                      on-select="addrRepresent = branch.id+'-'+branch.label"></abn-tree>
-                          </ul>
-                        </div>
-                      </div>-->
-
-                    </div>
-                    <!--<div class="form-group"
-                         ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '100'">
-                      <div class="col-sm-9 col-sm-offset-3">
-                        <div class="col-sm-6 litle-left">
-                          <input class="form-control" placeholder="улица">
-                        </div>
-                        <div class="  col-sm-2">
-                          <input class="form-control" placeholder="дом">
-                        </div>
-                        <div class="  col-sm-2">
-                          <input class="form-control" placeholder="корп">
-                        </div>
-                        <div class="  col-sm-2">
-                          <input class="form-control" placeholder="кв">
-                        </div>
-
-                      </div>
-                    </div>-->
-                    <div class="form-group" ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Свидетельство:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control">
-                      </div>
-                    </div>
-                    <div class="form-group" ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Дата регистрации:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input ng-datepicker type="text" type="text" ng-options="options" ng-model="dateRepresent">
-
-                      </div>
-                    </div>
-                    <div class="form-group" ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">УНП:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control">
-                      </div>
-                    </div>
-                    <div class="form-group" ng-show="typeRepresent.id == '4'||typeRepresent.id == '3'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Регистрационный номер:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control">
-                      </div>
-                    </div>
-                    <div class="form-group" ng-show="typeRepresent.id == '5'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Административная териториальная еденица (АТЕ):</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <div class="btn-group" ng-class="openVar" ng-model="ateRepresent">
-                          <input class="btn btn-default dropdown-toggle  width310" ng-value="ateRepresent"
-                                 ng-click="open()">
-                          <ul class="dropdown-menu width310">
-                            <abn-tree tree-data="ates" on-select="ateRepresent = branch.id+'-'+branch.label"></abn-tree>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="form-group" ng-show="typeRepresent.id == '6'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Страна:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control">
-                      </div>
-                    </div>
-
-                    <div class="form-group"
-                         ng-show="typeRepresent.id == '7'||typeRepresent.id == '6'||typeRepresent.id == '5'||typeRepresent.id == '4'||typeRepresent.id == '3'||typeRepresent.id == '2'||typeRepresent.id == '1'">
-                      <label class="col-sm-3  control-label">
-                        <span class="pull-right">Информация:</span>
-                      </label>
-
-                      <div class="col-sm-6">
-                        <input class="form-control">
-                      </div>
-
-
-                    </div>
-
-                    <div class="form-group">
-                      <label class="col-sm-3  control-label">
-
-                      </label>
-
-                      <div class="col-sm-3">
-                        <div class="btn btn-primary">Добавить</div>
-                      </div>
-
-                      <div class="col-sm-3">
-                        <div class="btn btn-primary" ng-click="updateSubject()">Изменить</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="panel panel-default" ng-init="showP">
-            <div class="panel-heading">
-              <div class="row">
-                <h4 class="btn btn-primary mybtn col-sm-3 litle-right" ng-click="showP=!showP">
-                  ДОКУМЕНТЫ
-                </h4>
-              </div>
-            </div>
-            <div class="panel-collapse collapse in" ng-show="showP">
-              <div class="panel-body">
-                <div>
-
-                </div>
-                <table class="table table-bordered">
-                  <title>Документы</title>
-                  <tr>
-                    <th>Тип</th>
-                    <th>Дата</th>
-                    <th>Номер</th>
-                    <th>Организация</th>
-                    <th>Описание</th>
-                  </tr>
-
-                </table>
-
-              </div>
-            </div>
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <div class="row">
-                  <h4 class=" btn btn-primary mybtn col-sm-3 litle-right" ng-click="showPanel3=!showPanel3">
-                    ОПЕРАЦИИ
-                  </h4>
-                </div>
-              </div>
-              <div class="panel-collapse collapse  in" ng-show="showPanel3">
-                <div class="panel-body">
-                  о операциях
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="form-group col-sm-offset-8 col-sm-3">
-            <button type="submit" class="btn btn-default col-lg-offset-8">СОХРАНИТЬ</button>
-          </div>
+            </form>
         </div>
-      </form>
     </div>
-  </div>
-
 </div>
 
-
 <modal title="Login form" visible="showModal">
-  <form role="form">
-    <h1>вписка по субъекту</h1>
-  </form>
+    <form role="form">
+        <h1>Выписка</h1>
+    </form>
 </modal>

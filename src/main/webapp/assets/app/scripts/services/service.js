@@ -7,6 +7,36 @@
 angular.module('assetsApp').factory('httpServices', function () {
   var httpServices = {};
 
+  var XMLHttpFactories = [
+    function () {
+      return new XMLHttpRequest()
+    },
+    function () {
+      return new ActiveXObject("Msxml2.XMLHTTP")
+    },
+    function () {
+      return new ActiveXObject("Msxml3.XMLHTTP")
+    },
+    function () {
+      return new ActiveXObject("Microsoft.XMLHTTP")
+    }
+  ];
+
+  var createXMLHTTPObject = function () {
+    var xmlhttp = false;
+    for (var i = 0; i < XMLHttpFactories.length; i++) {
+      try {
+        xmlhttp = XMLHttpFactories[i]();
+      }
+      catch (e) {
+        continue;
+      }
+      break;
+    }
+    return xmlhttp;
+  }
+
+
   httpServices.updateSubject = function (subject) {
     var url = 'http://localhost:8080/nka_net3/subject/update';
     var params = "?";
@@ -45,32 +75,5 @@ angular.module('assetsApp').factory('httpServices', function () {
   return httpServices;
 
 
-  var XMLHttpFactories = [
-    function () {
-      return new XMLHttpRequest()
-    },
-    function () {
-      return new ActiveXObject("Msxml2.XMLHTTP")
-    },
-    function () {
-      return new ActiveXObject("Msxml3.XMLHTTP")
-    },
-    function () {
-      return new ActiveXObject("Microsoft.XMLHTTP")
-    }
-  ];
 
-  var createXMLHTTPObject = function () {
-    var xmlhttp = false;
-    for (var i = 0; i < XMLHttpFactories.length; i++) {
-      try {
-        xmlhttp = XMLHttpFactories[i]();
-      }
-      catch (e) {
-        continue;
-      }
-      break;
-    }
-    return xmlhttp;
-  }
 });
