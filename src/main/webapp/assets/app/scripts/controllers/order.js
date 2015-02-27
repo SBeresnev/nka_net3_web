@@ -5,180 +5,137 @@
 'use strict';
 
 angular.module('assetsApp')
-    .controller('OrderCtrl', function ($scope, $http, $routeParams, httpServices) {
+    .controller('OrderCtrl', function ($scope, $http, $routeParams, httpServices, ordervar) {
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
             'Karma'
         ];
 
-        $scope.typeSearch = {id: ''};
-        $scope.searchSubject = {number: '', fioAndName: ''};
-        $scope.options = {
-            language: "ru",
-            autoclose: true,
-            startView: 2
-        }
-
-        $scope.operationTypes = [{
-            "prelabel": "",
-            "label": "Гос. регистрация",
-            "children": [{
-                "prelabel": "Гос. регистрация",
-                "label": "изменение"
-            }, {
-                "prelabel": "Гос. регистрация",
-                "label": "создание"
-            }]
-        }]
-
-        $scope.bases = [{
-            "prelabel": "",
-            "label": "Выделение участка",
-            "children": [{
-                "prelabel": "Выделение участка",
-                "label": "документ"
-            }, {
-                "prelabel": "Выделение участка",
-                "label": "создание"
-            }]
-        }]
-
-
-        $scope.subjecttypes = [
-            {id: 100, name: 'Гражданин РБ'},
-            {id: 2, name: 'Не Гражданин РБ'},
-            {id: 200, name: 'ИП Резидент РБ'},
-            {id: 4, name: 'ИП Не резидет РБ'},
-            {id: 5, name: 'Республика Беларусь'},
-            {id: 6, name: 'Иностранное государство'},
-            {id: 7, name: 'Организация'}
-        ];
-
-        $scope.doctypes = [
-            {id: 1, name: 'Авизо'},
-            {id: 2, name: 'Акт'},
-            {id: 3, name: 'Вид на жительство '},
-            {id: 4, name: 'Выписка'},
-            {id: 5, name: 'Государственный акт'},
-            {id: 6, name: 'Доверенность'},
-            {id: 7, name: 'Договор (соглашение)'},
-            {id: 8, name: 'Заявление'},
-            {id: 9, name: 'Землеустроительное дело'},
-            {id: 10, name: 'Иной документ '},
-            {id: 11, name: 'Определение'},
-            {id: 12, name: 'Паспорт'},
-            {id: 13, name: 'Предписание'},
-            {id: 14, name: 'Приговор'}
-        ];
-
-        $scope.objecttypes = [
-            {id: 1, name: 'Объект'},
-            {id: 2, name: 'ПИК'},
-            {id: 2, name: 'Право'},
-            {id: 4, name: 'Доля'},
-            {id: 5, name: 'Дело'},
-            {id: 6, name: 'Право перехода'}
-        ]
-        $scope.items = null;
-        $scope.typeClient = null;
-        $scope.showModal = false;
-        $scope.showPanel1 = false;
-        $scope.showPanel2 = false;
-        $scope.showPanel3 = false;
-        $scope.showSubjectsTable = false;
-        $scope.representativeActive = "";
-        $scope.clientActive = "active";
-        $scope.ates = [{label: 'loading'}];
-        $scope.openVar = '';
-
-
-        $scope.id = $routeParams.id;
-        $scope.order = "";
+        $scope.var = angular.copy(ordervar);
+        $scope.var.id = $routeParams.id;
 
         $scope.init = function () {
-
-            $http.get("/data/orders/" + $scope.id + '.json')
+            $http.get("/data/orders/" + $scope.var.id + '.json')
                 .then(function (res) {
-                    $scope.order = res.data;
+                    $scope.var.order = res.data;
                 });
-
+            $http.get("http://localhost:8080/nka_net3/dict/states")
+                .then(function (res) {
+                    $scope.var.states = res.data;
+                });
             $http.get("/data/doctype.json")
                 .then(function (res) {
-                    $scope.items = res.data;
+                    $scope.var.items = res.data;
                 });
-
             $http.get("/data/ate.json")
                 .then(function (res) {
-                    $scope.ates = res.data;
+                    $scope.var.ates = res.data;
+                });
+            $http.get("http://localhost:8080/nka_net3/dict/subjectTypes")
+                .then(function (res) {
+                    $scope.var.subjecttypes = res.data;
                 });
         };
 
-
         $scope.searchSubjects = function () {
-            $scope.showSubjectsTable = true;
-            $scope.subjects = [];
+            $scope.var.showSubjectsTable = true;
+            $scope.var.subjects = [];
             delete $http.defaults.headers.common['X-Requested-With'];
-            httpServices.searchSubjects($scope.typeSearch.id, $scope.searchSubject.number, $scope.searchSubject.fioAndName, $scope);
+
+            httpServices.searchSubjects($scope.var.typeSearch.code_id, $scope.var.searchSubject.number, $scope.var.searchSubject.fioAndName, $scope);
         };
 
         $scope.updateSubjectForm = function (subject) {
-            $scope.subjects = [];
-            $scope.showSubjectsTable = false;
-            if ($scope.clientActive == 'active') {
-                $scope.typeClient = {id: JSON.parse(subject).subjectType.code_id};
-                $scope.client = angular.copy(JSON.parse(subject));
-                $scope.client.bothRegDate = new Date(angular.copy(JSON.parse(subject)).bothRegDate)
+            $scope.var.subjects = [];
+            $scope.var.showSubjectsTable = false;
+            if ($scope.var.clientActive == 'active') {
+                $scope.var.typeClient = {code_id: JSON.parse(subject).subjectType.code_id};
+                $scope.var.client = angular.copy(JSON.parse(subject));
+                $scope.var.client.bothRegDate = new Date(angular.copy(JSON.parse(subject)).bothRegDate)
             }
-            if ($scope.representativeActive == 'active') {
-                $scope.typeRepresent = {id: JSON.parse(subject).subjectType.code_id};
-                $scope.represent = angular.copy(JSON.parse(subject));
-                $scope.represent.bothRegDate = new Date(angular.copy(JSON.parse(subject)).bothRegDate)
+            if ($scope.var.representativeActive == 'active') {
+                $scope.var.typeRepresent = {code_id: JSON.parse(subject).subjectType.code_id};
+                $scope.var.represent = angular.copy(JSON.parse(subject));
+                $scope.var.represent.bothRegDate = new Date(angular.copy(JSON.parse(subject)).bothRegDate)
             }
-
         };
 
         $scope.representativeActivate = function () {
-            $scope.representativeActive = "active";
-            $scope.clientActive = "";
+            $scope.var.representativeActive = "active";
+            $scope.var.clientActive = "";
         };
 
         $scope.clientActivate = function () {
-            $scope.representativeActive = "";
-            $scope.clientActive = "active";
+            $scope.var.representativeActive = "";
+            $scope.var.clientActive = "active";
         };
 
         $scope.say = function (str) {
-            $scope.doctype = str;
+            $scope.var.doctype = str;
         };
-
 
         $scope.open = function () {
-            if ($scope.openVar == 'open') {
-                $scope.openVar = '';
+            if ($scope.var.openVar == 'open') {
+                $scope.var.openVar = '';
             } else {
-                $scope.openVar = 'open';
+                $scope.var.openVar = 'open';
             }
-        };
-
-        $scope.my_tree_handler = function (branch) {
-            alert(JSON.stringify(branch))
         };
 
         $scope.modal = function () {
-            $scope.showModal = !$scope.showModal;
+            $scope.var.showModal = !$scope.var.showModal;
         };
 
         $scope.updateSubject = function () {
-            if ($scope.clientActive == 'active') {
-                httpServices.updateSubject($scope.client);
-                $scope.client = {};
-                $scope.typeClient = null
+            if ($scope.var.clientActive == 'active') {
+                httpServices.updateSubject($scope.var.client);
+                $scope.var.client = {};
+                $scope.var.typeClient = null
             }
-            if ($scope.representativeActive == 'active') {
+            if ($scope.var.representativeActive == 'active') {
                 httpServices.updateSubject($scope.represent);
-                $scope.represent = {};
-                $scope.typeRepresent = null
+                $scope.var.represent = {};
+                $scope.var.typeRepresent = null
+            }
+        };
+
+        $scope.pushSubject = function(){
+            var subject = {
+                type:""
+            };
+            if($scope.var.clientActive == 'active'){
+                subject = angular.copy($scope.var.client);
+                subject.type = "заказчик";
+                subject.name = ($scope.var.client.firstname != undefined?$scope.var.client.firstname:"") + " " +  ($scope.var.client.surname != undefined?$scope.var.client.surname:"") + " " +  ($scope.var.client.shortname != undefined?$scope.var.client.shortname:"");
+                $scope.var.client = {};
+            } else {
+                subject = angular.copy($scope.var.represent);
+                subject.type = "представитель";
+                subject.name =  ($scope.var.represent.firstname != undefined?$scope.var.represent.firstname:"") + " " +  ($scope.var.represent.surname != undefined?$scope.var.represent.surname:"") + " " +  ($scope.var.represent.shortname != undefined?$scope.var.represent.shortname:"");
+                $scope.var.represent = {};
+            }
+            $scope.var.selectedSubjects.push(subject);
+        };
+
+        $scope.deleteSubject = function(index){
+            $scope.var.selectedSubjects.splice(index, 1);
+        };
+
+        $scope.modalSubject = function (s) {
+            $scope.var.modalSubjects = angular.copy(s);
+            $scope.showSubject = !$scope.showSubject;
+        };
+
+        $scope.isObject = function(a){
+            if(a == null){
+                return false;
+            } else{
+                if(a instanceof Date){
+                    return false;
+                }else{
+                    return typeof a == 'object';
+                }
             }
         }
-    })
+    });

@@ -8,7 +8,7 @@
  *
  * Main module of the application.
  */
-angular
+var app = angular
     .module('assetsApp', [
         'ngAnimate',
         'ngCookies',
@@ -46,6 +46,14 @@ angular
                 templateUrl: 'views/doc.html',
                 controller: 'DocCtrl'
             })
+            .when('/subject', {
+                templateUrl: 'views/subject.html',
+                controller: 'SubjectCtrl'
+                })
+            .when('/items', {
+                templateUrl: 'views/items.html',
+                controller: 'ItemsCtrl'
+            })
             .otherwise({
                 redirectTo: '#/'
             });
@@ -78,6 +86,7 @@ angular
             scope: true,
             link: function postLink(scope, element, attrs) {
                 scope.title = attrs.title;
+
                 scope.$watch(attrs.visible, function (value) {
                     if (value == true)
                         $(element).modal('show');
@@ -99,4 +108,17 @@ angular
             }
         };
     })
-
+    .filter('filterSubjectType', function () {
+        return function (items) {
+            var filtered = [];
+            if(items != undefined){
+                for (var i = 0; i < items.length; i++) {
+                    var item = items[i];
+                    if(item.code_id < 400 && item.code_id != 100 && item.code_id != 200){
+                        filtered.push(item);
+                    }
+                }
+            }
+            return filtered;
+        };
+    });

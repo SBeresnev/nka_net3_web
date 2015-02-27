@@ -65,15 +65,11 @@ angular.module('assetsApp').factory('httpServices', function () {
     return http.onreadystatechange = function () {
       if (http.readyState == 4) {
         if (http.status == 200) {
-          scope.subjects = JSON.parse(http.responseText);
+          scope.var.subjects = JSON.parse(http.responseText);
           scope.$apply();
         }
       }
     }
   }
-
   return httpServices;
-
-
-
 });
