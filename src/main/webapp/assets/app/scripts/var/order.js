@@ -63,4 +63,5 @@ angular.module('assetsApp').value('ordervar',
         states: [],
         order: ""
     }
+
 );

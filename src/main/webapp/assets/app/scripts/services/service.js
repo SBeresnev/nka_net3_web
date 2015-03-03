@@ -66,6 +66,9 @@ angular.module('assetsApp').factory('httpServices', function () {
       if (http.readyState == 4) {
         if (http.status == 200) {
           scope.var.subjects = JSON.parse(http.responseText);
+          if(scope.var.subjects.length == 0) {
+            scope.var.showSubjectsTable = false;
+          }
           scope.$apply();
         }
       }

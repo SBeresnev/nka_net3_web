@@ -3,26 +3,24 @@
         <form ng-init="init()">
             <div class="col-sm-6">
                 <div class="input-group">
-              <span class="input-group-btn">
-                     <select ng-model="var.typeSearch"
-                             ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes| filterSubjectType"
-                             class="form-control col-sm-6 mySelect width310"
-                             required="required">
-                     </select>
-              </span>
-                    <input type="text" class="form-control" placeholder="Номер"
-                           ng-model="var.searchSubject.number">
+                        <span class="input-group-btn">
+                           <select ng-model="var.typeSearch"
+                                  ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes | filterSubjectType track by subjecttype.code_id"
+                                  class="form-control col-sm-6 mySelect width310" required="required">
+                           </select>
+                        </span>
+                    <input type="text" class="form-control" placeholder="Номер" ng-model="var.searchSubject.number" required="required">
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="input-group">
                     <input type="text" class="form-control"
                            placeholder="ФИО/Наименование организации"
-                           ng-model="var.searchSubject.fioAndName">
+                           ng-model="var.searchSubject.fioAndName" required="required">
                    <span class="input-group-btn">
-                       <button class="btn btn-default" type="submit"
-                               ng-click="searchSubjects()">Поиск
-                       </button>
+                     <button class="btn btn-default" type="submit" ng-click="searchSubjects()">
+                       Поиск
+                     </button>
                    </span>
                 </div>
             </div>
@@ -30,134 +28,170 @@
         <div class="col-sm-12" ng-show="var.showSubjectsTable">
             <table class="table table-bordered">
                 <tr>
-                    <th>Тип</th>
-                    <th>Регистрационный/Идентификационный номер</th>
-                    <th>ФИО/Наименование</th>
-                    <th>Адрес</th>
+                    <th>
+                        Тип
+                    </th>
+                    <th>
+                        Регистрационный/Идентификационный номер
+                    </th>
+                    <th>
+                        ФИО/Наименование
+                    </th>
+                    <th>
+                        Адрес
+                    </th>
                 </tr>
                 <tr ng-repeat="subject in var.subjects" class="btn-default"
                     ng-click="updateSubjectForm('{{subject}}')">
-                    <td>{{subject.subjectType.code_short_name}}</td>
-                    <td>{{subject.personalNumber}} {{subject.unp}}</td>
-                    <td>{{subject.firstname}} {{subject.fullname}}</td>
-                    <td>{{subject.address}}</td>
+                    <td>
+                        {{subject.subjectType.code_short_name}}
+                    </td>
+                    <td>
+                        {{subject.personalNumber}} {{subject.unp}}
+                    </td>
+                    <td>
+                        {{subject.firstname}} {{subject.fullname}}
+                    </td>
+                    <td>
+                        {{subject.address}}
+                    </td>
                 </tr>
             </table>
         </div>
         <div class="form-horizontal distance-top">
             <div class="form-group row">
                 <label class="col-sm-3 control-label">
-                    <span class="pull-right">Тип субъекта:</span>
+                    <span class="pull-right">
+                        Тип субъекта:
+                    </span>
                 </label>
-                <select ng-model="var.typeRepresent"
-                        ng-options="subjecttype.code_id as subjecttype.code_short_name for subjecttype in var.subjecttypes | filterSubjectType track by subjecttype.code_id"
+                <select ng-model="var.subj.type"
+                        ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes | filterSubjectType track by subjecttype.code_id"
                         class="form-control col-sm-6 mySelect width310">
                 </select>
             </div>
-            <div class="form-group" ng-model="var.typeRepresent" ng-show=" true">
+            <div class="form-group" ng-model="var.typeRepresent" ng-show="100 < var.subj.type.code_id && var.subj.type.code_id < 200">
                 <label class="col-sm-3  control-label">
-                    <span class="pull-right">Фамилия:</span>
+                    <span class="pull-right">
+                        Фамилия:
+                    </span>
                 </label>
 
                 <div class="col-sm-6">
-                    <input class="form-control" ng-model="var.represent.firstname">
+                    <input class="form-control" ng-model="var.subj.firstname" >
                 </div>
             </div>
-            <div class="form-group" ng-model="var.typeRepresent"
-                 ng-show=" true">
+            <div class="form-group" ng-model="var.typeRepresent" ng-show="100 < var.subj.type.code_id && var.subj.type.code_id < 200">
                 <label class="col-sm-3  control-label">
-                    <span class="pull-right">Имя:</span>
+                    <span class="pull-right">
+                        Имя:
+                    </span>
                 </label>
-
                 <div class="col-sm-6">
-                    <input class="form-control" ng-model="var.represent.surname">
+                    <input class="form-control" ng-model="var.subj.surname">
                 </div>
             </div>
-            <div class="form-group" ng-model="var.typeRepresent" ng-show=" true">
+            <div class="form-group" ng-model="var.typeRepresent"  ng-show="100 < var.subj.type.code_id && var.subj.type.code_id < 200">
                 <label class="col-sm-3  control-label">
-                    <span class="pull-right">Отчество:</span>
+                    <span class="pull-right">
+                        Отчество:
+                    </span>
                 </label>
 
                 <div class="col-sm-6">
-                    <input class="form-control" ng-model="var.represent.fathername">
+                    <input class="form-control" ng-model="var.subj.fathername">
                 </div>
             </div>
             <div class="form-group"
-                 ng-show=" true">
+                 ng-show="100 < var.subj.type.code_id && var.subj.type.code_id < 200">
                 <label class="col-sm-3  control-label">
-                    <span class="pull-right">Дата рождения:</span>
+                    <span class="pull-right">
+                        Дата рождения:
+                    </span>
                 </label>
 
                 <div class="col-sm-6">
                     <input class="form-control" type="date"
-                           ng-model="var.represent.regDate">
+                           ng-model="var.subj.regDate">
                 </div>
             </div>
             <div class="form-group"
-                 ng-show=" true">
+                 ng-show=" 200 < var.subj.type.code_id && var.subj.type.code_id < 400">
                 <label class="col-sm-3  control-label">
-                    <span class="pull-right">Сокращенное наименование:</span>
+                    <span class="pull-right">
+                        Сокращенное наименование:
+                    </span>
                 </label>
 
                 <div class="col-sm-6">
-                    <input class="form-control" ng-model="var.represent.shortname">
+                    <input class="form-control" ng-model="var.subj.shortname">
                 </div>
             </div>
             <div class="form-group"
-                 ng-show=" true">
+                 ng-show="100 < var.subj.type.code_id && var.subj.type.code_id < 200">
                 <label class="col-sm-3  control-label">
-                    <span class="pull-right">Идентификационный номер:</span>
+                    <span class="pull-right">
+                        Идентификационный номер:
+                    </span>
                 </label>
 
                 <div class="col-sm-6">
-                    <input class="form-control" ng-model="var.represent.personalNumber">
+                    <input class="form-control" ng-model="var.subj.personalNumber">
                 </div>
             </div>
             <div class="form-group"
-                 ng-show=" true">
+                 ng-show="100 < var.subj.type.code_id && var.subj.type.code_id < 400">
                 <label class="col-sm-3  control-label">
-                    <span class="pull-right">Адрес:</span>
+                    <span class="pull-right">
+                        Адрес:
+                    </span>
                 </label>
 
                 <div class="col-sm-6">
-                    <input class="form-control" ng-model="var.represent.address">
+                    <input class="form-control" ng-model="var.subj.address">
                 </div>
             </div>
-            <div class="form-group"
-                 ng-show=" true">
+            <div class="form-group" ng-show="200 < var.subj.type.code_id && var.subj.type.code_id < 400">
                 <label class="col-sm-3  control-label">
-                    <span class="pull-right">Дата регистрации:</span>
+                    <span class="pull-right">
+                        Дата регистрации:
+                    </span>
                 </label>
 
                 <div class="col-sm-6">
                     <input type="date" class="form-control"
-                           ng-model="var.represent.bothRegDate">
+                           ng-model="var.subj.bothRegDate">
                 </div>
             </div>
-            <div class="form-group"
-                 ng-show=" true">
+            <div class="form-group" ng-show="200 < var.subj.type.code_id && var.subj.type.code_id < 400">
                 <label class="col-sm-3  control-label">
-                    <span class="pull-right">УНП:</span>
+                    <span class="pull-right">
+                        УНП:
+                    </span>
                 </label>
 
                 <div class="col-sm-6">
-                    <input class="form-control" ng-model="var.represent.unp">
+                    <input class="form-control" ng-model="var.subj.unp">
                 </div>
             </div>
             <div class="form-group"
-                 ng-show=" true">
+                 ng-show="200 < var.subj.type.code_id && var.subj.type.code_id < 400">
                 <label class="col-sm-3  control-label">
-                    <span class="pull-right">Регистрационный номер:</span>
+                    <span class="pull-right">
+                        Регистрационный номер:
+                    </span>
                 </label>
 
                 <div class="col-sm-6">
-                    <input class="form-control" ng-model="var.represent.regnumber">
+                    <input class="form-control" ng-model="var.subj.regnumber">
                 </div>
             </div>
             <div class="form-group"
-                 ng-show=" true">
+                 ng-show="var.subj.type.code_id == 420">
                 <label class="col-sm-3  control-label">
-                    <span class="pull-right">Административная териториальная еденица (АТЕ):</span>
+                    <span class="pull-right">
+                        Административная териториальная еденица (АТЕ):
+                    </span>
                 </label>
 
                 <div class="col-sm-6">
@@ -174,13 +208,15 @@
                 </div>
             </div>
             <div class="form-group"
-                 ng-show="true">
+                 ng-show="100 < var.subj.type.code_id && var.subj.type.code_id < 500">
                 <label class="col-sm-3  control-label">
-                    <span class="pull-right">Страна:</span>
+                    <span class="pull-right">
+                        Страна:
+                    </span>
                 </label>
 
                 <div class="col-sm-6">
-                    <select ng-model="var.represent.state"
+                    <select ng-model="var.subj.state"
                             ng-options="state as state.code_short_name for state in var.states | orderBy: ['code_short_name']"
                             class="form-control col-sm-6 ">
                     </select>
@@ -191,10 +227,15 @@
                 </label>
 
                 <div class="col-sm-3">
-                    <div class="btn btn-primary" ng-click="pushSubject()">Добавить</div>
+                    <div class="btn btn-primary" ng-click="pushSubject()">
+                        Добавить
+                    </div>
                 </div>
+
                 <div class="col-sm-3">
-                    <div class="btn btn-primary" ng-click="updateSubject()">Изменить</div>
+                    <div class="btn btn-primary" ng-click="updateSubject()">
+                        Изменить
+                    </div>
                 </div>
             </div>
         </div>

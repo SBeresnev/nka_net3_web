@@ -15,13 +15,14 @@ angular.module('assetsApp')
         $scope.var = {
             states:'',
             items : '',
-            ates : '',
-            subjecttypes : ''
+            subjecttypes : '',
+            ates: [{label: 'loading'}]
         };
         $scope.init = function () {
             $http.get("http://localhost:8080/nka_net3/dict/states")
                 .then(function (res) {
                     $scope.var.states = res.data;
+                    $scope.var.subj = {state :$scope.var.states[33]};
                 });
             $http.get("/data/doctype.json")
                 .then(function (res) {
@@ -41,25 +42,18 @@ angular.module('assetsApp')
             $scope.var.showSubjectsTable = true;
             $scope.var.subjects = [];
             delete $http.defaults.headers.common['X-Requested-With'];
-            try{
-                $scope.var.searchSubject.number;
-            }catch (e){
-                $scope.var.searchSubject['number'] = "";
-            }
-            try{
-                $scope.var.searchSubject.fioAndName;
-            }catch (e){
-                $scope.var.searchSubject['fioAndName'] = "";
-            }
             httpServices.searchSubjects($scope.var.typeSearch.code_id, $scope.var.searchSubject.number, $scope.var.searchSubject.fioAndName, $scope);
         };
 
         $scope.updateSubjectForm = function (subject) {
             $scope.var.subjects = [];
             $scope.var.showSubjectsTable = false;
-            $scope.var.typeRepresent = {code_id: JSON.parse(subject).subjectType.code_id};
-            $scope.var.represent = angular.copy(JSON.parse(subject));
-            $scope.var.represent.bothRegDate = new Date(angular.copy(JSON.parse(subject)).bothRegDate)
+            $scope.var.subj.type = {code_id: JSON.parse(subject).subjectType.code_id};
+            $scope.var.subj = angular.copy(JSON.parse(subject));
+            $scope.var.subj.bothRegDate = new Date(angular.copy(JSON.parse(subject)).bothRegDate)
         };
 
+        $scope.pushSubject = function(){};
+
+        $scope.updateSubject = function(){};
     });

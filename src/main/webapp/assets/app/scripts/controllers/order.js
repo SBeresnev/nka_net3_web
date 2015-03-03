@@ -20,18 +20,26 @@ angular.module('assetsApp')
                 .then(function (res) {
                     $scope.var.order = res.data;
                 });
+
             $http.get("http://localhost:8080/nka_net3/dict/states")
                 .then(function (res) {
                     $scope.var.states = res.data;
+                    $scope.$apply();
+                    $scope.var.client = {sitizens :$scope.var.states[33]};
+                    $scope.var.represent = {sitizens :$scope.var.states[33]};
                 });
+
             $http.get("/data/doctype.json")
                 .then(function (res) {
                     $scope.var.items = res.data;
                 });
+
             $http.get("/data/ate.json")
                 .then(function (res) {
                     $scope.var.ates = res.data;
+
                 });
+
             $http.get("http://localhost:8080/nka_net3/dict/subjectTypes")
                 .then(function (res) {
                     $scope.var.subjecttypes = res.data;
@@ -42,7 +50,6 @@ angular.module('assetsApp')
             $scope.var.showSubjectsTable = true;
             $scope.var.subjects = [];
             delete $http.defaults.headers.common['X-Requested-With'];
-
             httpServices.searchSubjects($scope.var.typeSearch.code_id, $scope.var.searchSubject.number, $scope.var.searchSubject.fioAndName, $scope);
         };
 
@@ -101,9 +108,7 @@ angular.module('assetsApp')
         };
 
         $scope.pushSubject = function(){
-            var subject = {
-                type:""
-            };
+            var subject = { type:"" };
             if($scope.var.clientActive == 'active'){
                 subject = angular.copy($scope.var.client);
                 subject.type = "заказчик";
@@ -137,5 +142,6 @@ angular.module('assetsApp')
                     return typeof a == 'object';
                 }
             }
-        }
+        };
+
     });
