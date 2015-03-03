@@ -21,7 +21,7 @@ angular.module('assetsApp')
                     $scope.var.order = res.data;
                 });
 
-            $http.get("http://localhost:8080/nka_net3/dict/states")
+            $http.get("http://172.31.14.71:8080/nka_net3/dict/states")
                 .then(function (res) {
                     $scope.var.states = res.data;
                     $scope.var.client = {sitizens :$scope.var.states[33]};
@@ -39,7 +39,7 @@ angular.module('assetsApp')
 
                 });
 
-            $http.get("http://localhost:8080/nka_net3/dict/subjectTypes")
+            $http.get("http://172.31.14.71:8080/nka_net3/dict/subjectTypes")
                 .then(function (res) {
                     $scope.var.subjecttypes = res.data;
                 });
