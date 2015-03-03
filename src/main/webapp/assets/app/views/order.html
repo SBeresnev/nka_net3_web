@@ -619,7 +619,7 @@
     </form>
 </modal>
 
-<modal visible="showSubject">
+<modal visible="showSubject" ng-class="{'in' : showSubject}" ng-style="{true: {display: 'block'}, false: {display: 'none'}}[showSubject]">
     <div class="row">
         <div class="col-lg-8">
             <table class="table table-bordered">
