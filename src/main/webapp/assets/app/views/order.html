@@ -48,11 +48,14 @@
                         </div>
                         <div class="panel-collapse collapse in">
                             <div class="panel-body" ng-show="var.showPanel">
+                                <input type="checkbox"  ng-init="mvdSearch=false" ng-model="mvdSearch">
                                 <div class="row">
-                                    <form>
+
+
+                                    <form >
                                         <div class="col-sm-6">
-                                            <div class="input-group">
-                                                 <span class="input-group-btn">
+                                            <div class="input-group" >
+                                                 <span class="input-group-btn" ng-hide="mvdSearch">
                                                             <select ng-model="var.typeSearch"
                                                                     ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes| filterSubjectType"
                                                                     class="form-control col-sm-6 mySelect width310"
