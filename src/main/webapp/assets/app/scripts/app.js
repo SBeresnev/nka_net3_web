@@ -18,8 +18,8 @@ var app = angular
         'ngTouch',
         'angularBootstrapNavTree'
     ])
-    .constant('DOMAIN', 'http://localhost:8080')
-    /**.constant('DOMAIN', 'http://172.31.14.71:8080')*/
+/**.constant('DOMAIN', 'http://localhost:8080')*/
+    .constant('DOMAIN', 'http://172.31.14.71:8080')
     .config(function ($routeProvider, $httpProvider) {
         $httpProvider.defaults.useXDomain = true;
 
