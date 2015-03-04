@@ -5,7 +5,7 @@
 'use strict';
 
 angular.module('assetsApp')
-    .controller('OrderCtrl', function ($scope, $http, $routeParams, httpServices, ordervar) {
+    .controller('OrderCtrl', function ($scope, $http, $routeParams, httpServices, ordervar, DOMAIN) {
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
@@ -21,7 +21,7 @@ angular.module('assetsApp')
                     $scope.var.order = res.data;
                 });
 
-            $http.get("http://172.31.14.71:8080/nka_net3/dict/states")
+            $http.get(DOMAIN+"/nka_net3/dict/states")
                 .then(function (res) {
                     $scope.var.states = res.data;
                     $scope.var.client = {sitizens :$scope.var.states[33]};
@@ -39,7 +39,7 @@ angular.module('assetsApp')
 
                 });
 
-            $http.get("http://172.31.14.71:8080/nka_net3/dict/subjectTypes")
+            $http.get(DOMAIN+"/nka_net3/dict/subjectTypes")
                 .then(function (res) {
                     $scope.var.subjecttypes = res.data;
                 });
@@ -50,6 +50,17 @@ angular.module('assetsApp')
             $scope.var.subjects = [];
             delete $http.defaults.headers.common['X-Requested-With'];
             httpServices.searchSubjects($scope.var.typeSearch.code_id, $scope.var.searchSubject.number, $scope.var.searchSubject.fioAndName, $scope);
+        };
+
+        $scope.searchPass = function () {
+            if($scope.validId()&& $scope.validPass()){
+                $scope.var.showSubjectsTable = true;
+                $scope.var.subjects = [];
+                delete $http.defaults.headers.common['X-Requested-With'];
+                httpServices.searchPass( $scope.var.searchSubject.passSeriesAndNumber, $scope.var.searchSubject.idNumber, $scope);
+            } else{
+                alert("Ошибочно заполненны поля!")
+            }
         };
 
         $scope.updateSubjectForm = function (subject) {
@@ -142,5 +153,15 @@ angular.module('assetsApp')
                 }
             }
         };
+
+        $scope.validPass =  function(){
+            var exp = /^[A-Z,a-z]{2}(\d){7}$/;
+            return exp.test($scope.var.searchSubject.passSeriesAndNumber);
+        }
+
+        $scope.validId = function(){
+            var exp = /^(\d){7}[A-Z,a-z](\d){3}[A-Z,a-z]{2}(\d)$/;
+            return exp.test($scope.var.searchSubject.idNumber);
+        }
 
     });

@@ -48,14 +48,20 @@
                         </div>
                         <div class="panel-collapse collapse in">
                             <div class="panel-body" ng-show="var.showPanel">
-                                <input type="checkbox"  ng-init="mvdSearch=false" ng-model="mvdSearch">
+
                                 <div class="row">
 
-
+                                    <div class="col-sm-1">
+                                        <div class="input-group">
+                                            <div class="checkbox">
+                                                <label><input type="checkbox"  ng-init="mvdSearch=false" ng-model="mvdSearch">Поиск по паспорту</label>
+                                            </div>
+                                        </div>
+                                     </div>
                                     <form >
-                                        <div class="col-sm-6">
-                                            <div class="input-group" >
-                                                 <span class="input-group-btn" ng-hide="mvdSearch">
+                                        <div class="col-sm-5">
+                                            <div class="input-group" ng-hide="mvdSearch">
+                                                 <span class="input-group-btn" >
                                                             <select ng-model="var.typeSearch"
                                                                     ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes| filterSubjectType"
                                                                     class="form-control col-sm-6 mySelect width310"
@@ -64,14 +70,28 @@
                                                  </span>
                                                 <input type="text" class="form-control" placeholder="Номер" ng-model="var.searchSubject.number">
                                             </div>
+                                            <div class="input-group-btn" ng-hide="!mvdSearch">
+                                                <input type="text" class="form-control" placeholder="Серия и номер паспорта " ng-model="var.searchSubject.passSeriesAndNumber"
+                                                        ng-style="{false:{color: 'red', 'text-decoration': 'underline'}}[validPass()]">
+                                            </div>
                                         </div>
                                         <div class="col-sm-6">
-                                            <div class="input-group">
+                                            <div class="input-group" ng-hide="mvdSearch">
                                                 <input type="text" class="form-control"
                                                        placeholder="ФИО/Наименование организации"
-                                                       ng-model="var.searchSubject.fioAndName">
+                                                       ng-model="var.searchSubject.fioAndName" >
                                                  <span class="input-group-btn">
                                                       <button class="btn btn-default" type="submit" ng-click="searchSubjects()">Поиск
+                                                      </button>
+                                                 </span>
+                                            </div>
+                                            <div class="input-group" ng-hide="!mvdSearch">
+                                            <input type="text" class="form-control"
+                                                   placeholder="Идентификационный номер"
+                                                   ng-model="var.searchSubject.idNumber"
+                                                   ng-style="{false:{color: 'red', 'text-decoration': 'underline'}}[validId()]">
+                                                 <span class="input-group-btn">
+                                                      <button class="btn btn-default" type="submit" ng-click="searchPass()">Поиск
                                                       </button>
                                                  </span>
                                             </div>

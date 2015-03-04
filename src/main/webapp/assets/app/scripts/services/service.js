@@ -4,7 +4,7 @@
 
 'use strict';
 
-angular.module('assetsApp').factory('httpServices', function () {
+angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
   var httpServices = {};
 
   var XMLHttpFactories = [
@@ -38,7 +38,7 @@ angular.module('assetsApp').factory('httpServices', function () {
 
 
   httpServices.updateSubject = function (subject) {
-    var url = 'http://172.31.14.71:8080/nka_net3/subject/update';
+    var url = DOMAIN+'/nka_net3/subject/update';
     var params = "?";
     var method = "PUT";
     for (var index in subject) {
@@ -56,8 +56,28 @@ angular.module('assetsApp').factory('httpServices', function () {
   }
 
   httpServices.searchSubjects = function (id, number, fio, scope) {
-    var url = 'http://172.31.14.71:8080/nka_net3/subject/private';
+    var url = DOMAIN+'/nka_net3/subject/private';
     var params = "?" + "type=" + id + "&" + "number=" + number + "&" + "name=" + fio;
+    var method = "GET";
+    var http = createXMLHTTPObject();
+    http.open(method, url + params, true);
+    http.send();
+    return http.onreadystatechange = function () {
+      if (http.readyState == 4) {
+        if (http.status == 200) {
+          scope.var.subjects = JSON.parse(http.responseText);
+          if(scope.var.subjects.length == 0) {
+            scope.var.showSubjectsTable = false;
+          }
+          scope.$apply();
+        }
+      }
+    }
+  }
+
+  httpServices.searchPass= function ( number, id, scope) {
+    var url = DOMAIN+'/nka_net3/subject/mvd';
+    var params = "?" + "seriesAndNumber=" + number + "&" + "idNumber=" + id;
     var method = "GET";
     var http = createXMLHTTPObject();
     http.open(method, url + params, true);
