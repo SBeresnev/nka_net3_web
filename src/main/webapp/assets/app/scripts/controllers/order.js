@@ -141,7 +141,6 @@ angular.module('assetsApp')
             $scope.var.modalSubjects = angular.copy(s);
             $scope.showSubject = !$scope.showSubject;
         };
-
         $scope.isObject = function(a){
             if(a == null){
                 return false;
