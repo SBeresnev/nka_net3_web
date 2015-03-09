@@ -1,0 +1,82 @@
+<div class="padding-top" ng-init="init()">
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+            <h3 class="center-pill">
+                Типы словарей
+            </h3>
+
+            <div class="panel">
+                <div class="panel-title panel "></div>
+                <div class="panel-body">
+                    <table class="table table-bordered ">
+                        <tr>
+                            <th>Идентификатор</th>
+                            <th>Имя</th>
+                            <th>Статус</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="item in catalogTypes" class="btn-default"
+                            ng-click="loadCatalogs(item.analytic_type)">
+                            <th>{{item.analytic_type}}</th>
+                            <td>{{item.analyticTypeName}}</td>
+                            <td>{{item.status}}</td>
+                            <td width="3%">
+                                <button class="btn btn-danger">X</button>
+                            </td>
+                        </tr>
+                    </table>
+                    <button class="btn btn-primary pull-right">добавить</button>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-bordered ">
+                        <tr>
+                            <th>Тип</th>
+                            <th>Идентификатор</th>
+                            <th>Имя</th>
+                            <th>Короткое имя</th>
+                            <th>Родительский код</th>
+                        </tr>
+                        <tr ng-repeat="item in catalog" class="btn-default" ng-click="modal(item)">
+                            <th>{{item.analytic_type}}</th>
+                            <th>{{item.code_id}}</th>
+                            <td>{{item.code_name}}</td>
+                            <td>{{item.code_short_name}}</td>
+                            <td>{{item.parent_code}}</td>
+                        </tr>
+                    </table>
+                    <button class="btn btn-primary pull-right">добавить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" visible="showCatalog" ng-class="{'in' : showCatalog}"  ng-style="{true: {display: 'block'}, false: {display: 'none'}}[showCatalog]">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                        ng-click="modal()">&times;</button>
+                <h4 class="modal-title">{{ title }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="panel-body">
+                            <table class="table table-bordered">
+                                <div ng-repeat="(key, catalog) in modalCatalog" class="form-group">
+                                    <label class="control-label">{{key}}</label>
+                                    <input class="form-control" type="text" ng-value="catalog">
+                                </div>
+                            </table>
+                            <button class="btn btn-primary" ng-click="updateCatalog(modalCatalog)">Сохранить изменения</button>
+                            <button class="btn btn-danger" ng-click="deleteCatalog(modalCatalog)">Удалить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -100,10 +100,6 @@ angular.module('assetsApp')
             }
         };
 
-        $scope.modal = function () {
-            $scope.var.showModal = !$scope.var.showModal;
-        };
-
         $scope.updateSubject = function () {
             if ($scope.var.clientActive == 'active') {
                 httpServices.updateSubject($scope.var.client);
@@ -137,7 +133,7 @@ angular.module('assetsApp')
             $scope.var.selectedSubjects.splice(index, 1);
         };
 
-        $scope.modalSubject = function (s) {
+        $scope.modal = function (s) {
             $scope.var.modalSubjects = angular.copy(s);
             $scope.showSubject = !$scope.showSubject;
         };
