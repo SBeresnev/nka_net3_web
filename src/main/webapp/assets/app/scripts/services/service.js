@@ -53,7 +53,7 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
     var http = createXMLHTTPObject();
     http.open(method, url + params, true);
     http.send();
-  }
+  };
 
   httpServices.searchSubjects = function (id, number, fio, scope) {
     var url = DOMAIN+'/nka_net3/subject/private';
@@ -93,6 +93,14 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
         }
       }
     }
-  }
+  };
+  httpServices.addSubject = function (subject) {
+    var url = DOMAIN+'/nka_net3/subject/add';
+    var params = "?";
+    var method = "POST";
+    var http = createXMLHTTPObject();
+    http.open(method, url + params, true);
+    http.send(JSON.stringify(subject));
+  };
   return httpServices;
 });

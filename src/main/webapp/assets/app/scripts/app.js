@@ -127,4 +127,18 @@ var app = angular
             }
             return filtered;
         };
-    });
+    })
+.filter('filterSubjectTypeForCreate', function () {
+    return function (items) {
+        var filtered = [];
+        if(items != undefined){
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                if(item.code_id < 200 && item.code_id != 100){
+                    filtered.push(item);
+                }
+            }
+        }
+        return filtered;
+    };
+});

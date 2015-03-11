@@ -11,6 +11,8 @@ angular.module('assetsApp')
             'AngularJS',
             'Karma'
         ];
+        $scope.var = {};
+        $scope.var.searchSubject = {number: ' ', fioAndName: ' ' };
 
         $scope.var = angular.copy(ordervar);
         $scope.var.id = $routeParams.id;
@@ -24,8 +26,8 @@ angular.module('assetsApp')
             $http.get(DOMAIN+"/nka_net3/dict/states")
                 .then(function (res) {
                     $scope.var.states = res.data;
-                    $scope.var.client = {sitizens :$scope.var.states[33]};
-                    $scope.var.represent = {sitizens :$scope.var.states[33]};
+                    $scope.var.client = {sitizens :$scope.var.states[81]};
+                    $scope.var.represent = {sitizens :$scope.var.states[81]};
                 });
 
             $http.get("/data/doctype.json")
@@ -152,11 +154,11 @@ angular.module('assetsApp')
         $scope.validPass =  function(){
             var exp = /^[A-Z,a-z]{2}(\d){7}$/;
             return exp.test($scope.var.searchSubject.passSeriesAndNumber);
-        }
+        };
 
         $scope.validId = function(){
             var exp = /^(\d){7}[A-Z,a-z](\d){3}[A-Z,a-z]{2}(\d)$/;
             return exp.test($scope.var.searchSubject.idNumber);
-        }
+        };
 
     });
