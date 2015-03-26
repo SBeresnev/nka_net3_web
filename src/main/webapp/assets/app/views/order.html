@@ -8,9 +8,20 @@
                     </label>
 
                     <div class="col-sm-8">
-                        <input class="form-control">
+                        <label class="control-label">{{var.decl.declnumber}}</label>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2  control-label">
+                        <span class="pull-right">Статус заказа:</span>
+                    </label>
+
+                    <div class="col-sm-8">
+                        <label class="control-label">{{getLast(var.decl.dclresolution).resolutionType.code_name}}</label>
+                    </div>
+                </div>
+
                 <div class="form-group hidden">
                     <div class="col-sm-8">
                         <input name="orderId" class="form-control">
@@ -27,77 +38,67 @@
                     <div class="panel panel-default ">
                         <div class="panel-heading ">
                             <div class="row">
-                                <h4 class="btn btn-primary mybtn col-sm-3 litle-right" ng-click="var.showPanel=!var.showPanel">
+                                <h4 class="btn btn-primary mybtn col-sm-3 litle-right"
+                                    ng-click="var.showPanel=!var.showPanel">
                                     ЗАКАЗЧИКИ
                                 </h4>
+
                                 <div class="col-sm-8">
-                                    <div class="btn-block btn  width500" ng-repeat="selectedSubject in var.selectedSubjects track by $index ">
+                                    <div class="btn-block btn  width500"
+                                         ng-repeat="selectedSubject in var.decl.declarants">
                                         <button class="btn btn-default mybtn litle-right " style="width: 88%"
                                                 ng-click="modalSubject(selectedSubject)">
                                             <table class="table-bordered" width="100%">
-                                                <td width="30%">{{selectedSubject.type}}</td>
-                                                <td width="70%">{{selectedSubject.name}}{{selectedSubject.fullname}}</td>
+                                                <td width="30%" ng-if="selectedSubject.declrepr_type == 1"> заявитель
+                                                </td>
+                                                <td width="30%" ng-if="selectedSubject.declrepr_type == 2">
+                                                    представитель
+                                                </td>
+                                                <td width="70%">{{selectedSubject.person.surname+"
+                                                    "}}{{selectedSubject.person.firstname+"
+                                                    "}}{{selectedSubject.person.fullname}}
+                                                </td>
                                             </table>
                                         </button>
-                                        <button class="btn btn-danger pull-right mybtn btn-block" style="width: 9%" ng-click="deleteSubject($index)">
+                                        <button class="btn btn-danger pull-right mybtn btn-block" style="width: 9%"
+                                                ng-click="deleteSubject(selectedSubject.declarantId)">
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="panel-collapse collapse in">
-                            <div class="panel-body" ng-show="var.showPanel">
-
+                        <div class="panel-collapse collapse in" ng-show="var.showPanel">
+                            <div class="panel-body">
                                 <div class="row">
-
-                                    <div class="col-sm-1">
-                                        <div class="input-group">
-                                            <div class="checkbox">
-                                                <label><input type="checkbox"  ng-init="mvdSearch=false" ng-model="mvdSearch">Поиск по паспорту</label>
-                                            </div>
-                                        </div>
-                                     </div>
-                                    <form >
+                                    <form>
                                         <div class="col-sm-5">
-                                            <div class="input-group" ng-hide="mvdSearch">
-                                                 <span class="input-group-btn" >
+                                            <div class="input-group">
+                                                 <span class="input-group-btn">
                                                             <select ng-model="var.typeSearch"
                                                                     ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes| filterSubjectType"
                                                                     class="form-control col-sm-6 mySelect width310"
                                                                     required="required">
                                                             </select>
                                                  </span>
-                                                <input type="text" class="form-control" placeholder="Номер" ng-model="var.searchSubject.number">
-                                            </div>
-                                            <div class="input-group-btn" ng-hide="!mvdSearch">
-                                                <input type="text" class="form-control" placeholder="Серия и номер паспорта " ng-model="var.searchSubject.passSeriesAndNumber"
-                                                        ng-style="{false:{color: 'red', 'text-decoration': 'underline'}}[validPass()]">
+                                                <input type="text" class="form-control" placeholder="Номер"
+                                                       ng-model="var.searchSubject.number">
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
-                                            <div class="input-group" ng-hide="mvdSearch">
+                                            <div class="input-group">
                                                 <input type="text" class="form-control"
                                                        placeholder="ФИО/Наименование организации"
-                                                       ng-model="var.searchSubject.fioAndName" >
-                                                 <span class="input-group-btn">
-                                                      <button class="btn btn-default" type="submit" ng-click="searchSubjects()">Поиск
-                                                      </button>
-                                                 </span>
-                                            </div>
-                                            <div class="input-group" ng-hide="!mvdSearch">
-                                            <input type="text" class="form-control"
-                                                   placeholder="Идентификационный номер"
-                                                   ng-model="var.searchSubject.idNumber"
-                                                   ng-style="{false:{color: 'red', 'text-decoration': 'underline'}}[validId()]">
-                                                 <span class="input-group-btn">
-                                                      <button class="btn btn-default" type="submit" ng-click="searchPass()">Поиск
-                                                      </button>
-                                                 </span>
+                                                       ng-model="var.searchSubject.fioAndName">
+                                                    <span class="input-group-btn">
+                                                         <button class="btn btn-default" type="submit"
+                                                                 ng-click="searchSubjects()">Поиск
+                                                         </button>
+                                                    </span>
                                             </div>
                                         </div>
                                     </form>
-                                    <div class="col-sm-12" ng-show="var.showSubjectsTable">
+                                    <div class="col-sm-12 white-background" ng-show="var.showSubjectsTable">
                                         <table class="table table-bordered">
                                             <tr>
                                                 <th>Тип</th>
@@ -109,7 +110,9 @@
                                             <tr ng-repeat="subject in var.subjects" class="btn-default"
                                                 ng-click="updateSubjectForm('{{subject}}')">
                                                 <td width="5%">{{subject.subjectType.code_short_name}}</td>
-                                                <td width="25%">{{subject.surname}}{{" "+subject.firstname}}{{" "+subject.fathername}}{{subject.fullname}}</td>
+                                                <td width="25%">{{subject.surname}}{{"
+                                                    "+subject.firstname}}{{subject.fathername}}{{subject.fullname}}
+                                                </td>
                                                 <td width="25%">{{subject.bothRegDate|date}}</td>
                                                 <td>{{subject.personalNumber}} {{subject.unp}}</td>
                                                 <td>{{subject.address}}</td>
@@ -132,35 +135,44 @@
                                 </div>
                                 <div>
                                     <div class="form-horizontal distance-top" ng-show="var.clientActive == 'active'">
-                                        <div class="form-group">
+                                        <div class="form-group"
+                                             ng-show="'100' <var.typeClient.code_id && var.typeClient.code_id < '500'">
                                             <label class="col-sm-3 control-label">
                                                 <span class="pull-right">Тип субъекта:</span>
                                             </label>
-                                            <select ng-model="var.typeClient" ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes | filterSubjectType track by subjecttype.code_id" class="form-control col-sm-6 mySelect width310">
+                                            <select ng-model="var.typeClient"
+                                                    ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes | filterSubjectType track by subjecttype.code_id"
+                                                    class="form-control col-sm-6 mySelect width310">
                                             </select>
                                         </div>
-                                        <div class="form-group" ng-show="'100' <var.typeClient.code_id && var.typeClient.code_id < '200'">
+                                        <div class="form-group"
+                                             ng-show="'100' <var.typeClient.code_id && var.typeClient.code_id < '200'">
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">
                                                     Фамилия:
                                                 </span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" ng-model="var.client.firstname">
                                             </div>
                                         </div>
-                                        <div class="form-group" ng-show="'100' < var.typeClient.code_id && var.typeClient.code_id < '200'">
+                                        <div class="form-group"
+                                             ng-show="'100' < var.typeClient.code_id && var.typeClient.code_id < '200'">
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Имя:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" ng-model="var.client.surname">
                                             </div>
                                         </div>
-                                        <div class="form-group" ng-show="'100' < var.typeClient.code_id && var.typeClient.code_id < '200'">
+                                        <div class="form-group"
+                                             ng-show="'100' < var.typeClient.code_id && var.typeClient.code_id < '200'">
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Отчество:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" ng-model="var.client.fathername">
                                             </div>
@@ -170,6 +182,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Дата рождения:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" type="date"
                                                        ng-model="var.client.bothRegDate">
@@ -180,6 +193,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Сокращенное наименование:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" ng-model="var.client.shortname">
                                             </div>
@@ -189,6 +203,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Идентификационный номер:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" ng-model="var.client.personalNumber">
                                             </div>
@@ -198,6 +213,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Адрес:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" ng-model="var.client.address">
                                             </div>
@@ -207,6 +223,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Дата регистрации:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input type="date" class="form-control"
                                                        ng-model="var.client.bothRegDate">
@@ -217,6 +234,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">УНП:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" ng-model="var.client.unp">
                                             </div>
@@ -226,6 +244,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Регистрационный номер:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" ng-model="var.client.regNumber">
                                             </div>
@@ -235,6 +254,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Административная териториальная еденица (АТЕ):</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <div class="btn-group" ng-class="var.openVar" ng-model="var.ateClient">
                                                     <input class="btn btn-default dropdown-toggle  width310"
@@ -247,10 +267,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group" ng-show="'100' < var.typeClient.code_id && var.typeClient.code_id < '500'">
+                                        <div class="form-group"
+                                             ng-show="'100' < var.typeClient.code_id && var.typeClient.code_id < '500'">
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Страна:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <select ng-model="var.client.sitizens"
                                                         ng-options="state as state.code_short_name for state in var.states | orderBy: 'code_short_name' track by state.code_id"
@@ -259,17 +281,22 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3  control-label">
-                                            </label>
-                                            <div class="col-sm-3">
-                                                <div class="btn btn-primary" ng-click="pushSubject()">Добавить</div>
+                                            <div class="col-sm-6 col-sm-offset-3">
+                                                <div class="btn btn-primary"
+                                                     ng-click="addSubject(var.client.subjectId)">Добавить в заказ
+                                                </div>
+                                                <div class="btn btn-primary"
+                                                     onclick="window.open( '#/subject','_blank')">Добавить или изменить
+                                                    субъекта
+                                                </div>
                                             </div>
 
                                         </div>
                                     </div>
                                     <div class="form-horizontal distance-top"
                                          ng-show="var.representativeActive == 'active'">
-                                        <div class="form-group row">
+                                        <div class="form-group row"
+                                             ng-show="'100' <var.typeClient.code_id && var.typeClient.code_id < '500'">
                                             <label class="col-sm-3 control-label">
                                                 <span class="pull-right">Тип субъекта:</span>
                                             </label>
@@ -283,6 +310,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Фамилия:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" ng-model="var.represent.firstname">
                                             </div>
@@ -292,6 +320,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Имя:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" ng-model="var.represent.surname">
                                             </div>
@@ -301,6 +330,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Отчество:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" ng-model="var.represent.fathername">
                                             </div>
@@ -310,6 +340,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Дата рождения:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" type="date"
                                                        ng-model="var.represent.bothRegDate">
@@ -320,6 +351,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Сокращенное наименование:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" ng-model="var.represent.shortname">
                                             </div>
@@ -329,6 +361,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Идентификационный номер:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" ng-model="var.represent.personalNumber">
                                             </div>
@@ -338,6 +371,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Адрес:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" ng-model="var.represent.address">
                                             </div>
@@ -347,6 +381,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Дата регистрации:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input type="date" class="form-control"
                                                        ng-model="var.represent.bothRegDate">
@@ -357,6 +392,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">УНП:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" ng-model="var.represent.unp">
                                             </div>
@@ -366,6 +402,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Регистрационный номер:</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <input class="form-control" ng-model="var.represent.regnumber">
                                             </div>
@@ -375,6 +412,7 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Административная териториальная еденица (АТЕ):</span>
                                             </label>
+
                                             <div class="col-sm-6">
                                                 <div class="btn-group" ng-class="var.openVar"
                                                      ng-model="var.ateRepresent">
@@ -393,18 +431,24 @@
                                             <label class="col-sm-3  control-label">
                                                 <span class="pull-right">Страна:</span>
                                             </label>
+
                                             <div class="col-sm-6">
-                                                <select ng-model="var.represent.sitizens" ng-options="state as state.code_short_name for state in var.states | orderBy: ['code_short_name'] track by state.code_id" class="form-control col-sm-6 ">
+                                                <select ng-model="var.represent.sitizens"
+                                                        ng-options="state as state.code_short_name for state in var.states | orderBy: ['code_short_name'] track by state.code_id"
+                                                        class="form-control col-sm-6 ">
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3  control-label">
-                                            </label>
-                                            <div class="col-sm-3">
-                                                <div class="btn btn-primary" ng-click="pushSubject()">Добавить</div>
+                                            <div class="col-sm-6 col-sm-offset-3">
+                                                <div class="btn btn-primary"
+                                                     ng-click="addSubject(var.represent.subjectId)">Добавить в заказ
+                                                </div>
+                                                <div class="btn btn-primary"
+                                                     onclick="window.open( '#/subject','_blank')">Добавить или изменить
+                                                    субъекта
+                                                </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -418,6 +462,7 @@
                                     ng-click="var.showPanelOperation =! var.showPanelOperation">
                                     ОПЕРАЦИИ
                                 </h4>
+
                                 <div class=" col-sm-8  ">
                                     <div class="btn-block btn width500">
                                         <button class="btn btn-default mybtn litle-right " style="width: 88%"
@@ -455,6 +500,7 @@
                                     <label class="col-sm-3  control-label">
                                         <span class="pull-right">Вид операции:</span>
                                     </label>
+
                                     <div class="col-sm-9">
                                         <div class="btn-group" ng-class="var.operationTypeClass"
                                              ng-model="var.operationType">
@@ -462,7 +508,9 @@
                                                    ng-value="var.operationType.prelabel+' '+ var.operationType.label"
                                                    ng-click="var.operationTypeClass == 'open'?var.operationTypeClass = '':var.operationTypeClass = 'open'">
                                             <ul class="dropdown-menu width310">
-                                                <abn-tree tree-data="var.operationTypes" ng-click="var.operationTypeClass == 'open'?var.operationTypeClass = '':var.operationTypeClass = 'open'" on-select="var.operationType = {prelabel: branch.prelabel, label: branch.label}"></abn-tree>
+                                                <abn-tree tree-data="var.operationTypes"
+                                                          ng-click="var.operationTypeClass == 'open'?var.operationTypeClass = '':var.operationTypeClass = 'open'"
+                                                          on-select="var.operationType = {prelabel: branch.prelabel, label: branch.label}"></abn-tree>
                                             </ul>
                                         </div>
                                     </div>
@@ -471,6 +519,7 @@
                                     <label class="col-sm-3  control-label">
                                         <span class="pull-right">Основание:</span>
                                     </label>
+
                                     <div class="col-sm-9">
                                         <div class="btn-group" ng-class="var.baseClass" ng-model="var.base">
                                             <input class="btn btn-default dropdown-toggle  width310"
@@ -488,6 +537,7 @@
                                     <label class="col-sm-3  control-label">
                                         <span class="pull-right">Дата:</span>
                                     </label>
+
                                     <div class="col-sm-3">
                                         <input class="form-control" type="date" ng-model="var.operationDate">
                                     </div>
@@ -517,30 +567,35 @@
                     <div class="panel panel-default" ng-init="svar.howPDoc">
                         <div class="panel-heading">
                             <div class="row">
-                                <h4 class="btn btn-primary mybtn col-sm-3 litle-right" ng-click="var.showPDoc=!var.showPDoc">
+                                <h4 class="btn btn-primary mybtn col-sm-3 litle-right"
+                                    ng-click="var.showPDoc=!var.showPDoc">
                                     ДОКУМЕНТЫ
                                 </h4>
 
                                 <div class=" col-sm-8  ">
                                     <div class="btn-block btn  width500">
-                                        <button class="btn btn-default mybtn litle-right " style="width: 88%" ng-click="modal()">
+                                        <button class="btn btn-default mybtn litle-right " style="width: 88%"
+                                                ng-click="modal()">
                                             <table class="table-bordered" width="100%">
                                                 <td width="70%">Заявление</td>
                                                 <td width="30%">12.12.12</td>
                                             </table>
                                         </button>
-                                        <button class="btn btn-danger  pull-right  mybtn   btn-block " style="width: 9%" ng-click="modal()">
+                                        <button class="btn btn-danger  pull-right  mybtn   btn-block " style="width: 9%"
+                                                ng-click="modal()">
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                         </button>
                                     </div>
                                     <div class="btn-block btn width500">
-                                        <button class="btn btn-default mybtn litle-right " style="width: 88%" ng-click="modal()">
+                                        <button class="btn btn-default mybtn litle-right " style="width: 88%"
+                                                ng-click="modal()">
                                             <table class="table-bordered" width="100%">
                                                 <td width="70%">Бланк</td>
                                                 <td width="30%">12.12.12</td>
                                             </table>
                                         </button>
-                                        <button class="btn  btn btn-danger  pull-right  mybtn   btn-block" style="width: 9%" ng-click="modal()">
+                                        <button class="btn  btn btn-danger  pull-right  mybtn   btn-block"
+                                                style="width: 9%" ng-click="modal()">
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                         </button>
                                     </div>
@@ -571,6 +626,7 @@
                                     <label class="col-sm-3  control-label">
                                         <span class="pull-right">Дата:</span>
                                     </label>
+
                                     <div class="col-sm-3">
                                         <input class="form-control" type="date" ng-model="var.docDate">
                                     </div>
@@ -579,6 +635,7 @@
                                     <label class="col-sm-3  control-label">
                                         <span class="pull-right">Описание ораганизации:</span>
                                     </label>
+
                                     <div class="col-sm-6">
                                         <input class="form-control">
                                     </div>
@@ -611,48 +668,172 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2  control-label">
-                        <span class="pull-right">Примечания:</span>
-                    </label>
-                    <div class="col-sm-10">
-                        <textarea class="form-control" rows="4"></textarea>
+                    <div class="panel panel-default" ng-init="var.status = false">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div>
+                                    <h4 class="btn btn-primary mybtn col-sm-3 litle-right"
+                                        ng-click="var.status=!var.status">
+                                        ИСТОРИЯ ЗАКАЗА
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-collapse collapse in" ng-show="var.status">
+                            <div class="panel-body">
+                                <div class="">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th width="20%">
+                                                статус
+                                            </th>
+                                            <th width="15%">
+                                                дата
+                                            </th>
+                                            <th>
+                                                пользователь
+                                            </th>
+                                        </tr>
+                                        <tr ng-repeat="resolution in var.decl.dclresolution | orderBy: 'resolutionDate' : true">
+                                            <td>
+                                                {{resolution.resolutionType.code_name}}
+                                            </td>
+                                            <td>
+                                                {{resolution.resolutionDate| date : "dd.MM.yyyy - HH:mm"}}
+                                            </td>
+                                            <td>
+                                                {{resolution.oPerson.surname + " "}}{{resolution.oPerson.firstname}}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-                </div>
-                <div class=distance-top">
-                    <div class="form-inline">
-                        <button type="button" class="btn btn-primary col-sm-offset-2 margin-top">
-                            ПРИНЯТЬ
-                        </button>
-                        <button type="button" class="btn btn-primary  col-sm-offset-2 margin-top">
-                            ОТКАЗАТЬ
-                        </button>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-sm-2  control-label">
+                                <span class="pull-right">Примечания:</span>
+                            </label>
+
+                            <div class="col-sm-10">
+                                <textarea class="form-control" rows="4"></textarea>
+                            </div>
+                        </div>
+                        <div class=distance-top">
+                            <div class="form-inline">
+                                <button type="button"
+                                        class="btn btn-primary col-sm-offset-2 margin-top"
+                                        ng-show="getLast(var.decl.dclresolution).resolutionType.code_id == 0"
+                                        ng-click="setStatus(1)">
+                                    ПРИНЯТЬ
+                                </button>
+
+                                <button type="button"
+                                        class="btn btn-primary col-sm-offset-2 margin-top"
+                                        ng-show="getLast(var.decl.dclresolution).resolutionType.code_id == 1"
+                                        ng-click="setStatus(4)">
+                                    ПРИОСТАНОВИТЬ
+                                </button>
+
+                                <button type="button"
+                                        class="btn btn-primary col-sm-offset-2 margin-top"
+                                        ng-show="getLast(var.decl.dclresolution).resolutionType.code_id  == 1"
+                                        ng-click="setStatus(3)">
+                                    ЗАРЕГИСТРИРОВАТЬ
+                                </button>
+
+                                <button type="button"
+                                        class="btn btn-primary col-sm-offset-2 margin-top"
+                                        ng-show="getLast(var.decl.dclresolution).resolutionType.code_id == 4"
+                                        ng-click="setStatus(1)">
+                                    ВОЗОБНОВИТЬ
+                                </button>
+
+                                <button type="button"
+                                        class="btn btn-primary  col-sm-offset-2 margin-top"
+                                        ng-show="getLast(var.decl.dclresolution).resolutionType.code_id == 0">
+                                    ОТКАЗАТЬ
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<modal title="Login form" visible="showModal">
-    <form role="form">
-        <h1>Выписка</h1>
-    </form>
-</modal>
-
-<modal visible="showSubject" ng-class="{'in' : showSubject}" ng-style="{true: {display: 'block'}, false: {display: 'none'}}[showSubject]">
-    <div class="row">
-        <div class="col-lg-8">
-            <table class="table table-bordered">
-                <tr ng-repeat="(key, subject) in var.modalSubjects">
-                    <td>{{key}}</td>
-                    <td ng-if="!isObject(subject)">{{subject}}</td>
-                    <td ng-if="isObject(subject) && key == 'sitizens'">{{subject.code_short_name}}</td>
-                    <td ng-if="isObject(subject) && key == 'subjectType'">{{subject.code_short_name}}</td>
-                    <td ng-if="isObject(subject) && key == 'state'">{{subject.code_short_name}}</td>
-                </tr>
-            </table>
+<div class="modal fade" ng-init="showSubject = false" visible="showSubject" ng-class="{'in' : showSubject}"
+     ng-style="{true: {display: 'block'}, false: {display: 'none'}}[showSubject]">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                        ng-click="showSubject = false">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="panel-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td>Имя</td>
+                                    <td>{{var.modalSubjects.person.firstname}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Фамилия</td>
+                                    <td>{{var.modalSubjects.person.fathername}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Отчество</td>
+                                    <td>{{var.modalSubjects.person.surname}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Дата</td>
+                                    <td>{{var.modalSubjects.person.bothRegDate | date}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Тип</td>
+                                    <td>{{var.modalSubjects.person.subjectType.code_name}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Гражданство</td>
+                                    <td>{{var.modalSubjects.person.sitizens.code_name}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Личный номер</td>
+                                    <td>{{var.modalSubjects.person.personalNumber}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</modal>
+</div>
+
+<!-- <modal visible="showSubject" ng-class="{'in' : showSubject}"
+       ng-style="{true: {display: 'block'}, false: {display: 'none'}}[showSubject]">
+         <div class="row">
+             <div class="col-lg-8">
+                   <table class="table table-bordered">
+                     <tr ng-repeat="(key, subject) in var.modalSubjects.person">
+                           <td>{{key}}</td>
+                           <td ng-if="!isObject(subject)">{{subject}}</td>
+                           <td ng-if="isObject(subject) && key == 'sitizens'">{{subject.code_short_name}}</td>
+                           <td ng-if="isObject(subject) && key == 'subjectType'">{{subject.code_short_name}}</td>
+                     </tr>
+                   </table>
+             </div>
+         </div>
+</modal> -->
+
+<div class="modal fade in " ng-init="showLoading = true" visible="showLoading" ng-class="{'in' : showLoading }"
+     ng-style="{true: {display: 'block'}, false: {display: 'none'}}[showLoading ]">
+    <div class="center_b">
+        <img src="../images/image_836733.gif" alt=""/>
+    </div>
+</div>
+

@@ -13,33 +13,38 @@ angular.module('assetsApp')
         ];
 
         $scope.var = {
+            loading: false,
             states: '',
             items: '',
             subjecttypes: '',
             ates: [{label: 'loading'}]
         };
+
         $scope.init = function () {
-            $http.get("http://localhost:8080/nka_net3/dict/states")
+            $http.get(DOMAIN + "/nka_net3/dict/states")
                 .then(function (res) {
                     $scope.var.states = res.data;
                     $scope.var.subj = {sitizens: $scope.var.states[81]};
                 });
+
             $http.get("/data/doctype.json")
                 .then(function (res) {
                     $scope.var.items = res.data;
                 });
+
             $http.get("/data/ate.json")
                 .then(function (res) {
                     $scope.var.ates = res.data;
                 });
-            $http.get("http://localhost:8080/nka_net3/dict/subjectTypes")
+
+            $http.get(DOMAIN + "/nka_net3/dict/subjectTypes")
                 .then(function (res) {
                     $scope.var.subjecttypes = res.data;
                 });
         };
 
         $scope.searchSubjects = function () {
-            $scope.var.showSubjectsTable = true;
+            $scope.var.loading = true;
             $scope.var.subj = [];
             delete $http.defaults.headers.common['X-Requested-With'];
             httpServices.searchSubjects($scope.var.typeSearch.code_id, $scope.var.searchSubject.number, $scope.var.searchSubject.fioAndName, $scope);
@@ -48,7 +53,6 @@ angular.module('assetsApp')
         $scope.updateSubjectForm = function (subject) {
             $scope.var.subj = [];
             $scope.var.showSubjectsTable = false;
-
             $scope.var.subjtype = JSON.parse(subject).subjectType;
             $scope.var.subj = angular.copy(JSON.parse(subject));
             $scope.var.subj.bothRegDate = new Date(angular.copy(JSON.parse(subject)).bothRegDate)
@@ -56,7 +60,7 @@ angular.module('assetsApp')
 
         $scope.searchPass = function () {
             if ($scope.validId() && $scope.validPass()) {
-                $scope.var.showSubjectsTable = true;
+                $scope.var.loading = true;
                 $scope.var.subjects = [];
                 delete $http.defaults.headers.common['X-Requested-With'];
                 httpServices.searchPass($scope.var.searchSubject.passSeriesAndNumber, $scope.var.searchSubject.idNumber, $scope);
@@ -82,10 +86,10 @@ angular.module('assetsApp')
         $scope.validPass = function () {
             var exp = /^[A-Z,a-z]{2}(\d){7}$/;
             return exp.test($scope.var.searchSubject.passSeriesAndNumber);
-        }
+        };
 
         $scope.validId = function () {
             var exp = /^(\d){7}[A-Z,a-z](\d){3}[A-Z,a-z]{2}(\d)$/;
             return exp.test($scope.var.searchSubject.idNumber);
-        }
+        };
     });

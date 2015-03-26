@@ -61,7 +61,8 @@ angular.module('assetsApp').value('ordervar',
         ates: [{label: 'loading'}],
         openVar: '',
         states: [],
-        order: ""
+        order: "",
+        decl: {}
     }
 
 );

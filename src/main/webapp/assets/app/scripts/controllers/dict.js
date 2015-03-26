@@ -25,29 +25,35 @@ angular.module('assetsApp')
         };
 
         $scope.loadTypes = function(){
+            $scope.showLoading = true;
             $http.get(DOMAIN+"/nka_net3/catalog/get_all_types")
                 .then(function (res) {
                     $scope.catalogTypes = res.data;
+                    $scope.showLoading = false;
                 });
         }
 
         $scope.loadCatalogs = function(analytic_type){
-            $http.get(DOMAIN+"/nka_net3/catalog/get_catalogs_by_type",{
+            $scope.showLoading = true;
+            $http.get( DOMAIN+"/nka_net3/catalog/get_catalogs_by_type" ,{
                 params:{"type": analytic_type}
             })
                 .then(function (res) {
                     $scope.catalog = res.data;
+                    $scope.showLoading = false;
                 });
             $scope.item.analytic_type = analytic_type;
         };
 
         $scope.deleteCatalog = function(item){
             if(confirm("Вы действительно хотите удалить запись?")){
+                $scope.showLoading = true;
                 $http.delete(DOMAIN+"/nka_net3/catalog/delete_catalog_by_id",{
                     params:{"analytic_type": item.analytic_type, "code_id": item.code_id}
                 })
                     .then(function (res) {
                         $scope.catalog = res.data;
+                        $scope.showLoading = false;
                     });
                 $scope.modal();
             }
@@ -56,11 +62,13 @@ angular.module('assetsApp')
 
         $scope.deleteType = function(item){
             if(confirm("Вы действительно хотите удалить запись?")){
+                $scope.showLoading = true;
                 $http.delete(DOMAIN+"/nka_net3/catalog/deleted_type_by_id",{
                     params:{"analytic_type": item}
                 })
                     .then(function (res) {
                         $scope.loadTypes();
+                        $scope.showLoading = false;
                     });
             }
 
@@ -68,6 +76,7 @@ angular.module('assetsApp')
 
         $scope.updateCatalog = function(item){
             if(confirm("Сохранить изменения?")){
+                $scope.showLoading = true;
                 $http.get(DOMAIN+"/nka_net3/catalog/update_catalog",{
                     params:{
                         "analytic_type": item.analytic_type,
@@ -82,6 +91,7 @@ angular.module('assetsApp')
                 })
                     .then(function (res) {
                         $scope.catalog = res.data;
+                        $scope.showLoading = false;
                     });
                 $scope.modal();
             }
@@ -101,6 +111,7 @@ angular.module('assetsApp')
         };
 
         $scope.addNewCatalog = function(item){
+            $scope.showLoading = true;
             $http.get(DOMAIN+"/nka_net3/catalog/add_catalog",{
                 params:{
                     "analytic_type": item.analytic_type,
@@ -112,13 +123,14 @@ angular.module('assetsApp')
                     "status": item.status,
                     "parent_code" : item.parent_code,
                     "unitmeasure": item.unitmeasure}
-            })
-                .then(function (res) {
+            }).then(function (res) {
                     $scope.catalog = res.data;
+                    $scope.showLoading = false;
                 });
             $scope.modalNewCatalog();
         };
         $scope.addNewType = function(item){
+            $scope.showLoading = true;
             $http.get(DOMAIN+"/nka_net3/catalog/add_catalog_type",{
                 params:{
                     "analytic_type": item.analytic_type,
@@ -127,6 +139,7 @@ angular.module('assetsApp')
             })
                 .then(function (res) {
                     $scope.loadTypes();
+                    $scope.showLoading = false;
                 });
             $scope.modalNewType();
         };

@@ -1,22 +1,31 @@
-<h1><span class="glyphicon glyphicon-plus btn btn-lg text-success plus padding-top" ng-click="newOrder()"></span></h1>
-<table class="table table-bordered">
-  <tr>
-    <th>№</th>
-    <th>Дата</th>
-    <th>Заявитель</th>
-    <th>Объект</th>
-    <th>Действия</th>
-    <th>Документы</th>
-    <th>Статус</th>
-  </tr>
-  <tr ng-repeat="order in orders" class="btn-default" ng-click='getOrderById("{{order.id}}")' >
-      <td>{{order.number}}</td>
-    <td>{{order.date}}</td>
-      <td>{{order.zaya}}</td>
+<div class="container" ng-init="init()">
+    <h1><span class="glyphicon glyphicon-plus btn btn-lg text-success plus padding-top" ng-click="newOrder()"></span>
+    </h1>
+    <table class="table table-bordered">
+        <tr>
+            <th>№</th>
+            <th>Дата</th>
+            <th>Заявитель</th>
+            <th>Объект</th>
+            <th>Действия</th>
+            <th>Документы</th>
+            <th>Статус</th>
+        </tr>
+        <tr ng-s ng-repeat="order in orders|orderBy:'decldate':true" class="btn-default" ng-click='getOrderById("{{order.decl_id}}")'>
+            <td>{{order.declnumber}}</td>
+            <td>{{order.decldate|date:"dd.MM.yyyy - HH:mm"}}</td>
+            <td><ul class="nav"><li  ng-repeat=" declarant in order.declarants">{{declarant.declrepr_type==2?"представитель: ":"заявитель: "}}{{declarant.person.surname +" "}}{{declarant.person.firstname+ " "}}{{declarant.person.fullname+" "}}</li></ul></td>
+            <td>{{order.declObjects}}</td>
+            <td>{{order.operations}}</td>
+            <td>{{order.documents}}</td>
+            <td>{{order.declResolution.resolutionType.code_name}}</td>
+        </tr>
+    </table>
+</div>
 
-      <td>{{order.objects}}</td>
-      <td>{{order.actions}}</td>
-      <td>{{order.doc}}</td>
-    <td>{{order.status}}</td>
-  </tr>
-</table>
+<div class="modal fade in " ng-init="showLoading = true" visible="showLoading" ng-class="{'in' : showLoading }"
+     ng-style="{true: {display: 'block'}, false: {display: 'none'}}[showLoading ]">
+    <div class="center_b">
+        <img src="../images/image_836733.gif" alt=""/>
+    </div>
+</div>

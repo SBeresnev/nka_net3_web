@@ -13,15 +13,11 @@ angular.module('assetsApp')
         ];
         $scope.var = {};
         $scope.var.searchSubject = {number: ' ', fioAndName: ' ' };
-
         $scope.var = angular.copy(ordervar);
         $scope.var.id = $routeParams.id;
 
         $scope.init = function () {
-            $http.get("/data/orders/" +  '0001.json')
-                .then(function (res) {
-                    $scope.var.order = res.data;
-                });
+            $scope.getDecl();
 
             $http.get(DOMAIN+"/nka_net3/dict/states")
                 .then(function (res) {
@@ -45,6 +41,7 @@ angular.module('assetsApp')
                 .then(function (res) {
                     $scope.var.subjecttypes = res.data;
                 });
+
         };
 
         $scope.searchSubjects = function () {
@@ -61,7 +58,7 @@ angular.module('assetsApp')
                 delete $http.defaults.headers.common['X-Requested-With'];
                 httpServices.searchPass( $scope.var.searchSubject.passSeriesAndNumber, $scope.var.searchSubject.idNumber, $scope);
             } else{
-                alert("Ошибочно заполненны поля!")
+                alert("Ошибочно заполненны поля!");
             }
         };
 
@@ -71,12 +68,12 @@ angular.module('assetsApp')
             if ($scope.var.clientActive == 'active') {
                 $scope.var.typeClient = {code_id: JSON.parse(subject).subjectType.code_id};
                 $scope.var.client = angular.copy(JSON.parse(subject));
-                $scope.var.client.bothRegDate = new Date(angular.copy(JSON.parse(subject)).bothRegDate)
+                $scope.var.client.bothRegDate = new Date(angular.copy(JSON.parse(subject)).bothRegDate);
             }
             if ($scope.var.representativeActive == 'active') {
                 $scope.var.typeRepresent = {code_id: JSON.parse(subject).subjectType.code_id};
                 $scope.var.represent = angular.copy(JSON.parse(subject));
-                $scope.var.represent.bothRegDate = new Date(angular.copy(JSON.parse(subject)).bothRegDate)
+                $scope.var.represent.bothRegDate = new Date(angular.copy(JSON.parse(subject)).bothRegDate);
             }
         };
 
@@ -111,7 +108,7 @@ angular.module('assetsApp')
             if ($scope.var.representativeActive == 'active') {
                 httpServices.updateSubject($scope.represent);
                 $scope.var.represent = {};
-                $scope.var.typeRepresent = null
+                $scope.var.typeRepresent = null;
             }
         };
 
@@ -120,25 +117,22 @@ angular.module('assetsApp')
             if($scope.var.clientActive == 'active'){
                 subject = angular.copy($scope.var.client);
                 subject.type = "заказчик";
-                subject.name = ($scope.var.client.firstname != undefined?$scope.var.client.firstname:"") + " " +  ($scope.var.client.surname != undefined?$scope.var.client.surname:"") + " " +  ($scope.var.client.shortname != undefined?$scope.var.client.shortname:"");
+                subject.name = ($scope.var.client.firstname != undefined ? $scope.var.client.firstname : "") + " " +  ($scope.var.client.surname != undefined ? $scope.var.client.surname : "") + " " +  ($scope.var.client.shortname != undefined ? $scope.var.client.shortname : "");
                 $scope.var.client = {};
             } else {
                 subject = angular.copy($scope.var.represent);
                 subject.type = "представитель";
-                subject.name =  ($scope.var.represent.firstname != undefined?$scope.var.represent.firstname:"") + " " +  ($scope.var.represent.surname != undefined?$scope.var.represent.surname:"") + " " +  ($scope.var.represent.shortname != undefined?$scope.var.represent.shortname:"");
+                subject.name =  ($scope.var.represent.firstname != undefined ? $scope.var.represent.firstname : "") + " " +  ($scope.var.represent.surname != undefined ? $scope.var.represent.surname : "") + " " +  ($scope.var.represent.shortname != undefined ? $scope.var.represent.shortname : "");
                 $scope.var.represent = {};
             }
             $scope.var.selectedSubjects.push(subject);
         };
 
-        $scope.deleteSubject = function(index){
-            $scope.var.selectedSubjects.splice(index, 1);
-        };
-
-        $scope.modal = function (s) {
+        $scope.modalSubject = function (s) {
             $scope.var.modalSubjects = angular.copy(s);
             $scope.showSubject = !$scope.showSubject;
         };
+
         $scope.isObject = function(a){
             if(a == null){
                 return false;
@@ -161,4 +155,62 @@ angular.module('assetsApp')
             return exp.test($scope.var.searchSubject.idNumber);
         };
 
+        $scope.getDecl = function(){
+            $scope.showLoading = true;
+            $http.get(DOMAIN+"/nka_net3/decl/get_decl",{
+                params:{id: $routeParams.id}
+            })
+                .then(function (res) {
+                    $scope.var.decl = res.data;
+                    $scope.showLoading = false;
+                });
+        };
+
+        $scope.deleteSubject = function(declarantId){
+            if(confirm("Вы уверены что хотите удалить субъекта?")){
+                $http.delete(DOMAIN+"/nka_net3/decl/delete_subject_in_decl",{
+                    params:{idDecl: $routeParams.id, declarantId: declarantId}
+                })
+                    .then(function (res) {
+                        $scope.getDecl();
+                    });
+            }
+        };
+
+        $scope.setStatus = function(status){
+            $scope.showLoading = true;
+            $http.post(DOMAIN+"/nka_net3/decl/status",{
+                status: status,
+                declId: $routeParams.id
+            })
+                .then(function (res) {
+                    $scope.var.decl = res.data;
+                    $scope.showLoading = false;
+                });
+        };
+
+        $scope.addSubject = function(subjectId){
+            $http.get(DOMAIN+"/nka_net3/decl/add_subject_in_decl",{
+                params:{
+                    idDecl: $routeParams.id,
+                    idSubject: subjectId,
+                    type: $scope.var.representativeActive ? 2 : 1
+                }
+            })
+                .then(function (res) {
+                    $scope.getDecl();
+                });
+        }
+
+        $scope.getLast = function(item){
+            if(item != undefined){
+                var compareItem = item[0];
+                if(item.length > 1){
+                    for(var i = 1; i < item.length; i++){
+                        compareItem = item[i].resolutionDate > compareItem.resolutionDate ? item[i] : compareItem;
+                    }
+                }
+                return compareItem;
+            }
+        }
     });
