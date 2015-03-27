@@ -1,26 +1,30 @@
-<div class="container" ng-init="init()">
-    <h1><span class="glyphicon glyphicon-plus btn btn-lg text-success plus padding-top" ng-click="newOrder()"></span>
-    </h1>
-    <table class="table table-bordered">
-        <tr>
-            <th>№</th>
-            <th>Дата</th>
-            <th>Заявитель</th>
-            <th>Объект</th>
-            <th>Действия</th>
-            <th>Документы</th>
-            <th>Статус</th>
-        </tr>
-        <tr ng-s ng-repeat="order in orders|orderBy:'decldate':true" class="btn-default" ng-click='getOrderById("{{order.decl_id}}")'>
-            <td>{{order.declnumber}}</td>
-            <td>{{order.decldate|date:"dd.MM.yyyy - HH:mm"}}</td>
-            <td><ul class="nav"><li  ng-repeat=" declarant in order.declarants">{{declarant.declrepr_type==2?"представитель: ":"заявитель: "}}{{declarant.person.surname +" "}}{{declarant.person.firstname+ " "}}{{declarant.person.fullname+" "}}</li></ul></td>
-            <td>{{order.declObjects}}</td>
-            <td>{{order.operations}}</td>
-            <td>{{order.documents}}</td>
-            <td>{{order.declResolution.resolutionType.code_name}}</td>
-        </tr>
-    </table>
+<div class="" ng-init="init()">
+    <div class="row">
+        <div class="col-xs-10 col-xs-offset-1">
+            <h1><span class="glyphicon glyphicon-plus btn btn-lg text-success plus padding-top" ng-click="newOrder()"></span>
+            </h1>
+            <table class="table table-bordered ">
+                <tr>
+                    <th>№</th>
+                    <th>Дата</th>
+                    <th>Заявитель</th>
+                    <th>Объект</th>
+                    <th>Действия</th>
+                    <th>Документы</th>
+                    <th>Статус</th>
+                </tr>
+                <tr ng-s ng-repeat="order in orders|orderBy:'decldate':true" class="btn-default cursor-pointer" ng-click='getOrderById("{{order.decl_id}}")'>
+                    <td>{{order.declnumber}}</td>
+                    <td>{{order.decldate|date:"dd.MM.yyyy - HH:mm"}}</td>
+                    <td><ul class="nav"><li  ng-repeat=" declarant in order.declarants">{{declarant.declrepr_type==2?"представитель: ":"заявитель: "}}{{declarant.person.surname +" "}}{{declarant.person.firstname+ " "}}{{declarant.person.fullname+" "}}</li></ul></td>
+                    <td>{{order.declObjects}}</td>
+                    <td>{{order.operations}}</td>
+                    <td>{{order.documents}}</td>
+                    <td>{{order.declResolution.resolutionType.code_name}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade in " ng-init="showLoading = true" visible="showLoading" ng-class="{'in' : showLoading }"

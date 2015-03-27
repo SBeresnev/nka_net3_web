@@ -200,7 +200,7 @@ angular.module('assetsApp')
                 .then(function (res) {
                     $scope.getDecl();
                 });
-        }
+        };
 
         $scope.getLast = function(item){
             if(item != undefined){
@@ -212,5 +212,14 @@ angular.module('assetsApp')
                 }
                 return compareItem;
             }
+        };
+
+        $scope.changeDecltype = function(){
+            $scope.showLoading = true;
+            $http.put(DOMAIN+"/nka_net3/decl/change_decltype",$routeParams.id)
+                .then(function (res) {
+                    $scope.getDecl();
+                    $scope.showLoading = false;
+                });
         }
     });

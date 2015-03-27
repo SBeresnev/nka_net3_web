@@ -63,8 +63,7 @@ body {
 
 .mySelect{
   margin-left: 15px !important;
-  border-bottom-left-radius: 4px !important;
-  border-top-left-radius: 4px !important;
+  border-radius: 4px !important;
 }
 
 .plus{
@@ -74,8 +73,6 @@ body {
 .padding-top{
   padding-top: 15px;
 }
-
-
 
 
 .treeview, .treeview ul {
@@ -155,4 +152,8 @@ body {
   position: absolute;
   top: 38%;
   left: 50%;
+}
+
+.cursor-pointer{
+  cursor: pointer;
 }
