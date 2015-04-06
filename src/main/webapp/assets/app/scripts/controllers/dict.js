@@ -15,9 +15,13 @@ angular.module('assetsApp')
         $scope.showCatalog = false;
         $scope.modalCatalog = {};
         $scope.showNewCatalog = false;
+        $scope.selectedType = null;
+        $scope.selectedItem = null;
+
         $scope.modal = function(s){
+            $scope.selectedItem = s.code_id;
             $scope.modalCatalog = angular.copy(s);
-            $scope.showCatalog = !$scope.showCatalog
+            $scope.showCatalog = !$scope.showCatalog;
         };
 
         $scope.init = function () {
@@ -31,10 +35,11 @@ angular.module('assetsApp')
                     $scope.catalogTypes = res.data;
                     $scope.showLoading = false;
                 });
-        }
+        };
 
         $scope.loadCatalogs = function(analytic_type){
-            $scope.showLoading = true;
+            $scope.selectedType = analytic_type;
+                $scope.showLoading = true;
             $http.get( DOMAIN+"/nka_net3/catalog/get_catalogs_by_type" ,{
                 params:{"type": analytic_type}
             })
@@ -77,8 +82,7 @@ angular.module('assetsApp')
         $scope.updateCatalog = function(item){
             if(confirm("Сохранить изменения?")){
                 $scope.showLoading = true;
-                $http.get(DOMAIN+"/nka_net3/catalog/update_catalog",{
-                    params:{
+                $http.put(DOMAIN+"/nka_net3/catalog/update_catalog",{
                         "analytic_type": item.analytic_type,
                         "code_id": item.code_id,
                         "code_name": item.code_name,
@@ -88,7 +92,7 @@ angular.module('assetsApp')
                         "status": item.status,
                         "parent_code" : item.parent_code,
                         "unitmeasure": item.unitmeasure}
-                })
+                )
                     .then(function (res) {
                         $scope.catalog = res.data;
                         $scope.showLoading = false;
@@ -99,11 +103,10 @@ angular.module('assetsApp')
 
         $scope.modalNewCatalog = function(){
             if($scope.item.analytic_type != null){
-                $scope.showNewCatalog = ! $scope.showNewCatalog;
+                $scope.showNewCatalog = !$scope.showNewCatalog;
             }else{
-                alert("Не выбран тип")
+                alert("Не выбран тип");
             }
-
         };
 
         $scope.modalNewType = function(){
@@ -112,8 +115,7 @@ angular.module('assetsApp')
 
         $scope.addNewCatalog = function(item){
             $scope.showLoading = true;
-            $http.get(DOMAIN+"/nka_net3/catalog/add_catalog",{
-                params:{
+            $http.post(DOMAIN+"/nka_net3/catalog/add_catalog",{
                     "analytic_type": item.analytic_type,
                     "code_id": item.code_id,
                     "code_name": item.code_name,
@@ -123,21 +125,21 @@ angular.module('assetsApp')
                     "status": item.status,
                     "parent_code" : item.parent_code,
                     "unitmeasure": item.unitmeasure}
-            }).then(function (res) {
+            ).then(function (res) {
                     $scope.catalog = res.data;
                     $scope.showLoading = false;
                 });
             $scope.modalNewCatalog();
         };
+
         $scope.addNewType = function(item){
             $scope.showLoading = true;
-            $http.get(DOMAIN+"/nka_net3/catalog/add_catalog_type",{
-                params:{
+            $http.post(DOMAIN+"/nka_net3/catalog/add_catalog_type",
+              {
                     "analytic_type": item.analytic_type,
                     "analyticTypeName": item.analyticTypeName,
-                    "status": item.status}
-            })
-                .then(function (res) {
+                    "status": item.status
+              }).then(function (res) {
                     $scope.loadTypes();
                     $scope.showLoading = false;
                 });

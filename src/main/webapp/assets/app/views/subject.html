@@ -71,7 +71,7 @@
                             ng-click="updateSubjectForm('{{subject}}')">
                             <td width="5%">{{subject.subjectType.code_short_name}}</td>
                             <td width="25%">{{subject.surname}}{{" "+subject.firstname}}{{"
-                                "+subject.fathername}}{{subject.fullname}}
+                                "+subject.fathername }}{{subject.fullname}}
                             </td>
                             <td width="25%">{{subject.bothRegDate|date}}</td>
                             <td>{{subject.address}}</td>
@@ -310,6 +310,12 @@
             </div>
         </div>
     </div>
+</div>
 
 
+<div class="modal fade in" ng-init="var.loading = true" visible="showLoading" ng-class="{'in' : var.loading }"
+     ng-style="{true: {display: 'block'}, false: {display: 'none'}}[var.loading ]">
+    <div class="center_b">
+        <img src="../images/image_836733.gif" alt=""/>
+    </div>
 </div>

@@ -21,25 +21,30 @@ angular.module('assetsApp')
         };
 
         $scope.init = function () {
+            $scope.var.loading = true;
             $http.get(DOMAIN + "/nka_net3/dict/states")
                 .then(function (res) {
                     $scope.var.states = res.data;
                     $scope.var.subj = {sitizens: $scope.var.states[81]};
+                    $scope.var.loading = false;
                 });
 
             $http.get("/data/doctype.json")
                 .then(function (res) {
                     $scope.var.items = res.data;
+                    $scope.var.loading = false;
                 });
 
             $http.get("/data/ate.json")
                 .then(function (res) {
                     $scope.var.ates = res.data;
+                    $scope.var.loading = false;
                 });
 
             $http.get(DOMAIN + "/nka_net3/dict/subjectTypes")
                 .then(function (res) {
                     $scope.var.subjecttypes = res.data;
+                    $scope.var.loading = false;
                 });
         };
 
@@ -59,6 +64,7 @@ angular.module('assetsApp')
         };
 
         $scope.searchPass = function () {
+
             if ($scope.validId() && $scope.validPass()) {
                 $scope.var.loading = true;
                 $scope.var.subjects = [];

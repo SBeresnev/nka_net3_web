@@ -18,7 +18,7 @@ var app = angular
         'ngTouch',
         'angularBootstrapNavTree'
     ])
-.constant('DOMAIN', 'http://localhost:8080')
+    .constant('DOMAIN', 'http://localhost:8080')
 /** .constant('DOMAIN', 'http://172.31.14.71:8080')*/
     .config(function ($routeProvider, $httpProvider) {
         $httpProvider.defaults.useXDomain = true;
@@ -51,7 +51,7 @@ var app = angular
             .when('/subject', {
                 templateUrl: 'views/subject.html',
                 controller: 'SubjectCtrl'
-                })
+            })
             .when('/items', {
                 templateUrl: 'views/items.html',
                 controller: 'ItemsCtrl'
@@ -59,6 +59,10 @@ var app = angular
             .when('/dict', {
                 templateUrl: 'views/dict.html',
                 controller: 'DictCtrl'
+            })
+            .when('/dependency', {
+                templateUrl: 'views/dependency.html',
+                controller: 'DependencyCtrl'
             })
             .otherwise({
                 redirectTo: '#/'
@@ -82,7 +86,7 @@ var app = angular
             '<button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="modal()">&times;</button>' +
             '<h4 class="modal-title">{{ title }}</h4>' +
             '</div>' +
-            '<div class="modal-body" ng-transclude>'+
+            '<div class="modal-body" ng-transclude>' +
             '</div></div>' +
             '</div>' +
             '</div>',
@@ -117,10 +121,10 @@ var app = angular
     .filter('filterSubjectType', function () {
         return function (items) {
             var filtered = [];
-            if(items != undefined){
+            if (items != undefined) {
                 for (var i = 0; i < items.length; i++) {
                     var item = items[i];
-                    if(item.code_id < 500 && item.code_id != 100 && item.code_id != 200){
+                    if (item.code_id < 500 && item.code_id != 100 && item.code_id != 200) {
                         filtered.push(item);
                     }
                 }
@@ -128,17 +132,17 @@ var app = angular
             return filtered;
         };
     })
-.filter('filterSubjectTypeForCreate', function () {
-    return function (items) {
-        var filtered = [];
-        if(items != undefined){
-            for (var i = 0; i < items.length; i++) {
-                var item = items[i];
-                if(item.code_id < 200 && item.code_id != 100){
-                    filtered.push(item);
+    .filter('filterSubjectTypeForCreate', function () {
+        return function (items) {
+            var filtered = [];
+            if (items != undefined) {
+                for (var i = 0; i < items.length; i++) {
+                    var item = items[i];
+                    if (item.code_id < 200 && item.code_id != 100) {
+                        filtered.push(item);
+                    }
                 }
             }
-        }
-        return filtered;
-    };
-});
+            return filtered;
+        };
+    });
