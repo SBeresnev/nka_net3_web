@@ -9,7 +9,6 @@
                                 <label class="col-xs-4  control-label">
                                     <h3 class="pull-right">Номер заказа:</h3>
                                 </label>
-
                                 <div class="col-xs-8">
                                     <label class="control-label"><h3 class="text-primary">{{var.decl.declnumber}}</h3></label>
                                 </div>
@@ -33,9 +32,9 @@
                                     <h3 class=" control-label">Признак предварительности:</h3>
                                 </label>
                                 <div class="col-xs-7">
-                                    <label class=" control-label cursor-pointer text-primary" ng-click="changeDecltype()">
-                                        <span class="glyphicon glyphicon-remove-circle" aria-hidden="true" ng-show="var.decl.decltype" style="font-size: x-large; margin-top: 18px"></span>
-                                        <span class="glyphicon glyphicon-ok-circle " aria-hidden="true" ng-show="!var.decl.decltype" style="font-size: x-large; margin-top: 18px"></span>
+                                    <label class=" control-label cursor-pointer" ng-click="changeDecltype()">
+                                        <span class="glyphicon glyphicon-remove-circle text-danger" aria-hidden="true" ng-show="var.decl.decltype" style="font-size: x-large; margin-top: 18px"></span>
+                                        <span class="glyphicon glyphicon-ok-circle text-success" aria-hidden="true" ng-show="!var.decl.decltype" style="font-size: x-large; margin-top: 18px"></span>
                                     </label>
                                 </div>
                             </div>
@@ -282,7 +281,6 @@
                                                     субъекта в базе
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                     <div class="form-horizontal distance-top"
@@ -384,7 +382,6 @@
                                             <label class="col-xs-3  control-label">
                                                 <span class="pull-right">УНП:</span>
                                             </label>
-
                                             <div class="col-xs-6">
                                                 <input disabled class="form-control" ng-model="var.represent.unp">
                                             </div>
@@ -394,7 +391,6 @@
                                             <label class="col-xs-3  control-label">
                                                 <span class="pull-right">Регистрационный номер:</span>
                                             </label>
-
                                             <div class="col-xs-6">
                                                 <input disabled class="form-control" ng-model="var.represent.regnumber">
                                             </div>
@@ -404,7 +400,6 @@
                                             <label class="col-xs-3  control-label">
                                                 <span class="pull-right">Административная териториальная еденица (АТЕ):</span>
                                             </label>
-
                                             <div class="col-xs-6">
                                                 <div class="btn-group" ng-class="var.openVar"
                                                      ng-model="var.ateRepresent">
@@ -453,31 +448,20 @@
                                     ng-click="var.showPanelOperation =! var.showPanelOperation">
                                     ОПЕРАЦИИ
                                 </h4>
-                                <div class=" col-xs-8  ">
-                                    <div class="btn-block btn width500">
+                                <div class="col-xs-8">
+                                    <div class="btn-block btn"
+                                         ng-repeat="operation in var.decl.operations| orderBy: 'declarantId'">
                                         <button class="btn btn-default mybtn litle-right " style="width: 88%"
-                                                ng-click="modal()">
+                                                ng-click="modalOperation(operation)">
                                             <table class="table-bordered" width="100%">
-                                                <td width="70%">Регистрация</td>
-                                                <td width="30%">12.12.12</td>
+                                                <td width="70%">{{operation.operType.code_name+"
+                                                    "}}{{operation.operSubtype.code_name+"
+                                                    "}}{{operation.regDate| date}}
+                                                </td>
                                             </table>
                                         </button>
-                                        <button class="btn btn-danger  pull-right  mybtn   btn-block " style="width: 9%"
-                                                ng-click="modal()">
-                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                        </button>
-                                    </div>
-                                    <div class="btn-block btn width500">
-                                        <button class="btn btn-default mybtn litle-right " style="width: 88%"
-                                                ng-click="modal()">
-                                            <table class="table-bordered" width="100%">
-                                                <td width="70%">Формирование</td>
-                                                <td width="30%">12.12.12</td>
-                                            </table>
-                                        </button>
-                                        <button class="btn  btn btn-danger  pull-right  mybtn   btn-block"
-                                                style="width: 9%"
-                                                ng-click="modal()">
+                                        <button class="btn btn-danger pull-right mybtn btn-block" style="width: 9%"
+                                                ng-click="deleteOperation(operation.ooperId)">
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                         </button>
                                     </div>
@@ -490,46 +474,33 @@
                                     <label class="col-xs-3  control-label">
                                         <span class="pull-right">Вид операции:</span>
                                     </label>
-
-                                    <div class="col-xs-9">
-                                        <div class="btn-group" ng-class="var.operationTypeClass"
-                                             ng-model="var.operationType">
-                                            <input class="btn btn-default dropdown-toggle  width310"
-                                                   ng-value="var.operationType.prelabel+' '+ var.operationType.label"
-                                                   ng-click="var.operationTypeClass == 'open'?var.operationTypeClass = '':var.operationTypeClass = 'open'">
-                                            <ul class="dropdown-menu width310">
-                                                <abn-tree tree-data="var.operationTypes"
-                                                          ng-click="var.operationTypeClass == 'open'?var.operationTypeClass = '':var.operationTypeClass = 'open'"
-                                                          on-select="var.operationType = {prelabel: branch.prelabel, label: branch.label}"></abn-tree>
-                                            </ul>
-                                        </div>
+                                    <div class="col-xs-3">
+                                        <select ng-model="operationType"
+                                                ng-options="operationType as operationType.code_name for operationType in var.operationType track by operationType.code_id"
+                                                class="form-control col-xs-6 ">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-xs-3  control-label">
+                                        <span class="pull-right">Подвид операции:</span>
+                                    </label>
+                                    <div class="col-xs-3">
+                                        <select ng-model="operationSubType"
+                                                ng-options="operationType as operationType.code_name for operationType in var.operationSubType track by operationType.code_id"
+                                                class="form-control col-xs-6 ">
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-xs-3  control-label">
                                         <span class="pull-right">Основание:</span>
                                     </label>
-
-                                    <div class="col-xs-9">
-                                        <div class="btn-group" ng-class="var.baseClass" ng-model="var.base">
-                                            <input class="btn btn-default dropdown-toggle  width310"
-                                                   ng-value="var.base.prelabel+' '+ var.base.label"
-                                                   ng-click="var.baseClass == 'open'?var.baseClass = '':var.baseClass = 'open'">
-                                            <ul class="dropdown-menu width310">
-                                                <abn-tree tree-data="var.bases"
-                                                          ng-click="var.baseClass == 'open'?var.baseClass = '':var.baseClass = 'open'"
-                                                          on-select="var.base = {prelabel: branch.prelabel, label: branch.label}"></abn-tree>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-xs-3  control-label">
-                                        <span class="pull-right">Дата:</span>
-                                    </label>
-
                                     <div class="col-xs-3">
-                                        <input class="form-control" type="date" ng-model="var.operationDate">
+                                        <select ng-model="operationBase"
+                                                ng-options="operationBase as operationBase.code_name for operationBase in var.operationBase track by operationBase.code_id"
+                                                class="form-control col-xs-6 ">
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group ">
@@ -548,7 +519,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <button class="btn btn-primary col-xs-offset-3  col-xs-2">Сохранить операцию
+                                    <button class="btn btn-primary col-xs-offset-3 col-xs-2" ng-click="addOperation()">
+                                        Добавить операцию
                                     </button>
                                 </div>
                             </div>
@@ -561,7 +533,6 @@
                                     ng-click="var.showPDoc=!var.showPDoc">
                                     ДОКУМЕНТЫ
                                 </h4>
-
                                 <div class=" col-xs-8  ">
                                     <div class="btn-block btn  width500">
                                         <button class="btn btn-default mybtn litle-right " style="width: 88%"
@@ -625,7 +596,6 @@
                                     <label class="col-xs-3  control-label">
                                         <span class="pull-right">Описание ораганизации:</span>
                                     </label>
-
                                     <div class="col-xs-6">
                                         <input class="form-control">
                                     </div>
@@ -698,7 +668,6 @@
                                     </table>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     <div class="panel-body">
@@ -715,35 +684,38 @@
                             <div class="form-inline">
                                 <button type="button"
                                         class="btn btn-primary col-xs-offset-2 margin-top"
-                                        ng-show="getLast(var.decl.dclresolution).resolutionType.code_id == 0"
-                                        ng-click="setStatus(1)">
+                                        ng-show="getLast(var.decl.dclresolution).resolutionType.code_id == 1"
+                                        ng-click="setStatus(2)">
                                     ПРИНЯТЬ
                                 </button>
-
                                 <button type="button"
                                         class="btn btn-primary col-xs-offset-2 margin-top"
-                                        ng-show="getLast(var.decl.dclresolution).resolutionType.code_id == 1"
-                                        ng-click="setStatus(4)">
+                                        ng-show="getLast(var.decl.dclresolution).resolutionType.code_id == 2"
+                                        ng-click="setStatus(6)">
                                     ПРИОСТАНОВИТЬ
                                 </button>
-
                                 <button type="button"
                                         class="btn btn-primary col-xs-offset-2 margin-top"
-                                        ng-show="getLast(var.decl.dclresolution).resolutionType.code_id  == 1"
-                                        ng-click="setStatus(3)">
+                                        ng-show="getLast(var.decl.dclresolution).resolutionType.code_id  == 2"
+                                        ng-click="setStatus(4)">
                                     ЗАРЕГИСТРИРОВАТЬ
                                 </button>
-
                                 <button type="button"
                                         class="btn btn-primary col-xs-offset-2 margin-top"
-                                        ng-show="getLast(var.decl.dclresolution).resolutionType.code_id == 4"
-                                        ng-click="setStatus(1)">
+                                        ng-show="getLast(var.decl.dclresolution).resolutionType.code_id  == 2"
+                                        ng-click="setStatus(5)">
+                                    ОТКАЗАТЬ В ВЫПОЛНЕНИИ
+                                </button>
+                                <button type="button"
+                                        class="btn btn-primary col-xs-offset-2 margin-top"
+                                        ng-show="getLast(var.decl.dclresolution).resolutionType.code_id == 6"
+                                        ng-click="setStatus(2)">
                                     ВОЗОБНОВИТЬ
                                 </button>
-
                                 <button type="button"
                                         class="btn btn-primary  col-xs-offset-2 margin-top"
-                                        ng-show="getLast(var.decl.dclresolution).resolutionType.code_id == 0">
+                                        ng-show="getLast(var.decl.dclresolution).resolutionType.code_id == 1"
+                                        ng-click="setStatus(3)">
                                     ОТКАЗАТЬ
                                 </button>
                             </div>

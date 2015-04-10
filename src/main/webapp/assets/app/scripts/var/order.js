@@ -62,7 +62,10 @@ angular.module('assetsApp').value('ordervar',
         openVar: '',
         states: [],
         order: "",
-        decl: {}
+        decl: {},
+        operationBase : null,
+        operationSubType : null,
+        operationType: null,
     }
 
 );

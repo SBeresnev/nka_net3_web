@@ -104,7 +104,8 @@ angular.module('assetsApp')
             $http.get(DOMAIN + "/nka_net3/catalog/get_analytic_depended_item", {
                 params: {
                     id: id,
-                    type: $scope.selectedDependedType
+                    type: $scope.selectedDependedType,
+                    parentType: $scope.selectedParentId
                 }
             }).then(function (res) {
                 $scope.dependedCatalog = res.data;

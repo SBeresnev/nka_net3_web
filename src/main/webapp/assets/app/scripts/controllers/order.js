@@ -42,6 +42,25 @@ angular.module('assetsApp')
                     $scope.var.subjecttypes = res.data;
                 });
 
+
+            $http.get(DOMAIN+"/nka_net3/dict/operationType")
+                .then(function (res) {
+                    $scope.var.operationType = res.data;
+                });
+
+            $http.get(DOMAIN+"/nka_net3/dict/operationSubType")
+                .then(function (res) {
+                    $scope.var.operationSubType = res.data;
+                });
+
+            $http.get(DOMAIN+"/nka_net3/dict/operationBase")
+                .then(function (res) {
+                    $scope.var.operationBase = res.data;
+                });
+            $http.get(DOMAIN+"/nka_net3/operations/get_from_decl",{ params: { declId: $scope.var.id }})
+                .then(function (res) {
+                    $scope.var.decl.operations = res.data;
+                });
         };
 
         $scope.searchSubjects = function () {
@@ -221,5 +240,35 @@ angular.module('assetsApp')
                     $scope.getDecl();
                     $scope.showLoading = false;
                 });
+        };
+
+        $scope.addOperation = function(){
+            $scope.showLoading = true;
+            $http.post(DOMAIN+"/nka_net3/operations/add",{
+                declId: $routeParams.id,
+                operType: $scope.operationType,
+                operSubtype: $scope.operationSubType,
+                reason: $scope.operationBase
+            }).then(function (res) {
+                    $scope.operationType = {};
+                    $scope.operationSubType = {};
+                    $scope.operationBase = {};
+                    $scope.getDecl();
+                    $scope.showLoading = false;
+                }).catch(function(){
+                    $scope.showLoading = false;
+                    alert("Ошибка сервера")
+                });
+        };
+
+        $scope.deleteOperation = function(ooperId){
+            if(confirm("Вы уверены что хотите удалить операцию?")){
+                $http.delete(DOMAIN+"/nka_net3/operations/delete",{
+                    params:{idDecl: $routeParams.id, ooperId: ooperId}
+                })
+                    .then(function (res) {
+                        $scope.getDecl();
+                    });
+            }
         }
     });

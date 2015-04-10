@@ -34,6 +34,9 @@ angular.module('assetsApp')
                 .then(function (res) {
                     $scope.catalogTypes = res.data;
                     $scope.showLoading = false;
+                }).catch(function(response) {
+                    $scope.showLoading = false;
+                    alert('Ошибка сервера');
                 });
         };
 
@@ -46,12 +49,16 @@ angular.module('assetsApp')
                 .then(function (res) {
                     $scope.catalog = res.data;
                     $scope.showLoading = false;
+                }).catch(function(response) {
+                    $scope.showLoading = false;
+                    alert('Ошибка сервера');
                 });
             $scope.item.analytic_type = analytic_type;
         };
 
         $scope.deleteCatalog = function(item){
             if(confirm("Вы действительно хотите удалить запись?")){
+                $scope.showCatalog = false;
                 $scope.showLoading = true;
                 $http.delete(DOMAIN+"/nka_net3/catalog/delete_catalog_by_id",{
                     params:{"analytic_type": item.analytic_type, "code_id": item.code_id}
@@ -59,10 +66,12 @@ angular.module('assetsApp')
                     .then(function (res) {
                         $scope.catalog = res.data;
                         $scope.showLoading = false;
-                    });
-                $scope.modal();
+                    }).catch(function(response) {
+                        $scope.showLoading = false;
+                        alert('Ошибка сервера');
+                });
+                $scope.showCatalog = false;
             }
-
         };
 
         $scope.deleteType = function(item){
@@ -74,9 +83,11 @@ angular.module('assetsApp')
                     .then(function (res) {
                         $scope.loadTypes();
                         $scope.showLoading = false;
+                    }).catch(function(response) {
+                        $scope.showLoading = false;
+                        alert('Ошибка сервера');
                     });
             }
-
         };
 
         $scope.updateCatalog = function(item){
@@ -91,13 +102,15 @@ angular.module('assetsApp')
                         "v_prm1": item.v_prm1,
                         "status": item.status,
                         "parent_code" : item.parent_code,
-                        "unitmeasure": item.unitmeasure}
-                )
-                    .then(function (res) {
+                        "unitmeasure": item.unitmeasure
+                    }).then(function (res) {
                         $scope.catalog = res.data;
                         $scope.showLoading = false;
+                    }).catch(function(response) {
+                        $scope.showLoading = false;
+                        alert('Ошибка сервера');
                     });
-                $scope.modal();
+                $scope.showCatalog = false;
             }
         };
 
@@ -124,12 +137,15 @@ angular.module('assetsApp')
                     "v_prm1": item.v_prm1,
                     "status": item.status,
                     "parent_code" : item.parent_code,
-                    "unitmeasure": item.unitmeasure}
-            ).then(function (res) {
+                    "unitmeasure": item.unitmeasure
+                }).then(function (res) {
                     $scope.catalog = res.data;
                     $scope.showLoading = false;
+                }).catch(function(response) {
+                    $scope.showLoading = false;
+                    alert('Ошибка сервера');
                 });
-            $scope.modalNewCatalog();
+            $scope.showNewCatalog = false;
         };
 
         $scope.addNewType = function(item){
@@ -142,7 +158,10 @@ angular.module('assetsApp')
               }).then(function (res) {
                     $scope.loadTypes();
                     $scope.showLoading = false;
+                }).catch(function(response) {
+                    $scope.showLoading = false;
+                    alert('Ошибка сервера');
                 });
-            $scope.modalNewType();
+            $scope.showNewType = false;
         };
     });
