@@ -22,7 +22,7 @@ angular.module('assetsApp')
 
         $scope.init = function () {
             $scope.var.loading = true;
-            $http.get(DOMAIN + "/nka_net3/dict/states")
+            $http.get(DOMAIN + "/nka_net3/catalog/states")
                 .then(function (res) {
                     $scope.var.states = res.data;
                     $scope.var.subj = {sitizens: $scope.var.states[81]};
@@ -41,7 +41,7 @@ angular.module('assetsApp')
                     $scope.var.loading = false;
                 });
 
-            $http.get(DOMAIN + "/nka_net3/dict/subjectTypes")
+            $http.get(DOMAIN + "/nka_net3/catalog/subjectTypes")
                 .then(function (res) {
                     $scope.var.subjecttypes = res.data;
                     $scope.var.loading = false;
@@ -71,7 +71,7 @@ angular.module('assetsApp')
                 delete $http.defaults.headers.common['X-Requested-With'];
                 httpServices.searchPass($scope.var.searchSubject.passSeriesAndNumber, $scope.var.searchSubject.idNumber, $scope);
             } else {
-                alert("Ошибочно заполненны поля!")
+                alert("Ошибочно заполненны поля!");
             }
         };
 

@@ -57,12 +57,16 @@ var app = angular
                 controller: 'ItemsCtrl'
             })
             .when('/dict', {
-                templateUrl: 'views/dict.html',
-                controller: 'DictCtrl'
+                templateUrl: 'views/catalog.html',
+                controller: 'CatalogCtrl'
             })
             .when('/dependency', {
                 templateUrl: 'views/dependency.html',
                 controller: 'DependencyCtrl'
+            })
+            .when('/test', {
+                templateUrl: 'views/test.html',
+                controller: 'TestCtrl'
             })
             .otherwise({
                 redirectTo: '#/'

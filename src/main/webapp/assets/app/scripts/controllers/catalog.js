@@ -4,7 +4,7 @@
 'use strict';
 
 angular.module('assetsApp')
-    .controller('DictCtrl', function ($scope,$http, $location, DOMAIN) {
+    .controller('CatalogCtrl', function ($scope,$http, $location, DOMAIN) {
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',

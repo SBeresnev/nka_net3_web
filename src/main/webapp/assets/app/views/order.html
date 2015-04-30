@@ -9,8 +9,10 @@
                                 <label class="col-xs-4  control-label">
                                     <h3 class="pull-right">Номер заказа:</h3>
                                 </label>
+
                                 <div class="col-xs-8">
-                                    <label class="control-label"><h3 class="text-primary">{{var.decl.declnumber}}</h3></label>
+                                    <label class="control-label"><h3 class="text-primary">{{var.decl.declnumber}}</h3>
+                                    </label>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -19,7 +21,8 @@
                                 </label>
 
                                 <div class="col-xs-8">
-                                    <label class="control-label"><h3  class="text-primary">{{getLast(var.decl.dclresolution).resolutionType.code_name}}</h3></label>
+                                    <label class="control-label"><h3 class="text-primary">
+                                        {{getLast(var.decl.dclresolution).resolutionType.code_name}}</h3></label>
                                 </div>
                             </div>
                             <div class="form-group hidden">
@@ -31,10 +34,15 @@
                                 <label class="col-xs-4 ">
                                     <h3 class=" control-label">Признак предварительности:</h3>
                                 </label>
+
                                 <div class="col-xs-7">
                                     <label class=" control-label cursor-pointer" ng-click="changeDecltype()">
-                                        <span class="glyphicon glyphicon-remove-circle text-danger" aria-hidden="true" ng-show="var.decl.decltype" style="font-size: x-large; margin-top: 18px"></span>
-                                        <span class="glyphicon glyphicon-ok-circle text-success" aria-hidden="true" ng-show="!var.decl.decltype" style="font-size: x-large; margin-top: 18px"></span>
+                                        <span class="glyphicon glyphicon-remove-circle text-danger" aria-hidden="true"
+                                              ng-show="var.decl.decltype"
+                                              style="font-size: x-large; margin-top: 18px"></span>
+                                        <span class="glyphicon glyphicon-ok-circle text-success" aria-hidden="true"
+                                              ng-show="!var.decl.decltype"
+                                              style="font-size: x-large; margin-top: 18px"></span>
                                     </label>
                                 </div>
                             </div>
@@ -47,15 +55,17 @@
                                     ng-click="var.showPanel=!var.showPanel">
                                     ЗАКАЗЧИКИ
                                 </h4>
+
                                 <div class="col-xs-8">
                                     <div class="btn-block btn"
-                                         ng-repeat="selectedSubject in var.decl.declarants| orderBy: 'declarantId'">
+                                         ng-repeat="selectedSubject in var.decl.declarants| filter: filterIdenticalSubject | orderBy: 'declarantId'">
                                         <button class="btn btn-default mybtn litle-right " style="width: 88%"
                                                 ng-click="modalSubject(selectedSubject)">
                                             <table class="table-bordered" width="100%">
                                                 <td width="30%" ng-if="selectedSubject.declrepr_type == 1"> заявитель
                                                 </td>
-                                                <td width="30%" ng-if="selectedSubject.declrepr_type == 2"> представитель
+                                                <td width="30%" ng-if="selectedSubject.declrepr_type == 2">
+                                                    представитель
                                                 </td>
                                                 <td width="70%">{{selectedSubject.person.surname+"
                                                     "}}{{selectedSubject.person.firstname+"
@@ -64,7 +74,7 @@
                                             </table>
                                         </button>
                                         <button class="btn btn-danger pull-right mybtn btn-block" style="width: 9%"
-                                                ng-click="deleteSubject(selectedSubject.declarantId)">
+                                                ng-click="deleteSubject(selectedSubject)">
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                         </button>
                                     </div>
@@ -74,30 +84,31 @@
                         <div class="panel-collapse collapse in" ng-show="var.showPanel">
                             <div class="panel-body">
                                 <div class="row">
-                                        <div class="col-xs-3">
-                                            <div class="input-group">
-                                                <select ng-model="var.typeSearch"
-                                                                    ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes| filterSubjectType"
-                                                                    class="form-control mySelect"
-                                                                    required="required">
-                                                    <option value="" disabled selected>Тип субъекта</option>
-                                                </select>
-                                            </div>
-                                        </div>
                                     <div class="col-xs-3">
-                                        <input type="text" class="form-control  col-xs-1" placeholder="Личный номер" ng-model="var.searchSubject.number">
+                                        <div class="input-group">
+                                            <select ng-model="var.typeSearch"
+                                                    ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes| filterSubjectType"
+                                                    class="form-control mySelect"
+                                                    required="required">
+                                                <option value="" disabled selected>Тип субъекта</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <input type="text" class="form-control  col-xs-1" placeholder="Личный номер"
+                                               ng-model="var.searchSubject.number">
                                     </div>
                                     <div class="col-xs-6">
-                                            <div class="input-group">
-                                                <input type="text" class="form-control"
-                                                       placeholder="ФИО/Наименование организации"
-                                                       ng-model="var.searchSubject.fioAndName">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control"
+                                                   placeholder="ФИО/Наименование организации"
+                                                   ng-model="var.searchSubject.fioAndName">
                                                     <span class="input-group-btn">
                                                          <button class="btn btn-default" type="submit"
                                                                  ng-click="searchSubjects()">Поиск
                                                          </button>
                                                     </span>
-                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-xs-12 white-background" ng-show="var.showSubjectsTable">
                                         <table class="table table-bordered">
@@ -111,7 +122,8 @@
                                             <tr ng-repeat="subject in var.subjects" class="btn-default cursor-pointer"
                                                 ng-click="updateSubjectForm('{{subject}}')">
                                                 <td width="5%">{{subject.subjectType.code_short_name}}</td>
-                                                <td width="25%">{{subject.surname}}{{" " + subject.firstname}}{{" " + subject.fathername}}{{" " + subject.fullname}}
+                                                <td width="25%">{{subject.surname}}{{" " + subject.firstname}}{{" " +
+                                                    subject.fathername}}{{" " + subject.fullname}}
                                                 </td>
                                                 <td width="25%">{{subject.bothRegDate|date}}</td>
                                                 <td>{{subject.personalNumber}} {{subject.unp}}</td>
@@ -120,13 +132,14 @@
                                         </table>
                                     </div>
                                     <ul class="nav nav-tabs distance-top padding-top">
-                                        <li class="cursor-pointer" role="presentation" ng-click="clientActivate()" ng-class="var.clientActive">
+                                        <li class="cursor-pointer" role="presentation" ng-click="clientActivate()"
+                                            ng-class="var.clientActive">
                                             <a>
                                                 Заказчик
                                             </a>
                                         </li>
-                                        <li class="cursor-pointer" role="presentation" ng-click="representativeActivate()"
-                                            ng-class="var.representativeActive">
+                                        <li class="cursor-pointer" role="presentation"
+                                            ng-click="representativeActivate()" ng-class="var.representativeActive">
                                             <a>
                                                 Представитель
                                             </a>
@@ -152,14 +165,18 @@
                                                     Фамилия:
                                                 </span>
                                             </label>
+
                                             <div class="col-xs-6">
-                                                <input disabled disabled class="form-control" ng-model="var.client.firstname">
+                                                <input disabled disabled class="form-control"
+                                                       ng-model="var.client.firstname">
                                             </div>
                                         </div>
-                                        <div class="form-group" ng-show="'100' < var.typeClient.code_id && var.typeClient.code_id < '200'">
+                                        <div class="form-group"
+                                             ng-show="'100' < var.typeClient.code_id && var.typeClient.code_id < '200'">
                                             <label class="col-xs-3  control-label">
                                                 <span class="pull-right">Имя:</span>
                                             </label>
+
                                             <div class="col-xs-6">
                                                 <input disabled class="form-control" ng-model="var.client.surname">
                                             </div>
@@ -169,6 +186,7 @@
                                             <label class="col-xs-3  control-label">
                                                 <span class="pull-right">Отчество:</span>
                                             </label>
+
                                             <div class="col-xs-6">
                                                 <input disabled class="form-control" ng-model="var.client.fathername">
                                             </div>
@@ -189,6 +207,7 @@
                                             <label class="col-xs-3  control-label">
                                                 <span class="pull-right">Сокращенное наименование:</span>
                                             </label>
+
                                             <div class="col-xs-6">
                                                 <input disabled class="form-control" ng-model="var.client.shortname">
                                             </div>
@@ -198,8 +217,10 @@
                                             <label class="col-xs-3  control-label">
                                                 <span class="pull-right">Идентификационный номер:</span>
                                             </label>
+
                                             <div class="col-xs-6">
-                                                <input disabled class="form-control" ng-model="var.client.personalNumber">
+                                                <input disabled class="form-control"
+                                                       ng-model="var.client.personalNumber">
                                             </div>
                                         </div>
                                         <div class="form-group"
@@ -207,6 +228,7 @@
                                             <label class="col-xs-3  control-label">
                                                 <span class="pull-right">Адрес:</span>
                                             </label>
+
                                             <div class="col-xs-6">
                                                 <input disabled class="form-control" ng-model="var.client.address">
                                             </div>
@@ -216,6 +238,7 @@
                                             <label class="col-xs-3  control-label">
                                                 <span class="pull-right">Дата регистрации:</span>
                                             </label>
+
                                             <div class="col-xs-6">
                                                 <input disabled type="date" class="form-control"
                                                        ng-model="var.client.bothRegDate">
@@ -226,6 +249,7 @@
                                             <label class="col-xs-3  control-label">
                                                 <span class="pull-right">УНП:</span>
                                             </label>
+
                                             <div class="col-xs-6">
                                                 <input disabled class="form-control" ng-model="var.client.unp">
                                             </div>
@@ -285,6 +309,23 @@
                                     </div>
                                     <div class="form-horizontal distance-top"
                                          ng-show="var.representativeActive == 'active'">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-xs-offset-2 col-xs-8 table-bordered">
+                                                    <table class="table table-bordered">
+                                                        <caption>Выбрать представляемых заявителей</caption>
+                                                        <tr ng-repeat="subj in var.decl.declarants| filter: filterSubject"
+                                                            class="cursor-pointer btn-default" ng-click="selectClient(subj.declarantId)">
+                                                            <td width="100%"  ng-class="{'success': checkChosen(subj.declarantId)}">
+                                                                {{subj.person.surname + " " +
+                                                                subj.person.firstname + " " + subj.person.fathername}}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </div>
                                         <div class="form-group row"
                                              ng-show="'100' <var.typeClient.code_id && var.typeClient.code_id < '500'">
                                             <label class="col-xs-3 control-label">
@@ -322,7 +363,8 @@
                                             </label>
 
                                             <div class="col-xs-6">
-                                                <input disabled class="form-control" ng-model="var.represent.fathername">
+                                                <input disabled class="form-control"
+                                                       ng-model="var.represent.fathername">
                                             </div>
                                         </div>
                                         <div class="form-group"
@@ -353,7 +395,8 @@
                                             </label>
 
                                             <div class="col-xs-6">
-                                                <input disabled class="form-control" ng-model="var.represent.personalNumber">
+                                                <input disabled class="form-control"
+                                                       ng-model="var.represent.personalNumber">
                                             </div>
                                         </div>
                                         <div class="form-group"
@@ -382,6 +425,7 @@
                                             <label class="col-xs-3  control-label">
                                                 <span class="pull-right">УНП:</span>
                                             </label>
+
                                             <div class="col-xs-6">
                                                 <input disabled class="form-control" ng-model="var.represent.unp">
                                             </div>
@@ -391,6 +435,7 @@
                                             <label class="col-xs-3  control-label">
                                                 <span class="pull-right">Регистрационный номер:</span>
                                             </label>
+
                                             <div class="col-xs-6">
                                                 <input disabled class="form-control" ng-model="var.represent.regnumber">
                                             </div>
@@ -400,6 +445,7 @@
                                             <label class="col-xs-3  control-label">
                                                 <span class="pull-right">Административная териториальная еденица (АТЕ):</span>
                                             </label>
+
                                             <div class="col-xs-6">
                                                 <div class="btn-group" ng-class="var.openVar"
                                                      ng-model="var.ateRepresent">
@@ -432,7 +478,8 @@
                                                      ng-click="addSubject(var.represent.subjectId)">Добавить в заказ
                                                 </div>
                                                 <div class="btn btn-primary"
-                                                     onclick="window.open( '#/subject','_blank')">Добавить или изменить субъекта в базе
+                                                     onclick="window.open( '#/subject','_blank')">Добавить или изменить
+                                                    субъекта в базе
                                                 </div>
                                             </div>
                                         </div>
@@ -448,6 +495,7 @@
                                     ng-click="var.showPanelOperation =! var.showPanelOperation">
                                     ОПЕРАЦИИ
                                 </h4>
+
                                 <div class="col-xs-8">
                                     <div class="btn-block btn"
                                          ng-repeat="operation in var.decl.operations| orderBy: 'declarantId'">
@@ -474,6 +522,7 @@
                                     <label class="col-xs-3  control-label">
                                         <span class="pull-right">Вид операции:</span>
                                     </label>
+
                                     <div class="col-xs-3">
                                         <select ng-model="operationType"
                                                 ng-options="operationType as operationType.code_name for operationType in var.operationType track by operationType.code_id"
@@ -485,6 +534,7 @@
                                     <label class="col-xs-3  control-label">
                                         <span class="pull-right">Подвид операции:</span>
                                     </label>
+
                                     <div class="col-xs-3">
                                         <select ng-model="operationSubType"
                                                 ng-options="operationType as operationType.code_name for operationType in var.operationSubType track by operationType.code_id"
@@ -496,6 +546,7 @@
                                     <label class="col-xs-3  control-label">
                                         <span class="pull-right">Основание:</span>
                                     </label>
+
                                     <div class="col-xs-3">
                                         <select ng-model="operationBase"
                                                 ng-options="operationBase as operationBase.code_name for operationBase in var.operationBase track by operationBase.code_id"
@@ -533,6 +584,7 @@
                                     ng-click="var.showPDoc=!var.showPDoc">
                                     ДОКУМЕНТЫ
                                 </h4>
+
                                 <div class=" col-xs-8  ">
                                     <div class="btn-block btn  width500">
                                         <button class="btn btn-default mybtn litle-right " style="width: 88%"
@@ -596,6 +648,7 @@
                                     <label class="col-xs-3  control-label">
                                         <span class="pull-right">Описание ораганизации:</span>
                                     </label>
+
                                     <div class="col-xs-6">
                                         <input class="form-control">
                                     </div>

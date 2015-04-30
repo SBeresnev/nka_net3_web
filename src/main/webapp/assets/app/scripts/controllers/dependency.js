@@ -70,7 +70,6 @@ angular.module('assetsApp')
 
         $scope.deleteDependencyType = function (id) {
             $scope.showLoading = true;
-
             $http.delete(DOMAIN + "/nka_net3/catalog/delete_analytic_dependency", {
                 params: {id: id}
             }).then(
@@ -87,8 +86,8 @@ angular.module('assetsApp')
             $scope.showLoading = true;
             $scope.selectedDependedType = selected;
             $scope.currentDependencyId = dependencyId;
-            $http.get(DOMAIN + "/nka_net3/catalog/get_analytic_dependency_parent_item_by_id", {
-                params: {id: id}
+            $http.get(DOMAIN + "/nka_net3/catalog/get_catalogs_by_type", {
+                params: {type: id}
             }).then(function (res) {
                 $scope.parentCatalog = res.data;
                 $scope.showLoading = false;
