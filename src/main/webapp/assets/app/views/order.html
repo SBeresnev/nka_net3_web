@@ -88,8 +88,7 @@
                                         <div class="input-group">
                                             <select ng-model="var.typeSearch"
                                                     ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes| filterSubjectType"
-                                                    class="form-control mySelect"
-                                                    required="required">
+                                                    class="form-control mySelect">
                                                 <option value="" disabled selected>Тип субъекта</option>
                                             </select>
                                         </div>
@@ -790,7 +789,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-xs-8">
-                        <div class="panel-body" style="overflow:auto; height: 550px">
+                        <div class="panel-body" style="overflow:auto; height: auto">
                             <table class="table table-bordered">
                                 <tr>
                                     <td>Имя</td>
@@ -819,6 +818,15 @@
                                 <tr>
                                     <td>Личный номер</td>
                                     <td>{{var.modalSubjects.person.personalNumber}}</td>
+                                </tr>
+                            </table>
+
+                            <table  class="table table-bordered" ng-if="var.modalSubjects.declrepr_type == 2">
+                                <caption>Представляемые субъекты</caption>
+                                <tr  ng-repeat="subject in getRelatedSubject(var.modalSubjects)">
+                                    <td>
+                                        {{subject.parentPerson.person.surname + " " + subject.parentPerson.person.firstname + " " + subject.parentPerson.person.fathername}}
+                                    </td>
                                 </tr>
                             </table>
                         </div>

@@ -29,18 +29,6 @@ angular.module('assetsApp')
                     $scope.var.loading = false;
                 });
 
-            $http.get("/data/doctype.json")
-                .then(function (res) {
-                    $scope.var.items = res.data;
-                    $scope.var.loading = false;
-                });
-
-            $http.get("/data/ate.json")
-                .then(function (res) {
-                    $scope.var.ates = res.data;
-                    $scope.var.loading = false;
-                });
-
             $http.get(DOMAIN + "/nka_net3/catalog/subjectTypes")
                 .then(function (res) {
                     $scope.var.subjecttypes = res.data;

@@ -34,7 +34,7 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
       break;
     }
     return xmlhttp;
-  }
+  };
 
 
   httpServices.updateSubject = function (subject) {
@@ -75,7 +75,7 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
         }
       }
     }
-  }
+  };
 
   httpServices.searchPass= function ( number, id, scope) {
     var url = DOMAIN+'/nka_net3/subject/mvd';
