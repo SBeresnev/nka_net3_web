@@ -57,7 +57,7 @@
                                 </h4>
 
                                 <div class="col-xs-8">
-                                    <div class="btn-block btn"
+                                    <div class="col-xs-12 table"
                                          ng-repeat="selectedSubject in var.decl.declarants| filter: filterIdenticalSubject | orderBy: 'declarantId'">
                                         <button class="btn btn-default mybtn litle-right " style="width: 88%"
                                                 ng-click="modalSubject(selectedSubject)">
@@ -496,7 +496,7 @@
                                 </h4>
 
                                 <div class="col-xs-8">
-                                    <div class="btn-block btn"
+                                    <div class="col-xs-12 table"
                                          ng-repeat="operation in var.decl.operations| orderBy: 'declarantId'">
                                         <button class="btn btn-default mybtn litle-right " style="width: 88%"
                                                 ng-click="modalOperation(operation)">
@@ -585,7 +585,7 @@
                                 </h4>
 
                                 <div class=" col-xs-8  ">
-                                    <div class="btn-block btn  width500">
+                                    <div class="col-xs-12 table">
                                         <button class="btn btn-default mybtn litle-right " style="width: 88%"
                                                 ng-click="modal()">
                                             <table class="table-bordered" width="100%">
@@ -598,7 +598,7 @@
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                         </button>
                                     </div>
-                                    <div class="btn-block btn width500">
+                                    <div class="col-xs-12 table">
                                         <button class="btn btn-default mybtn litle-right " style="width: 88%"
                                                 ng-click="modal()">
                                             <table class="table-bordered" width="100%">
@@ -783,8 +783,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dixsiss="modal" aria-hidden="true"
-                        ng-click="showSubject = false">&times;</button>
+                <button type="button" class="close" data-dixsiss="modal" aria-hidden="true" ng-click="showSubject = false">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="row">

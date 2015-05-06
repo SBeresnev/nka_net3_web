@@ -14,14 +14,14 @@
                     <th>Статус</th>
                 </tr>
                 <tr ng-s ng-repeat="order in orders|orderBy:'decldate':true" class="btn-default cursor-pointer" ng-click='getOrderById("{{order.decl_id}}")'>
-                    <td>{{order.declnumber}}</td>
-                    <td>{{order.decldate|date:"dd.MM.yyyy - HH:mm"}}</td>
-                    <td><ul class="nav"><li  ng-repeat=" declarant in order.declarants | filter: filterIdenticalSubject">{{declarant.declrepr_type==2?"представитель: ":"заявитель: "}}{{declarant.person.surname +" "}}{{declarant.person.firstname+ " "}}{{declarant.person.fullname+" "}}</li></ul></td>
-                    <td>{{order.declObjects}}</td>
-                    <td><ul class="nav"><li  ng-repeat=" operation in order.operations">{{
+                    <td width="5%">{{order.declnumber}}</td>
+                    <td width="8%">{{order.decldate|date:"dd.MM.yyyy - HH:mm"}}</td>
+                    <td width="16%"><ul class="nav"><li  ng-repeat=" declarant in order.declarants | filter: filterIdenticalSubject">{{declarant.declrepr_type==2?"представитель: ":"заявитель: "}}{{declarant.person.surname +" "}}{{declarant.person.firstname+ " "}}{{declarant.person.fullname+" "}}</li></ul></td>
+                    <td width="15%">{{order.declObjects}}</td>
+                    <td width="15%"><ul class="nav"><li  ng-repeat=" operation in order.operations">{{
                         operation.operType.code_name + operation.operSubtype.code_name }}</li></ul></td>
-                    <td>{{order.documents}}</td>
-                    <td>{{order.declResolution.resolutionType.code_name}}</td>
+                    <td  width="15%">{{order.documents}}</td>
+                    <td  width="8%">{{order.declResolution.resolutionType.code_name}}</td>
                 </tr>
             </table>
         </div>
