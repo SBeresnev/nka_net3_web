@@ -37,10 +37,14 @@ angular.module('assetsApp')
         };
 
         $scope.searchSubjects = function () {
-            $scope.var.loading = true;
-            $scope.var.subj = [];
-            delete $http.defaults.headers.common['X-Requested-With'];
-            httpServices.searchSubjects($scope.var.typeSearch.code_id, $scope.var.searchSubject.number, $scope.var.searchSubject.fioAndName, $scope);
+            if ($scope.var.typeSearch != undefined) {
+                $scope.var.loading = true;
+                $scope.var.subj = [];
+                delete $http.defaults.headers.common['X-Requested-With'];
+                httpServices.searchSubjects($scope.var.typeSearch.code_id, $scope.var.searchSubject.number, $scope.var.searchSubject.fioAndName, $scope);
+            } else {
+                alert("Не выбран тип субъекта!");
+            }
         };
 
         $scope.updateSubjectForm = function (subject) {
@@ -64,14 +68,16 @@ angular.module('assetsApp')
         };
 
         $scope.pushSubject = function (subject) {
-            var url = DOMAIN+'/nka_net3/subject/add';
+            var url = DOMAIN + '/nka_net3/subject/add';
             subject.subjectType = angular.copy($scope.var.subjtype);
-            $http.post(url, subject);
+            $http.post(url, subject).catch(function () {
+                alert("Ошибка сервера");
+            });
             $scope.var.subj = {};
         };
 
         $scope.updateSubject = function (subject) {
-            var url = DOMAIN+'/nka_net3/subject/update';
+            var url = DOMAIN + '/nka_net3/subject/update';
             subject.subjectType = angular.copy($scope.var.subjtype);
             $http.put(url, subject);
             $scope.var.subj = {};

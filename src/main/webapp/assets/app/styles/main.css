@@ -157,3 +157,9 @@ body {
 .cursor-pointer{
   cursor: pointer;
 }
+
+.window{
+  z-index: 1000;
+  position: absolute;
+  margin: 40px;
+}

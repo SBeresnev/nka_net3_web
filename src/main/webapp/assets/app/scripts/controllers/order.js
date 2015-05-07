@@ -28,12 +28,10 @@ angular.module('assetsApp')
                     $scope.var.represent = {sitizens: $scope.var.states[81]};
                 });
 
-
             $http.get(DOMAIN + "/nka_net3/catalog/subjectTypes")
                 .then(function (res) {
                     $scope.var.subjecttypes = res.data;
                 });
-
 
             $http.get(DOMAIN + "/nka_net3/catalog/operationType")
                 .then(function (res) {
@@ -56,10 +54,14 @@ angular.module('assetsApp')
         };
 
         $scope.searchSubjects = function () {
-            $scope.var.showSubjectsTable = true;
-            $scope.var.subjects = [];
-            delete $http.defaults.headers.common['X-Requested-With'];
-            httpServices.searchSubjects($scope.var.typeSearch.code_id, $scope.var.searchSubject.number, $scope.var.searchSubject.fioAndName, $scope);
+            if ($scope.var.typeSearch.code_id != undefined) {
+                $scope.var.showSubjectsTable = true;
+                $scope.var.subjects = [];
+                delete $http.defaults.headers.common['X-Requested-With'];
+                httpServices.searchSubjects($scope.var.typeSearch.code_id, $scope.var.searchSubject.number, $scope.var.searchSubject.fioAndName, $scope);
+            } else {
+                alert("Не выбран тип субъекта!");
+            }
         };
 
         $scope.searchPass = function () {
@@ -181,7 +183,7 @@ angular.module('assetsApp')
                 var ids = $scope.searchDependSubjectIds(declarant);
                 $scope.selectedClient.splice($scope.selectedClient.indexOf(declarant.declarantId), 1);
                 $http.delete(DOMAIN + "/nka_net3/decl/delete_subject_in_decl", {
-                    params: {idDecl: $routeParams.id, declarantIds: ids, declarantId: ids}
+                    params: {idDecl: $routeParams.id, declarantIds: ids}
                 }).then(function (res) {
                     $scope.getDecl();
                 });
@@ -207,8 +209,8 @@ angular.module('assetsApp')
                 type: $scope.var.representativeActive ? 2 : 1,
                 clients: $scope.selectedClient
             }).then(function (res) {
-                    $scope.getDecl();
-                });
+                $scope.getDecl();
+            });
             $scope.selectedClient = [];
             $scope.var.represent = {};
             $scope.var.typeRepresent = {};
@@ -265,11 +267,10 @@ angular.module('assetsApp')
                 }).then(function (res) {
                     $scope.showLoading = false;
                     $scope.getDecl();
-                })
-                    .catch(function () {
-                        $scope.showLoading = false;
-                        alert("Ошибка сервера");
-                    });
+                }).catch(function () {
+                    $scope.showLoading = false;
+                    alert("Ошибка сервера");
+                });
             }
         };
 
@@ -292,38 +293,38 @@ angular.module('assetsApp')
         };
 
         $scope.filterSubject = function (element) {
-            return  element.declrepr_type == 1 ? true : false;
+            return element.declrepr_type == 1 ? true : false;
         };
 
         $scope.filterIdenticalSubject = function (element, index, array) {
             var result = true;
-            if(element.declrepr_type == 2){
-                result = $scope.showId.indexOf(element.person.subjectId) ==-1;
-                $scope.showId.push( element.person.subjectId);
+            if (element.declrepr_type == 2) {
+                result = $scope.showId.indexOf(element.person.subjectId) == -1;
+                $scope.showId.push(element.person.subjectId);
             }
-            if(index + 1 == array.length){
+            if (index + 1 == array.length) {
                 $scope.showId = [];
             }
-            return  result;
+            return result;
         };
 
-        $scope.searchDependSubjectIds = function(declarant){
+        $scope.searchDependSubjectIds = function (declarant) {
             var array = [];
-            if(declarant.declrepr_type == 1) {
+            if (declarant.declrepr_type == 1) {
                 array.push(declarant.declarantId);
             }
-            for(var i = 0; i <  $scope.var.decl.declarants.length; i++){
-                if($scope.var.decl.declarants[i].declrepr_type == 2 && ( $scope.var.decl.declarants[i].person.subjectId == declarant.person.subjectId || $scope.var.decl.declarants[i].parentPerson.person.subjectId == declarant.person.subjectId)) {
+            for (var i = 0; i < $scope.var.decl.declarants.length; i++) {
+                if ($scope.var.decl.declarants[i].declrepr_type == 2 && ( $scope.var.decl.declarants[i].person.subjectId == declarant.person.subjectId || $scope.var.decl.declarants[i].parentPerson.person.subjectId == declarant.person.subjectId)) {
                     array.push($scope.var.decl.declarants[i].declarantId);
                 }
             }
             return array;
         };
 
-        $scope.getRelatedSubject = function(subject){
+        $scope.getRelatedSubject = function (subject) {
             var array = [];
-            for(var i = 0; i <  $scope.var.decl.declarants.length; i++){
-                if($scope.var.decl.declarants[i].person.subjectId == subject.person.subjectId && $scope.var.decl.declarants[i].declrepr_type == 2) {
+            for (var i = 0; i < $scope.var.decl.declarants.length; i++) {
+                if ($scope.var.decl.declarants[i].person.subjectId == subject.person.subjectId && $scope.var.decl.declarants[i].declrepr_type == 2) {
                     array.push($scope.var.decl.declarants[i]);
                 }
             }

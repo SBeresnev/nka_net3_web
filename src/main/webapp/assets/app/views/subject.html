@@ -21,7 +21,8 @@
                     </div>
                 </div>
                 <div class="col-xs-3" ng-hide="mvdSearch">
-                    <input type="text" class="form-control" placeholder="Номер" ng-model="var.searchSubject.number">
+                    <input type="text" class="form-control" placeholder="Номер" ng-init="var.searchSubject.number = ''"
+                           ng-model="var.searchSubject.number">
                 </div>
                 <div class="col-xs-5" ng-hide="!mvdSearch">
                     <div class="input-group-btn">
@@ -33,7 +34,9 @@
                 </div>
                 <div class="col-xs-4" ng-hide="mvdSearch">
                     <div class="input-group">
-                        <input type="text" class="form-control"
+                        <input ng-init="var.searchSubject.fioAndName = ''"
+                               type="text"
+                               class="form-control"
                                placeholder="ФИО/Наименование организации"
                                ng-model="var.searchSubject.fioAndName">
                                                  <span class="input-group-btn">
@@ -58,27 +61,31 @@
                                                  </span>
                     </div>
                 </div>
-                <div class="col-xs-12" ng-show="var.showSubjectsTable">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>Тип</th>
-                            <th>ФИО/Наименование</th>
-                            <th>Дата рождения</th>
-                            <th>Регистрационный/Идентификационный номер</th>
-                            <th>Адрес</th>
-                        </tr>
-                        <tr ng-repeat="subject in var.subjects" class="btn-default"
-                            ng-click="updateSubjectForm('{{subject}}')">
-                            <td width="5%">{{subject.subjectType.code_short_name}}</td>
-                            <td width="25%">{{subject.surname}}{{" "+subject.firstname}}{{"
-                                "+subject.fathername }}{{subject.fullname}}
-                            </td>
-                            <td width="25%">{{subject.bothRegDate|date}}</td>
-                            <td>{{subject.address}}</td>
-                            <td>{{subject.personalNumber}} {{subject.unp}}</td>
-
-                        </tr>
-                    </table>
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="col-xs-12 white-background " click-anywhere-but-here="var.showSubjectsTable = false"
+                             ng-show="var.showSubjectsTable">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Тип</th>
+                                    <th>ФИО/Наименование</th>
+                                    <th>Дата рождения</th>
+                                    <th>Регистрационный/Идентификационный номер</th>
+                                    <th>Адрес</th>
+                                </tr>
+                                <tr ng-repeat="subject in var.subjects" class="btn-default"
+                                    ng-click="updateSubjectForm('{{subject}}')">
+                                    <td width="5%">{{subject.subjectType.code_short_name}}</td>
+                                    <td width="20%">{{subject.surname}}{{" "+subject.firstname}}{{" "+subject.fathername
+                                        }}{{subject.fullname}}
+                                    </td>
+                                    <td width="10%">{{subject.bothRegDate|date}}</td>
+                                    <td width="10%">{{subject.personalNumber}} {{subject.unp}}</td>
+                                    <td>{{subject.address}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -316,6 +323,6 @@
 <div class="modal fade in" ng-init="var.loading = true" visible="showLoading" ng-class="{'in' : var.loading }"
      ng-style="{true: {display: 'block'}, false: {display: 'none'}}[var.loading ]">
     <div class="center_b">
-        <img src="../images/image_836733.gif" alt=""/>
+        <img src="./images/image_836733.gif" alt=""/>
     </div>
 </div>

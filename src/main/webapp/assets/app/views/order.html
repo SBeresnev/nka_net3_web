@@ -103,13 +103,14 @@
                                                    placeholder="ФИО/Наименование организации"
                                                    ng-model="var.searchSubject.fioAndName">
                                                     <span class="input-group-btn">
-                                                         <button class="btn btn-default" type="submit"
-                                                                 ng-click="searchSubjects()">Поиск
+                                                         <button class="btn btn-default dropdown-toggle" type="submit"
+                                                                 ng-click="searchSubjects()">
+                                                             Поиск
                                                          </button>
                                                     </span>
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 white-background" ng-show="var.showSubjectsTable">
+                                    <div class="col-xs-11 white-background window" click-anywhere-but-here="var.showSubjectsTable = false" ng-show="var.showSubjectsTable">
                                         <table class="table table-bordered">
                                             <tr>
                                                 <th>Тип</th>
@@ -118,17 +119,20 @@
                                                 <th>Регистрационный/Идентификационный номер</th>
                                                 <th>Адрес</th>
                                             </tr>
-                                            <tr ng-repeat="subject in var.subjects" class="btn-default cursor-pointer"
+                                            <tr ng-repeat="subject in var.subjects"
+                                                class="btn-default cursor-pointer"
                                                 ng-click="updateSubjectForm('{{subject}}')">
                                                 <td width="5%">{{subject.subjectType.code_short_name}}</td>
-                                                <td width="25%">{{subject.surname}}{{" " + subject.firstname}}{{" " +
+                                                <td width="25%">{{subject.surname}}{{" " + subject.firstname}}{{" "
+                                                    +
                                                     subject.fathername}}{{" " + subject.fullname}}
                                                 </td>
                                                 <td width="25%">{{subject.bothRegDate|date}}</td>
-                                                <td>{{subject.personalNumber}} {{subject.unp}}</td>
-                                                <td>{{subject.address}}</td>
+                                                <td width="25%">{{subject.personalNumber}} {{subject.unp}}</td>
+                                                <td width="15%">{{subject.address}}</td>
                                             </tr>
                                         </table>
+
                                     </div>
                                     <ul class="nav nav-tabs distance-top padding-top">
                                         <li class="cursor-pointer" role="presentation" ng-click="clientActivate()"
@@ -314,8 +318,10 @@
                                                     <table class="table table-bordered">
                                                         <caption>Выбрать представляемых заявителей</caption>
                                                         <tr ng-repeat="subj in var.decl.declarants| filter: filterSubject"
-                                                            class="cursor-pointer btn-default" ng-click="selectClient(subj.declarantId)">
-                                                            <td width="100%"  ng-class="{'success': checkChosen(subj.declarantId)}">
+                                                            class="cursor-pointer btn-default"
+                                                            ng-click="selectClient(subj.declarantId)">
+                                                            <td width="100%"
+                                                                ng-class="{'success': checkChosen(subj.declarantId)}">
                                                                 {{subj.person.surname + " " +
                                                                 subj.person.firstname + " " + subj.person.fathername}}
                                                             </td>
@@ -783,7 +789,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dixsiss="modal" aria-hidden="true" ng-click="showSubject = false">&times;</button>
+                <button type="button" class="close" data-dixsiss="modal" aria-hidden="true"
+                        ng-click="showSubject = false">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -820,11 +827,13 @@
                                 </tr>
                             </table>
 
-                            <table  class="table table-bordered" ng-if="var.modalSubjects.declrepr_type == 2">
+                            <table class="table table-bordered" ng-if="var.modalSubjects.declrepr_type == 2">
                                 <caption>Представляемые субъекты</caption>
-                                <tr  ng-repeat="subject in getRelatedSubject(var.modalSubjects)">
+                                <tr ng-repeat="subject in getRelatedSubject(var.modalSubjects)">
                                     <td>
-                                        {{subject.parentPerson.person.surname + " " + subject.parentPerson.person.firstname + " " + subject.parentPerson.person.fathername}}
+                                        {{subject.parentPerson.person.surname + " " +
+                                        subject.parentPerson.person.firstname + " " +
+                                        subject.parentPerson.person.fathername}}
                                     </td>
                                 </tr>
                             </table>
@@ -855,7 +864,7 @@
 <div class="modal fade in " ng-init="showLoading = true" visible="showLoading" ng-class="{'in' : showLoading }"
      ng-style="{true: {display: 'block'}, false: {display: 'none'}}[showLoading ]">
     <div class="center_b">
-        <img src="../images/image_836733.gif" alt=""/>
+        <img src="./images/image_836733.gif" alt=""/>
     </div>
 </div>
 
