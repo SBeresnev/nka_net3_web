@@ -127,7 +127,7 @@ var app = angular
             if (items != undefined) {
                 for (var i = 0; i < items.length; i++) {
                     var item = items[i];
-                    if (item.code_id < 500 && item.code_id != 100 && item.code_id != 200) {
+                    if (item.code_id < 500 && (item.code_id == 100 || item.code_id == 200 || item.code_id >= 300 )) {
                         filtered.push(item);
                     }
                 }

@@ -70,8 +70,8 @@ angular.module('assetsApp')
         $scope.pushSubject = function (subject) {
             var url = DOMAIN + '/nka_net3/subject/add';
             subject.subjectType = angular.copy($scope.var.subjtype);
-            $http.post(url, subject).catch(function () {
-                alert("Ошибка сервера");
+            $http.post(url, subject).catch(function (message) {
+                alert(JSON.stringify(message.data));
             });
             $scope.var.subj = {};
         };

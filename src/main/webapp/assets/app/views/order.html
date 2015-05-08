@@ -62,14 +62,15 @@
                                         <button class="btn btn-default mybtn litle-right " style="width: 88%"
                                                 ng-click="modalSubject(selectedSubject)">
                                             <table class="table-bordered" width="100%">
-                                                <td width="30%" ng-if="selectedSubject.declrepr_type == 1"> заявитель
+                                                <td width="30%" ng-if="selectedSubject.declrepr_type == 1">
+                                                    заявитель
                                                 </td>
                                                 <td width="30%" ng-if="selectedSubject.declrepr_type == 2">
                                                     представитель
                                                 </td>
                                                 <td width="70%">{{selectedSubject.person.surname+"
                                                     "}}{{selectedSubject.person.firstname+"
-                                                    "}}{{selectedSubject.person.fullname}}
+                                                    "}}{{selectedSubject.person.fullname}}{{selectedSubject.person.unp}}
                                                 </td>
                                             </table>
                                         </button>
@@ -110,12 +111,15 @@
                                                     </span>
                                         </div>
                                     </div>
-                                    <div class="col-xs-11 white-background window" click-anywhere-but-here="var.showSubjectsTable = false" ng-show="var.showSubjectsTable">
+                                    <div class="col-xs-11 white-background window"
+                                         click-anywhere-but-here="var.showSubjectsTable = false"
+                                         ng-show="var.showSubjectsTable">
                                         <table class="table table-bordered">
                                             <tr>
                                                 <th>Тип</th>
                                                 <th>ФИО/Наименование</th>
-                                                <th>Дата рождения</th>
+                                                <th>Дата рождения/регистрации</th>
+                                                <th ng-if="var.subjects[0].dtype == 'juridical'">УНП</th>
                                                 <th>Регистрационный/Идентификационный номер</th>
                                                 <th>Адрес</th>
                                             </tr>
@@ -128,8 +132,10 @@
                                                     subject.fathername}}{{" " + subject.fullname}}
                                                 </td>
                                                 <td width="25%">{{subject.bothRegDate|date}}</td>
-                                                <td width="25%">{{subject.personalNumber}} {{subject.unp}}</td>
-                                                <td width="15%">{{subject.address}}</td>
+                                                <td width="10%" ng-if="subject.dtype == 'juridical'">{{subject.unp}}
+                                                </td>
+                                                <td width="25%">{{subject.personalNumber}} {{subject.regNumber}}</td>
+                                                <td width="25%">{{subject.address}}</td>
                                             </tr>
                                         </table>
 
@@ -213,6 +219,16 @@
 
                                             <div class="col-xs-6">
                                                 <input disabled class="form-control" ng-model="var.client.shortname">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"
+                                             ng-show="'200' < var.typeClient.code_id && var.typeClient.code_id < '400'">
+                                            <label class="col-xs-3  control-label">
+                                                <span class="pull-right">Полное наименование:</span>
+                                            </label>
+
+                                            <div class="col-xs-6">
+                                                <input disabled class="form-control" ng-model="var.client.fullname">
                                             </div>
                                         </div>
                                         <div class="form-group"
@@ -796,7 +812,7 @@
                 <div class="row">
                     <div class="col-xs-8">
                         <div class="panel-body" style="overflow:auto; height: auto">
-                            <table class="table table-bordered">
+                            <table ng-if="var.modalSubjects.person.dtype == 'private'" class="table table-bordered">
                                 <tr>
                                     <td>Имя</td>
                                     <td>{{var.modalSubjects.person.firstname}}</td>
@@ -826,6 +842,36 @@
                                     <td>{{var.modalSubjects.person.personalNumber}}</td>
                                 </tr>
                             </table>
+
+                            <table ng-if="var.modalSubjects.person.dtype == 'juridical'" class="table table-bordered">
+                                <tr>
+
+                                    <td>Полное наименование</td>
+                                    <td>{{var.modalSubjects.person.fullname}}</td>
+                                </tr>
+                                <tr>
+                                    <td>наименование</td>
+                                    <td>{{var.modalSubjects.person.shortname}}</td>
+                                </tr>
+                                <tr>
+                                    <td>УНП</td>
+                                    <td>{{var.modalSubjects.person.unp}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Рег. номер</td>
+                                    <td>{{var.modalSubjects.person.regNumber}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Дата регистрации</td>
+                                    <td>{{var.modalSubjects.person.bothRegDate | date}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Орг. структура</td>
+                                    <td>{{var.modalSubjects.person.orgRightForm.code_name}}</td>
+                                </tr>
+
+                            </table>
+
 
                             <table class="table table-bordered" ng-if="var.modalSubjects.declrepr_type == 2">
                                 <caption>Представляемые субъекты</caption>

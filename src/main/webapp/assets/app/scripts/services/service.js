@@ -56,7 +56,7 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
   };
 
   httpServices.searchSubjects = function (id, number, fio, scope) {
-    var url = DOMAIN+'/nka_net3/subject/private';
+    var url = DOMAIN+'/nka_net3/subject/search';
     var params = "?" + "type=" + id + "&" + "number=" + number + "&" + "name=" + fio;
     var method = "GET";
     var http = createXMLHTTPObject();

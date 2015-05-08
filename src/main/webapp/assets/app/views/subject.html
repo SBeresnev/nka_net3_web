@@ -61,31 +61,29 @@
                                                  </span>
                     </div>
                 </div>
-                <div class="panel">
-                    <div class="panel-body">
-                        <div class="col-xs-12 white-background " click-anywhere-but-here="var.showSubjectsTable = false"
-                             ng-show="var.showSubjectsTable">
-                            <table class="table table-bordered">
-                                <tr>
-                                    <th>Тип</th>
-                                    <th>ФИО/Наименование</th>
-                                    <th>Дата рождения</th>
-                                    <th>Регистрационный/Идентификационный номер</th>
-                                    <th>Адрес</th>
-                                </tr>
-                                <tr ng-repeat="subject in var.subjects" class="btn-default"
-                                    ng-click="updateSubjectForm('{{subject}}')">
-                                    <td width="5%">{{subject.subjectType.code_short_name}}</td>
-                                    <td width="20%">{{subject.surname}}{{" "+subject.firstname}}{{" "+subject.fathername
-                                        }}{{subject.fullname}}
-                                    </td>
-                                    <td width="10%">{{subject.bothRegDate|date}}</td>
-                                    <td width="10%">{{subject.personalNumber}} {{subject.unp}}</td>
-                                    <td>{{subject.address}}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
+
+                <div class="col-xs-8 white-background  window" click-anywhere-but-here="var.showSubjectsTable = false"
+                     ng-show="var.showSubjectsTable">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Тип</th>
+                            <th>ФИО/Наименование</th>
+                            <th>Дата рождения</th>
+                            <th>Регистрационный/Идентификационный номер</th>
+                            <th>Адрес</th>
+                        </tr>
+                        <tr ng-repeat="subject in var.subjects" class="btn-default"
+                            ng-click="updateSubjectForm('{{subject}}')">
+                            <td width="5%">{{subject.subjectType.code_short_name}}</td>
+                            <td width="20%">{{subject.surname}}{{" "+subject.firstname}}{{" "+subject.fathername
+                                }}{{subject.fullname}}
+                            </td>
+                            <td width="10%">{{subject.bothRegDate|date}}</td>
+                            <td width="10%">{{subject.personalNumber}} {{subject.unp}}</td>
+                            <td  width="10%">{{subject.address}}</td>
+                        </tr>
+                    </table>
+
                 </div>
             </div>
         </div>
