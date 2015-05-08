@@ -1,0 +1,234 @@
+<div class="padding-top" ng-init="init()">
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+            <h3 class="center-pill">
+                Типы словарей
+            </h3>
+            <div class="panel">
+                <div class="panel-title panel "></div>
+                <div class="panel-body">
+                    <table class="table table-bordered ">
+                        <tr>
+                            <th>Идентификатор</th>
+                            <th>Имя</th>
+                            <th>Статус</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="item in catalogTypes | orderBy: 'analyticTypeName'" class="btn-default cursor-pointer"
+                            ng-class="{'success': selectedType == item.analytic_type}"
+                            ng-click="loadCatalogs(item.analytic_type)">
+                            <th>{{item.analytic_type}}</th>
+                            <td>{{item.analyticTypeName}}</td>
+                            <td>{{item.status}}</td>
+                            <td width="3%">
+                                <button class="btn btn-danger" ng-click="deleteType(item.analytic_type)">X</button>
+                            </td>
+                        </tr>
+                    </table>
+                    <button class="btn btn-primary pull-right" ng-click="modalNewType()">добавить</button>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-bordered ">
+                        <tr>
+                            <th>Тип</th>
+                            <th>Идентификатор</th>
+                            <th>Имя</th>
+                            <th>Короткое имя</th>
+                            <th>Родительский код</th>
+                        </tr>
+                        <tr ng-repeat="item in catalog" class="btn-default cursor-pointer"
+                            ng-class="{'success': selectedItem == item.code_id}"
+                            ng-click="modal(item)">
+                            <th>{{item.analytic_type}}</th>
+                            <th>{{item.code_id}}</th>
+                            <td>{{item.code_name}}</td>
+                            <td>{{item.code_short_name}}</td>
+                            <td>{{item.parent_code}}</td>
+                        </tr>
+                    </table>
+                    <button class="btn btn-primary pull-right" ng-click="modalNewCatalog()">добавить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" visible="showCatalog" ng-class="{'in' : showCatalog}"
+     ng-style="{true: {display: 'block'}, false: {display: 'none'}}[showCatalog]">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                        ng-click="showCatalog = false">&times;</button>
+                <h4 class="modal-title">{{ title }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="panel-body ">
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">analytic_type</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="modalCatalog.analytic_type"  required="required" readonly>
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">code_id</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="modalCatalog.code_id">
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">code_name</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="modalCatalog.code_name">
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">code_short_name</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="modalCatalog.code_short_name">
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">n_prm1</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="modalCatalog.n_prm1">
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">parent_code</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="modalCatalog.parent_code">
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">status</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="modalCatalog.status">
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">unitmeasure</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="modalCatalog.unitmeasure">
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">v_prm1</label>
+                                <input class="form-control ng-pristine ng-valid ng-touched" type="text"
+                                       ng-model="modalCatalog.v_prm1">
+                            </div>
+                            <button class="btn btn-primary" ng-click="updateCatalog(modalCatalog)">Сохранить изменения
+                            </button>
+                            <button class="btn btn-danger" ng-click="deleteCatalog(modalCatalog)">Удалить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" visible="showNewCatalog" ng-class="{'in' : showNewCatalog}"
+     ng-style="{true: {display: 'block'}, false: {display: 'none'}}[showNewCatalog]">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                        ng-click="modalNewCatalog()">&times;</button>
+                <h4 class="modal-title">{{ title }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="panel-body" style="overflow:auto; height: 550px">
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">analytic_type</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="item.analytic_type"  required="required" readonly>
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">code_id</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="item.code_id">
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">code_name</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="item.code_name">
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">code_short_name</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="item.code_short_name">
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">n_prm1</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="item.n_prm1">
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">parent_code</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="item.parent_code">
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">status</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="item.status">
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">unitmeasure</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="item.unitmeasure">
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">v_prm1</label>
+                                <input class="form-control ng-pristine ng-valid ng-touched" type="text"
+                                       ng-model="item.v_prm1">
+                            </div>
+                            <button class="btn btn-primary" ng-click="addNewCatalog(item)">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" visible="showNewType" ng-class="{'in' : showNewType}"
+     ng-style="{true: {display: 'block'}, false: {display: 'none'}}[showNewType]">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                        ng-click="modalNewType()">&times;</button>
+                <h4 class="modal-title">{{ title }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="panel-body">
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">analytic_type</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="type.analytic_type">
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">analyticTypeName</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="type.analyticTypeName">
+                            </div>
+                            <div class="form-group ng-scope">
+                                <label class="control-label ng-binding">status</label>
+                                <input class="form-control ng-pristine ng-untouched ng-valid" type="text"
+                                       ng-model="type.status">
+                            </div>
+                            <button class="btn btn-primary" ng-click="addNewType(type)">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade in " ng-init="showLoading = true" visible="showLoading" ng-class="{'in' : showLoading }"
+     ng-style="{true: {display: 'block'}, false: {display: 'none'}}[showLoading ]">
+    <div class="center_b">
+        <img src="./images/image_836733.gif" alt=""/>
+    </div>
+</div>
