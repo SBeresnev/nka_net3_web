@@ -163,7 +163,7 @@
                                                 <span class="pull-right">Тип субъекта:</span>
                                             </label>
                                             <select disabled ng-model="var.typeClient"
-                                                    ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes | filterSubjectType track by subjecttype.code_id"
+                                                    ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes track by subjecttype.code_id"
                                                     class="form-control col-xs-6 mySelect width310">
                                             </select>
                                         </div>
@@ -339,7 +339,7 @@
                                                             <td width="100%"
                                                                 ng-class="{'success': checkChosen(subj.declarantId)}">
                                                                 {{subj.person.surname + " " +
-                                                                subj.person.firstname + " " + subj.person.fathername}}
+                                                                subj.person.firstname + " " + subj.person.fathername + " " + subj.person.fullname}}
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -879,7 +879,7 @@
                                     <td>
                                         {{subject.parentPerson.person.surname + " " +
                                         subject.parentPerson.person.firstname + " " +
-                                        subject.parentPerson.person.fathername}}
+                                        subject.parentPerson.person.fathername + " " + subject.parentPerson.person.fullname}}
                                     </td>
                                 </tr>
                             </table>

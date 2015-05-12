@@ -56,7 +56,7 @@ var app = angular
                 controller: 'ItemsCtrl'
             })
             .when('/dict', {
-                templateUrl: 'views/catalog.html',
+                templateUrl: 'views/catalogs.html',
                 controller: 'CatalogCtrl'
             })
             .when('/dependency', {

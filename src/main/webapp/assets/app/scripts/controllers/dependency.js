@@ -135,9 +135,9 @@ angular.module('assetsApp')
         $scope.showListItem = function (id) {
             $scope.selectedParentItem = id;
             $scope.showLoading = true;
-            $http.get(DOMAIN + "/nka_net3/catalog/get_analytic_dependency_parent_item_by_id", {
+            $http.get(DOMAIN + "/nka_net3/catalog/get_catalogs_by_type", {
                 params: {
-                    id: $scope.selectedDependedType
+                    type: $scope.selectedDependedType
                 }
             }).then(function (res) {
                 $scope.listItems = res.data;
