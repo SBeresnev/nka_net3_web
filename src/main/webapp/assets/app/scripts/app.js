@@ -135,13 +135,20 @@ var app = angular
             return filtered;
         };
     })
+    .filter('pagination', function() {
+        return function(input, start) {
+            if (!input || !input.length) { return; }
+            start = +start; //parse to int
+            return input.slice(start);
+        }
+    })
     .filter('filterSubjectTypeForCreate', function () {
         return function (items) {
             var filtered = [];
             if (items != undefined) {
                 for (var i = 0; i < items.length; i++) {
                     var item = items[i];
-                    if (item.code_id < 200 && item.code_id != 100) {
+                    if ((item.parent_code == 200 || item.parent_code == 100) && item.code_id != 100 && item.code_id != 200) {
                         filtered.push(item);
                     }
                 }

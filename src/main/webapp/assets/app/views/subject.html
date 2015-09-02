@@ -5,12 +5,25 @@
                 <div class="col-xs-2">
                     <div class="input-group">
                         <div class="checkbox">
-                            <label><input type="checkbox" ng-init="mvdSearch=false" ng-model="mvdSearch">Поиск по
+                            <label ng-hide="urSearch"><input type="checkbox" ng-init="mvdSearch=false" ng-model="mvdSearch">Поиск по
                                 паспорту</label>
+                            <label ng-hide="mvdSearch"><input type="checkbox" ng-init="urSearch=false" ng-model="urSearch">Поиск по
+                                юридическим лицам</label>
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-2" ng-hide="mvdSearch">
+                <div class="col-xs-2" ng-hide="mvdSearch || urSearch">
+<!--                    <div class="input-group">
+                        <select ng-model="var.typeSearchBase"
+                                ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes| filterSubjectTypeBase"
+                                class="form-control col-xs-6 mySelect"
+                                required="required">
+                            <option value="" disabled selected>Тип субъекта</option>
+                            <option value="200">Физ. лица</option>
+                            <option value="100">Юр. лица</option>
+                        </select>
+                    </div>-->
+
                     <div class="input-group">
                         <select ng-model="var.typeSearch"
                                 ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes| filterSubjectTypeForCreate"
@@ -20,7 +33,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-xs-3" ng-hide="mvdSearch">
+                <div class="col-xs-3" ng-hide="mvdSearch || urSearch">
                     <input type="text" class="form-control" placeholder="Номер" ng-init="var.searchSubject.number = ''"
                            ng-model="var.searchSubject.number">
                 </div>
@@ -32,7 +45,17 @@
                                ng-style="{false:{color: 'red', 'text-decoration': 'underline'}}[validPass()]">
                     </div>
                 </div>
-                <div class="col-xs-4" ng-hide="mvdSearch">
+
+                <div class="col-xs-5" ng-hide="!urSearch">
+                    <div class="input-group-btn">
+                        <input type="text" class="form-control" placeholder="Номер УНП "
+                               ng-init="var.searchSubject.unp = ''"
+                               ng-model="var.searchSubject.unp"
+                               ng-style="{false:{color: 'red', 'text-decoration': 'underline'}}[validUnp()]">
+                    </div>
+                </div>
+
+                <div class="col-xs-4" ng-hide="mvdSearch || urSearch">
                     <div class="input-group">
                         <input ng-init="var.searchSubject.fioAndName = ''"
                                type="text"
@@ -62,33 +85,85 @@
                     </div>
                 </div>
 
-                <div class="col-xs-8 white-background  window" click-anywhere-but-here="var.showSubjectsTable = false"
-                     ng-show="var.showSubjectsTable">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>Тип</th>
-                            <th>ФИО/Наименование</th>
-                            <th>Дата рождения</th>
-                            <th>Регистрационный/Идентификационный номер</th>
-                            <th>Адрес</th>
-                        </tr>
-                        <tr ng-repeat="subject in var.subjects" class="btn-default"
-                            ng-click="updateSubjectForm('{{subject}}')">
-                            <td width="5%">{{subject.subjectType.code_short_name}}</td>
-                            <td width="20%">{{subject.surname}}{{" "+subject.firstname}}{{" "+subject.fathername
-                                }}{{subject.fullname}}
-                            </td>
-                            <td width="10%">{{subject.bothRegDate|date}}</td>
-                            <td width="10%">{{subject.personalNumber}} {{subject.unp}}</td>
-                            <td  width="10%">{{subject.address}}</td>
-                        </tr>
-                    </table>
-
+                <div class="col-xs-5" ng-hide="!urSearch">
+                    <div class="input-group">
+                        <input type="text" class="form-control"
+                               placeholder="Название"
+                               ng-init="var.searchSubject.nameUr = ''"
+                               ng-model="var.searchSubject.nameUr">
+                                                 <span class="input-group-btn">
+                                                      <button class="btn btn-default" type="submit"
+                                                              ng-click="searchUr()">Поиск
+                                                      </button>
+                                                 </span>
+                    </div>
                 </div>
+
+
+
             </div>
         </div>
         <div class="panel-body">
             <div class="row">
+
+                <div class="col-xs-8 white-background  window"
+                     ng-show="var.showSubjectsTable">
+
+                    <div class="panel-title panel "></div>
+                    <div class="panel-body">
+                        <input class="btn btn-info show-all" type="button" ng-click="loadAll()" id="show-all"
+                               value="Показать всё">
+                        <label>Показывать по </label> <input type="number" min="1" ng-model="pageSize" style="width: 45px">
+                        <label>элементов</label>
+                    </div>
+                    <form class="form-horizontal" role="form" id="flt1" style="visibility: hidden">
+                        <div class="col-sm-2 form-group has-feedback">
+                            <input class="form-control" placeholder="filter catalog..." type="search" ng-model="flt1">
+                            <span class="form-control-feedback glyphicon glyphicon-search"></span>
+                        </div>
+                    </form>
+
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Тип</th>
+                            <th>ФИО/Наименование</th>
+                            <th>Дата рождения/регистрации</th>
+                            <th>Регистрационный/Идентификационный номер</th>
+                            <th>Адрес</th>
+                        </tr>
+                        <tr ng-repeat="subject in var.subjects | filter:flt1 | pagination: curPage * pageSize |  limitTo: pageSize"
+                            class="btn-default"
+                            ng-click="updateSubjectForm({{subject}})"
+                            ng-style="{false:{'background-color': '#F7BABA'}}[unReg(subject)]">
+                            <td width="5%">{{subject.subjectType.code_short_name}}{{subject.opf}}</td>
+                            <td width="20%">{{subject.surname}}{{" "+subject.firstname}}{{" "+subject.fathername
+                                }}{{subject.fullname}}{{subject.vnaim}}
+                            </td>
+                            <td width="10%">{{subject.bothRegDate|date}}{{subject.regDate}}</td>
+                            <td width="10%">{{subject.personalNumber}} {{subject.unp}}</td>
+                            <td  width="10%">{{subject.address}}{{subject.fullAddress}}</td>
+                        </tr>
+                    </table>
+
+                    <div class="pagination pagination-centered" ng-show="var.subjects.length">
+                        <ul class="pagination-controle pagination">
+                            <li>
+                                <button type="button" class="btn btn-primary" ng-disabled="curPage == 0"
+                                        ng-click="curPage=curPage-1"> &lt; PREV
+                                </button>
+                            </li>
+                            <li>
+                                <span>Page {{curPage + 1}} of {{ numberOfPages() }}</span>
+                            </li>
+                            <li>
+                                <button type="button" class="btn btn-primary"
+                                        ng-disabled="curPage >= var.subjects.length/pageSize - 1"
+                                        ng-click="curPage = curPage+1">NEXT &gt;</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
                 <!--  <form>
                       <div class="col-xs-6">
                           <div class="input-group">
@@ -115,7 +190,8 @@
                       </div>
                   </form>-->
 
-                <div class="form-horizontal distance-top">
+                <div class="form-horizontal distance-top"
+                ng-show="var.showForms">
                     <div class="form-group row">
                         <label class="col-xs-3 control-label">
                     <span class="pull-right">
@@ -177,7 +253,7 @@
                         </div>
                     </div>
                     <div class="form-group"
-                         ng-show=" 200 < var.subjtype.code_id&& var.subjtype.code_id< 400">
+                         ng-show="200 < var.subjtype.code_id&& var.subjtype.code_id< 400">
                         <label class="col-xs-3  control-label">
                     <span class="pull-right">
                         Сокращенное наименование:

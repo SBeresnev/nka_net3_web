@@ -38,7 +38,8 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
 
 
   httpServices.updateSubject = function (subject) {
-    var url = DOMAIN+'/nka_net3/subject/update';
+   /* var url = DOMAIN+'/nka_net3/subject/update';*/
+    var url = DOMAIN+'/subject/update';
     var params = "?";
     var method = "PUT";
     for (var index in subject) {
@@ -56,10 +57,12 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
   };
 
   httpServices.searchSubjects = function (id, number, fio, scope) {
-    var url = DOMAIN+'/nka_net3/subject/search';
+    /*var url = DOMAIN+'/nka_net3/subject/search';*/
+    var url = DOMAIN+'/subject/search';
     var params = "?" + "type=" + id + "&" + "number=" + number + "&" + "name=" + fio;
     var method = "GET";
     var http = createXMLHTTPObject();
+    console.log(url + params)
     http.open(method, url + params, true);
     http.send();
     return http.onreadystatechange = function () {
@@ -67,9 +70,8 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
         scope.var.loading = false;
         if (http.status == 200) {
           scope.var.subjects = JSON.parse(http.responseText);
-          scope.var.showSubjectsTable = true;
-          if(scope.var.subjects.length == 0) {
-            scope.var.showSubjectsTable = false;
+          if(scope.var.subjects.length != 0) {
+            scope.var.showSubjectsTable = true;
           }
           scope.$apply();
         }
@@ -78,7 +80,8 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
   };
 
   httpServices.searchPass= function ( number, id, scope) {
-    var url = DOMAIN+'/nka_net3/subject/mvd';
+    /*var url = DOMAIN+'/nka_net3/subject/mvd';*/
+    var url = DOMAIN+'/subject/mvd';
     var params = "?" + "seriesAndNumber=" + number + "&" + "idNumber=" + id;
     var method = "GET";
     var http = createXMLHTTPObject();
@@ -89,17 +92,40 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
         scope.var.loading = false;
         if (http.status == 200) {
           scope.var.subjects = JSON.parse(http.responseText);
-          scope.var.showSubjectsTable = true;
-          if(scope.var.subjects.length == 0) {
-            scope.var.showSubjectsTable = false;
+          if(scope.var.subjects.length != 0) {
+            scope.var.showSubjectsTable = true;
           }
           scope.$apply();
         }
       }
     }
   };
+
+  httpServices.searchUr= function ( unp, nameUr, scope) {
+    /*var url = DOMAIN+'/nka_net3/subject/minjust';*/
+    var url = DOMAIN+'/subject/minjust_serv';
+    var params = "?" + "unp=" + unp + "&" + "name=" + nameUr;
+    var method = "GET";
+    var http = createXMLHTTPObject();
+    http.open(method, url + params, true);
+    http.send();
+    return http.onreadystatechange = function () {
+      if (http.readyState == 4) {
+        scope.var.loading = false;
+        if (http.status == 200) {
+          scope.var.subjects = JSON.parse(http.responseText);
+          if(scope.var.subjects.length != 0) {
+            scope.var.showSubjectsTable = true;
+          }
+          scope.$apply();
+        }
+      }
+    }
+  };
+
   httpServices.addSubject = function (subject) {
-    var url = DOMAIN+'/nka_net3/subject/add';
+    /*var url = DOMAIN+'/nka_net3/subject/add';*/
+    var url = DOMAIN+'/subject/add';
     var params = "?";
     var method = "POST";
     var http = createXMLHTTPObject();
