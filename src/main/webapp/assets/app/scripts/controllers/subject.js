@@ -22,7 +22,8 @@ angular.module('assetsApp')
 
         $scope.init = function () {
             $scope.var.loading = true;
-            $http.get(DOMAIN + "/nka_net3/catalog/states")
+            /*$http.get(DOMAIN + "/nka_net3/catalog/states")*/
+            $http.get(DOMAIN + "/catalog/states")
                 .then(function (res) {
                     $scope.var.states = res.data;
                     $scope.var.subj = {sitizens: $scope.var.states[81]};
@@ -30,7 +31,8 @@ angular.module('assetsApp')
                     $scope.var.showForms = true;
                 });
 
-            $http.get(DOMAIN + "/nka_net3/catalog/subjectTypes")
+            /*$http.get(DOMAIN + "/nka_net3/catalog/subjectTypes")*/
+            $http.get(DOMAIN + "/catalog/subjectTypes")
                 .then(function (res) {
                     $scope.var.subjecttypes = res.data;
                     $scope.var.loading = false;
@@ -55,18 +57,18 @@ angular.module('assetsApp')
         };
 
         $scope.hiddenAll = function () {
-                var inpt_hd = document.getElementById('hide-all');
-                var filt = document.getElementById('flt1');
+            var inpt_hd = document.getElementById('hide-all');
+            var filt = document.getElementById('flt1');
             $scope.pageSize = 4;
-                if(inpt_hd!=null)
-                {
-                    inpt_hd.id='show-all';
-                    inpt_hd.value = 'Показать всё';
-                    inpt_hd.classList.remove("btn-warning");
-                    inpt_hd.classList.add("btn-info");
-                    filt.style.visibility = "hidden";
-                }
-            };
+            if(inpt_hd!=null)
+            {
+                inpt_hd.id='show-all';
+                inpt_hd.value = 'Показать всё';
+                inpt_hd.classList.remove("btn-warning");
+                inpt_hd.classList.add("btn-info");
+                filt.style.visibility = "hidden";
+            }
+        };
 
         $scope.searchSubjects = function () {
             if ($scope.var.typeSearch != undefined) {
@@ -84,63 +86,16 @@ angular.module('assetsApp')
         };
 
         $scope.updateSubjectForm = function (subject) {
-            $scope.var.subj = [];
-            $scope.var.showForms = true;
-            $scope.var.showSubjectsTable = false;
-            if(subject.unp != null && subject.subjectType == null) {
-                var subjPush = {
-                    subjectId:null,
-                    reestrdataID:null,
-                    isOwner:null,
-                    subjectType:
-                    {
-                        code_id:210,
-                        analytic_type:110,
-                        code_name:null,
-                        code_short_name:null,
-                        parent_code:200,
-                        n_prm1:null,
-                        v_prm1:"Регистр юридических лиц",
-                        unitmeasure:null,
-                        status:0,
-                        catalogPk:
-                        {
-                            code_id:210,
-                            analytic_type:110
-                        }
-                    },
-                    dtype:"juridical",
-                    subjectdataid:null,
-                    fullname: subject.vnaim,
-                    shortname:subject.vn,
-                    regNumber:subject.unp,
-                    unp:subject.unp,
-                    orgRightForm:
-                    {
-                        code_id:subject.nkOpf,
-                        analytic_type:210,
-                        code_name:null,
-                        code_short_name:null,
-                        parent_code:null,
-                        n_prm1:null,
-                        v_prm1:null,
-                        unitmeasure:null,
-                        status:1,
-                        catalogPk:
-                        {
-                            code_id:null,
-                            analytic_type:210
-                        }
-                    },
-                    bothRegDate:subject.regDate,
-                    remark:null,
-                    address:subject.fullAddress
-                }
-                subject = subjPush;
+            if($scope.unReg(subject)) {
+                $scope.var.subj = [];
+                $scope.var.showForms = true;
+                $scope.var.showSubjectsTable = false;
+                subject = $scope.createJSON(subject);
+                $scope.var.subjtype = subject.subjectType;
+                $scope.var.subj = angular.copy(subject);
+                $scope.var.subj.bothRegDate = new Date(angular.copy(subject).bothRegDate);
             }
-            $scope.var.subjtype = subject.subjectType;
-            $scope.var.subj = angular.copy(subject);
-            $scope.var.subj.bothRegDate = new Date(angular.copy(subject).bothRegDate);
+            else return false;
         };
 
         $scope.searchPass = function () {
@@ -162,21 +117,22 @@ angular.module('assetsApp')
         $scope.searchUr = function () {
 
             /*if ($scope.validUnp()) {*/
-                $scope.var.loading = true;
+            $scope.var.loading = true;
             $scope.var.showForms = false;
             $scope.var.showSubjectsTable = true;
             $scope.hiddenAll();
             $scope.flt1="";
-                $scope.var.subjects = [];
-                delete $http.defaults.headers.common['X-Requested-With'];
-                httpServices.searchUr($scope.var.searchSubject.unp, $scope.var.searchSubject.nameUr, $scope);
+            $scope.var.subjects = [];
+            delete $http.defaults.headers.common['X-Requested-With'];
+            httpServices.searchUr($scope.var.searchSubject.unp, $scope.var.searchSubject.nameUr, $scope);
             /*} else {
-                alert("Ошибочно заполненны поля!");
-            }*/
+             alert("Ошибочно заполненны поля!");
+             }*/
         };
 
         $scope.pushSubject = function (subject) {
-            var url = DOMAIN + '/nka_net3/subject/add';
+            /*var url = DOMAIN + '/nka_net3/subject/add';*/
+            var url = DOMAIN + '/subject/add';
             subject.subjectType = angular.copy($scope.var.subjtype);
             console.log(JSON.stringify(subject));
             $http.post(url, subject).catch(function (message) {
@@ -203,10 +159,64 @@ angular.module('assetsApp')
         };
 
         $scope.validUnp = function () {
-          var exp = /^\d{9}$/;
-          return exp.test($scope.var.searchSubject.unp);
+            var exp = /^\d{9}$/;
+            return exp.test($scope.var.searchSubject.unp);
         };
         $scope.unReg = function (subject) {
-          return (subject.unRegDate == null);
+            return (subject.unRegDate == null);
+        };
+        $scope.createJSON=function(subject) {
+            if(subject.unp != null && subject.subjectType == null) {
+                var subjPush = {
+                    subjectId:null,
+                    reestrdataID:null,
+                    isOwner:null,
+                    subjectType:
+                    {
+                        code_id:210,
+                        analytic_type:null,
+                        code_name:null,
+                        code_short_name:null,
+                        parent_code:null,
+                        n_prm1:null,
+                        v_prm1:"Регистр юридических лиц",
+                        unitmeasure:null,
+                        status:1,
+                        catalogPk:
+                        {
+                            code_id:210,
+                            analytic_type:null
+                        }
+                    },
+                    dtype:"juridical",
+                    subjectdataid:null,
+                    fullname: subject.vnaim,
+                    shortname:subject.vn,
+                    regNumber:subject.unp,
+                    unp:subject.unp,
+                    orgRightForm:
+                    {
+                        code_id:subject.nkOpf,
+                        analytic_type:210,
+                        code_name:null,
+                        code_short_name:null,
+                        parent_code:null,
+                        n_prm1:null,
+                        v_prm1:null,
+                        unitmeasure:null,
+                        status:1,
+                        catalogPk:
+                        {
+                            code_id:subject.nkOpf,
+                            analytic_type:220
+                        }
+                    },
+                    bothRegDate:subject.regDate,
+                    remark:null,
+                    address:subject.fullAddress
+                }
+                subject = subjPush;
+            }
+            return subject;
         };
     });
