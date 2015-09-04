@@ -22,8 +22,7 @@ angular.module('assetsApp')
 
         $scope.init = function () {
             $scope.var.loading = true;
-            /*$http.get(DOMAIN + "/nka_net3/catalog/states")*/
-            $http.get(DOMAIN + "/catalog/states")
+            $http.get(DOMAIN + "/nka_net3/catalog/states")
                 .then(function (res) {
                     $scope.var.states = res.data;
                     $scope.var.subj = {sitizens: $scope.var.states[81]};
@@ -31,8 +30,7 @@ angular.module('assetsApp')
                     $scope.var.showForms = true;
                 });
 
-            /*$http.get(DOMAIN + "/nka_net3/catalog/subjectTypes")*/
-            $http.get(DOMAIN + "/catalog/subjectTypes")
+            $http.get(DOMAIN + "/nka_net3/catalog/subjectTypes")
                 .then(function (res) {
                     $scope.var.subjecttypes = res.data;
                     $scope.var.loading = false;
@@ -91,6 +89,7 @@ angular.module('assetsApp')
                 $scope.var.showForms = true;
                 $scope.var.showSubjectsTable = false;
                 subject = $scope.createJSON(subject);
+                $scope.var.sitizens = subject.sitizens;
                 $scope.var.subjtype = subject.subjectType;
                 $scope.var.subj = angular.copy(subject);
                 $scope.var.subj.bothRegDate = new Date(angular.copy(subject).bothRegDate);
@@ -115,24 +114,29 @@ angular.module('assetsApp')
         };
 
         $scope.searchUr = function () {
-
-            /*if ($scope.validUnp()) {*/
-            $scope.var.loading = true;
-            $scope.var.showForms = false;
-            $scope.var.showSubjectsTable = true;
-            $scope.hiddenAll();
-            $scope.flt1="";
-            $scope.var.subjects = [];
-            delete $http.defaults.headers.common['X-Requested-With'];
-            httpServices.searchUr($scope.var.searchSubject.unp, $scope.var.searchSubject.nameUr, $scope);
-            /*} else {
-             alert("Ошибочно заполненны поля!");
-             }*/
+            var unp = $scope.var.searchSubject.unp;
+            var nameUr = $scope.var.searchSubject.nameUr;
+            if(!$scope.isFillingField(nameUr, unp))
+                alert("Не заполненны поля!");
+            else if (unp.trim() != "" && !$scope.validUnp())
+                alert("Ошибочно заполненны поля!");
+            else {
+                $scope.var.loading = true;
+                $scope.var.showForms = false;
+                $scope.var.showSubjectsTable = true;
+                $scope.hiddenAll();
+                $scope.flt1 = "";
+                $scope.var.subjects = [];
+                delete $http.defaults.headers.common['X-Requested-With'];
+                httpServices.searchUr(unp, nameUr, $scope);
+                $scope.numberOfPages = function () {
+                    return Math.ceil($scope.var.subjects.length / $scope.pageSize);
+                };
+            }
         };
 
         $scope.pushSubject = function (subject) {
-            /*var url = DOMAIN + '/nka_net3/subject/add';*/
-            var url = DOMAIN + '/subject/add';
+            var url = DOMAIN + '/nka_net3/subject/add';
             subject.subjectType = angular.copy($scope.var.subjtype);
             console.log(JSON.stringify(subject));
             $http.post(url, subject).catch(function (message) {
@@ -211,6 +215,22 @@ angular.module('assetsApp')
                             analytic_type:220
                         }
                     },
+                    sitizens:
+                    {code_id:112,
+                        analytic_type:200,
+                        code_name:"Республика Беларусь",
+                        code_short_name:"БЕЛАРУСЬ",
+                        parent_code:null,
+                        n_prm1:null,
+                        v_prm1:"BLR",
+                        unitmeasure:null,
+                        status:1,
+                        catalogPk:
+                        {
+                            code_id:112,
+                            analytic_type:200
+                        }
+                    },
                     bothRegDate:subject.regDate,
                     remark:null,
                     address:subject.fullAddress
@@ -219,4 +239,10 @@ angular.module('assetsApp')
             }
             return subject;
         };
+        $scope.disabledJrField = function (id) {
+            return (200<id<400);
+        };
+        $scope.isFillingField = function (field1, field2) {
+            return (!(field1.trim() == "" && field2.trim() == ""));
+        }
     });
