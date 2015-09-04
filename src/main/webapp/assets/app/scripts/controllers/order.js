@@ -79,14 +79,14 @@ angular.module('assetsApp')
             $scope.var.subjects = [];
             $scope.var.showSubjectsTable = false;
             if ($scope.var.clientActive == 'active') {
-                $scope.var.typeClient = {code_id: JSON.parse(subject).subjectType.code_id};
-                $scope.var.client = angular.copy(JSON.parse(subject));
-                $scope.var.client.bothRegDate = new Date(angular.copy(JSON.parse(subject)).bothRegDate);
+                $scope.var.typeClient = {code_id: subject.subjectType.code_id};
+                $scope.var.client = angular.copy(subject);
+                $scope.var.client.bothRegDate = new Date((angular.copy(subject)).bothRegDate);
             }
             if ($scope.var.representativeActive == 'active') {
-                $scope.var.typeRepresent = {code_id: JSON.parse(subject).subjectType.code_id};
-                $scope.var.represent = angular.copy(JSON.parse(subject));
-                $scope.var.represent.bothRegDate = new Date(angular.copy(JSON.parse(subject)).bothRegDate);
+                $scope.var.typeRepresent = {code_id: subject.subjectType.code_id};
+                $scope.var.represent = angular.copy(subject);
+                $scope.var.represent.bothRegDate = new Date((angular.copy(subject)).bothRegDate);
             }
         };
 

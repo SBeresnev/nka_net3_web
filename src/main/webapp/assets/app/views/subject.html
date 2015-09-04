@@ -133,7 +133,7 @@
                             <th>Дата рождения/регистрации</th>
                             <th ng-show="subject.unp != ''">Дата прекращения регистрации</th>
                         </tr>
-                        <tr ng-repeat="subject in var.subjects | filter:flt1 | pagination: curPage * pageSize |  limitTo: pageSize| orderBy: 'unRegDate'"
+                        <tr ng-repeat="subject in var.subjects | filter:flt1 | pagination: curPage * pageSize |  limitTo: pageSize"
                             class="btn-default"
                             ng-click="updateSubjectForm({{subject}})"
                             ng-style="{false:{'background-color': '#F7BABA'}}[unReg(subject)]">
