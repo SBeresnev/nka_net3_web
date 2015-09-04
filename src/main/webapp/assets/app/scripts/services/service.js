@@ -99,7 +99,7 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
   };
 
   httpServices.searchUr= function ( unp, nameUr, scope) {
-    var url = DOMAIN+'/nka_net3/subject/minjust';
+    var url = DOMAIN+'/nka_net3/subject/minjust_serv';
     var params = "?" + "unp=" + unp + "&" + "name=" + nameUr;
     var method = "GET";
     var http = createXMLHTTPObject();

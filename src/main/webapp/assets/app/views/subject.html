@@ -125,25 +125,27 @@
 
                     <table class="table table-bordered">
                         <tr>
+                            <th>Номер</th>
                             <th>Тип</th>
                             <th>ФИО/Наименование</th>
-                            <th>Дата рождения/регистрации</th>
-                            <th ng-show="subject.unp != ''">Дата прекращения регистрации</th>
                             <th>Регистрационный/Идентификационный номер</th>
                             <th>Адрес</th>
+                            <th>Дата рождения/регистрации</th>
+                            <th ng-show="subject.unp != ''">Дата прекращения регистрации</th>
                         </tr>
                         <tr ng-repeat="subject in var.subjects | filter:flt1 | pagination: curPage * pageSize |  limitTo: pageSize| orderBy: 'unRegDate'"
                             class="btn-default"
                             ng-click="updateSubjectForm({{subject}})"
                             ng-style="{false:{'background-color': '#F7BABA'}}[unReg(subject)]">
+                            <td width="2%">{{$index + 1}}</td>
                             <td width="5%">{{subject.subjectType.code_short_name}}{{subject.opf}}</td>
                             <td width="20%">{{subject.surname}}{{" "+subject.firstname}}{{" "+subject.fathername
                                 }}{{subject.fullname}}{{subject.vnaim}}
                             </td>
-                            <td width="10%">{{subject.bothRegDate|date}}{{subject.regDate}}</td>
-                            <td width="10%" ng-show="subject.unp != ''">{{subject.unRegDate}}</td>
                             <td width="10%">{{subject.personalNumber}} {{subject.unp}}</td>
                             <td  width="10%">{{subject.address}}{{subject.fullAddress}}</td>
+                            <td width="5%">{{subject.bothRegDate|date}}{{subject.regDate}}</td>
+                            <td width="5%" ng-show="subject.unp != ''">{{subject.unRegDate}}</td>
                         </tr>
                     </table>
 
