@@ -23,9 +23,9 @@
     <mvc:default-servlet-handler/>
 
     <!-- resources exclusions from servlet mapping -->
-    <mvc:resources mapping="/assets/**" location="classpath:/META-INF/resources/webjars/"/>
+    <mvc:resources mapping="/assets/**" location="/"/>
     <mvc:resources mapping="/data/**" location="/assets/data/"/>
-    <mvc:resources mapping="/**" location="/assets/dist/"/>
+    <mvc:resources mapping="/**" location="/assets/app/"/>
 
 
 </beans>
