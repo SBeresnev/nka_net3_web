@@ -110,6 +110,12 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
         scope.var.loading = false;
         if (http.status == 200) {
           scope.var.subjects = JSON.parse(http.responseText);
+          (scope.var.subjects).sort(function(a, b){
+            if (a.unRegDate == null)
+              return -1;
+            else
+            return 1;
+          });
           if(scope.var.subjects.length != 0) {
             scope.var.showSubjectsTable = true;
           }
