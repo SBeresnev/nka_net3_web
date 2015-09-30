@@ -163,3 +163,7 @@ body {
   position: absolute;
   margin: 40px;
 }
+
+.k-treeview .k-in {
+   padding: 5px;
+}

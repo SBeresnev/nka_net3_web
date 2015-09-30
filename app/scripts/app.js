@@ -67,6 +67,10 @@ var app = angular
                 templateUrl: 'views/test.html',
                 controller: 'TestCtrl'
             })
+			.when('/address', {
+                templateUrl: 'views/address.html',
+                controller: 'AddressCtrl'
+            })
             .otherwise({
                 redirectTo: '#/'
             });
