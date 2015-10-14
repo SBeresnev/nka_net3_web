@@ -17,7 +17,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             states: '',
             items: '',
             subjecttypes: '',
-            ates: [{label: 'loading'}]
+            subjects: [{label: 'loading'}]
         };
 
         $scope.init = function () {
