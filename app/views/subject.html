@@ -352,11 +352,14 @@
                         <div class="col-xs-6">
                             <div class="btn-group" ng-class="var.openVar"  ng-model="var.ate">
                                 <input class="btn btn-default dropdown-toggle  width310" ng-value="var.ate" ng-click="open()" readonly="true">
-                                <ul class="dropdown-menu width310">
-                                    <abn-tree tree-data="var.ates" on-select="ate = branch.id+'-'+branch.label"></abn-tree>
-                                </ul>
+
+                                <!--ul class="dropdown-menu width310">
+                                 <abn-tree tree-data="var.ates" on-select="ate = branch.id+'-'+branch.label"></abn-tree>
+                                </ul-->
+
                             </div>
                         </div>
+
                     </div>
 
                     <div class="form-group" ng-show="100 < var.subjtype.code_id&& var.subjtype.code_id< 500">

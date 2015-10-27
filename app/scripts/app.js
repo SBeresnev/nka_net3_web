@@ -67,7 +67,7 @@ var app = angular
                 templateUrl: 'views/test.html',
                 controller: 'TestCtrl'
             })
-			.when('/address', {
+            .when('/address', {
                 templateUrl: 'views/address.html',
                 controller: 'AddressCtrl'
             })
