@@ -1,3 +1,11 @@
+.k-treeview .k-in { color: #000000;
+   background-color: #ffffff;
+}
+
+.k-treeview .k-in .k-selected { color: #000000;
+  background-color: #ff4324;
+}
+.wait * {cursor:wait}
 
 body {
   padding-top: 20px;

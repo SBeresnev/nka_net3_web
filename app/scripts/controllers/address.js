@@ -39,6 +39,9 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
 
     };
 
+
+
+
     // $http.get('dao/ate.json').then(function(res){ $scope.var.treeData = res.data; $scope.var.ateDataSearch = res.data; $scope.var.ateData = res.data;});
 
     // $http.get('dao/street.json').then(function(res){ $scope.var.streetDataSearch = res.data; });
@@ -61,8 +64,8 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
 
         $scope.var.parcelDataSearch = [];
 
-
         $scope.var.url = DOMAIN + "/nka_net3/address/getate?parent_id=";
+
 
         $http.get($scope.var.url).then(function (res) {
 

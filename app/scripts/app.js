@@ -16,7 +16,8 @@ var app = angular
         'ngRoute',
         'ngSanitize',
         'ngTouch',
-        'angularBootstrapNavTree'
+        'angularBootstrapNavTree',
+        'kendo.directives'
     ])
     .constant('DOMAIN', "" + window.location.protocol + '//'+ window.location.hostname+":8080")
     .config(function ($routeProvider, $httpProvider) {
@@ -38,6 +39,10 @@ var app = angular
             .when('/order', {
                 templateUrl: 'views/order.html',
                 controller: 'OrderCtrl'
+            })
+            .when('/address', {
+                templateUrl: 'views/address.html',
+                controller: 'AddressCtrl'
             })
             .when('/object', {
                 templateUrl: 'views/object.html',
@@ -66,10 +71,6 @@ var app = angular
             .when('/test', {
                 templateUrl: 'views/test.html',
                 controller: 'TestCtrl'
-            })
-            .when('/address', {
-                templateUrl: 'views/address.html',
-                controller: 'AddressCtrl'
             })
             .otherwise({
                 redirectTo: '#/'
