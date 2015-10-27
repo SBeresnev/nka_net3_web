@@ -288,7 +288,7 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
 
         item.corpNum != null ? cord_num_format = cord_num_format + "/" + item.corpNum.toString() : null ;
 
-        item.roomNum != null ? cord_num_format = cord_num_format + " - " + item.roomNum.toString() : null ;
+        item.roomNum != null ? cord_num_format = cord_num_format + "-" + item.roomNum.toString() : null ;
 
         item.roomId != null ? cord_num_format = cord_num_format + item.roomId.toString() : null ;
 
