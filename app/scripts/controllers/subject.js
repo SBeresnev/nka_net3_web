@@ -21,6 +21,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
         };
 
         $scope.init = function () {
+
             $scope.var.loading = true;
             $http.get(DOMAIN + "/nka_net3/catalog/states")
                 .then(function (res) {
@@ -35,6 +36,8 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
                     $scope.var.subjecttypes = res.data;
                     $scope.var.loading = false;
                 });
+
+
         };
 
         $scope.loadAll = function(){
@@ -78,6 +81,8 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
                 $scope.var.subj = [];
                 delete $http.defaults.headers.common['X-Requested-With'];
                 httpServices.searchSubjects($scope.var.typeSearch.code_id, $scope.var.searchSubject.number, $scope.var.searchSubject.fioAndName, $scope);
+
+
             } else {
                 alert("Не выбран тип субъекта!");
             }
@@ -101,7 +106,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
                 $scope.var.subj = angular.copy(subject);
 
-                $scope.var.subj.bothRegDate = angular.copy(subject).bothRegDate;
+                $scope.var.subj.bothRegDate = new Date(angular.copy(subject).bothRegDate);
             }
 
             else return false;

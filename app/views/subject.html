@@ -260,7 +260,7 @@
                         </label>
 
                         <div class="col-xs-6">
-                            <input class="form-control" type="date" ng-model="var.subj.bothRegDate | date:'yyyy-MM-dd HH:mm'">
+                            <input class="form-control" type="date" ng-model="var.subj.bothRegDate" value = "{{var.subj.bothRegDate | date:'yyyy-MM-dd'}}" />
                         </div>
 
                     </div>
@@ -315,7 +315,7 @@
                         </label>
 
                         <div class="col-xs-6">
-                            <input class="form-control" ng-model="  var.subj.bothRegDate | date:'yyyy-MM-dd HH:mm'" readonly="true">
+                            <input class="form-control" type="date"  ng-model="var.subj.bothRegDate" readonly="true">
                         </div>
                     </div>
 
