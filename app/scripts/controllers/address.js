@@ -10,6 +10,8 @@
  */
 angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $location, DOMAIN){
 
+    $scope.url_address = DOMAIN + '/#/main';
+
     $scope.var = {
 
         url      :  '' ,
@@ -36,10 +38,7 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
         ateData  : new kendo.data.HierarchicalDataSource($scope.ateData),             // tree search
         treeData : new kendo.data.HierarchicalDataSource($scope.treeData)
 
-
     };
-
-
 
 
     // $http.get('dao/ate.json').then(function(res){ $scope.var.treeData = res.data; $scope.var.ateDataSearch = res.data; $scope.var.ateData = res.data;});
@@ -98,6 +97,8 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
         $scope.cleanStreet();
 
         $scope.cleanParcel();
+
+        $scope.var.fullStr = '';
 
     };
 
@@ -386,19 +387,22 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
 
             $scope.var.toSend = data;
 
-            alert( $scope.var.toSend.address_id);
+            sessionStorage.setItem("addressObj",JSON.stringify($scope.var.toSend));
+
+            swal("Good job!", "Address ID = " + $scope.var.toSend.address_id , "success");
 
             myElement.removeClass("wait");
 
         }).error(function (data, status, header, config) {
 
-            $scope.ServerResponse = alert('Error message: '+data + "\n\n\n\nstatus: " + status + "\n\n\n\nheaders: " + header + "\n\n\n\nconfig: " + config);
+            $scope.ServerResponse = 'Error message: '+data + "\n\n\n\nstatus: " + status + "\n\n\n\nheaders: " + header + "\n\n\n\nconfig: " + config;
+
+            swal("Error", $scope.ServerResponse , "error");
 
 
         });
 
     }
-
 
     function getCurate(item){
 
