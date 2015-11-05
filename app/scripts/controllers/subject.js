@@ -12,6 +12,8 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             'Karma'
         ];
 
+        $scope.urlAddress = window.location.protocol + '//'+ window.location.hostname+":9000" + '/#/address';
+
         $scope.var = {
             loading: false,
             states: '',
@@ -263,6 +265,31 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
         $scope.isFillingField = function (field1, field2) {
             return (!(field1.trim() == "" && field2.trim() == ""));
+        }
+
+        $scope.openAddress = function () {
+            sessionStorage.setItem("addObj",JSON.stringify([]));
+
+            $scope.DlgOptions = {
+                width: "1300px", height: "500px", modal: true,
+                actions: ["Custom", "Minimize", "Maximize", "Close"],
+                title: "Addresses", iframe: true, visible: false
+            };
+
+            $scope.window.setOptions($scope.DlgOptions);
+
+            $scope.window.center();  // open dailog in center of screen
+
+            $scope.window.open();
+        }
+
+        $scope.closeAddress = function()
+        {
+
+            var toSend = JSON.parse(sessionStorage.getItem("addressObj"));
+
+            $scope.var.subj.address = toSend.adr;
+
         }
 
     });

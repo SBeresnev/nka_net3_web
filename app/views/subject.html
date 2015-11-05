@@ -296,17 +296,22 @@
                        </div>
                     </div>
 
-                    <div class="form-group"
-                         ng-show="100 < var.subjtype.code_id&& var.subjtype.code_id< 400">
-                        <label class="col-xs-3  control-label">
-                    <span class="pull-right">
-                        Адрес:
-                    </span>
+                    <div class="form-group"  ng-show="100 < var.subjtype.code_id&& var.subjtype.code_id< 400">
+                        <label class="control-label col-xs-3">
+                             <span class="pull-right">
+                                 Адрес:
+                             </span>
                         </label>
-                        <div class="col-xs-6">
-                            <input class="form-control" ng-model="var.subj.address" ng-disabled="200 < var.subjtype.code_id&& var.subjtype.code_id< 400">
-                        </div>
+
+
+                    <span id = "k-my-spn" class=" k-textbox k-space-right" >
+                        <input type="text" id="icon-right" ng-model="var.subj.address" />
+                        <a href="" class="k-icon k-i-search" ng-click = "openAddress()" >&nbsp;</a>
+                    </span>
+
+
                     </div>
+
                     <div class="form-group" ng-show="200 < var.subjtype.code_id&& var.subjtype.code_id< 400">
                         <label class="col-xs-3  control-label">
                     <span class="pull-right">
@@ -398,6 +403,7 @@
     </div>
 </div>
 
+<div kendo-window="window" k-visible="false" k-modal="true" k-on-close="closeAddress()" k-content="{url: '{{urlAddress}}'}"> </div>
 
 <div class="modal fade in" ng-init="var.loading = true" visible="showLoading" ng-class="{'in' : var.loading }"
      ng-style="{true: {display: 'block'}, false: {display: 'none'}}[var.loading ]">
