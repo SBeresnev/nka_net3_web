@@ -1,0 +1,50 @@
+<!doctype html>
+<html class="no-js">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>NKA NET III</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css(.) styles/vendor.css -->
+  <!-- bower:css -->
+
+  <!-- endbuild -->
+
+  <link rel="import" href="./lib.html">
+
+</head>
+<body ng-app="assetsApp">
+
+<!-- Add your site or application content here -->
+<div >
+  <div STYLE="min-height: 800px">
+    <div class="header">
+      <ul class="nav pull-left">
+        <li class="btn btn-primary" onclick="javascript:window.location.href= '#/'">{{text.general}}</li>
+      </ul>
+      <ul class="nav nav-pills  pull-right">
+        <li class="btn btn-primary" onclick="javascript:window.location.href= '#/'">{{text.settings}}</li>
+        <li class="btn btn-primary" onclick="javascript:window.location.href= '#/'">{{text.exit}}</li>
+      </ul>
+    </div>
+
+    <div ng-view=""></div>
+
+  </div>
+
+  <div class="footer  pull-down">
+    <ul class="nav nav-pills pull-left">
+      <li>NKA NET v3/ All right reserved. Created by NKANETDevTeam. {{text.technicalSupport}} - support.nca.by</li>
+    </ul>
+    <ul class="nav nav-pills pull-right">
+      <li class="btn btn-lg " onclick="javascript:window.scrollTo(0,0)"><a ng-click><span
+        class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></li>
+
+    </ul>
+  </div>
+</div>
+
+
+</body>
+</html>

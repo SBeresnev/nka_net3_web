@@ -1,0 +1,295 @@
+<div class="panel" ng-init="init()">
+    <div class="panel-heading"></div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-6">
+                <table class="table table-bordered ">
+                    <caption><h3 class="text-center">Словари</h3>
+                    <div class="panel-body center">
+                        <form class="form-horizontal center" role="form" id="dict" style="visibility: hidden">
+                            <div class="col-sm-4 has-feedback">
+                                <input class="form-control" placeholder="filter catalog..." type="search" ng-model="fdict">
+                                <span class="form-control-feedback glyphicon glyphicon-search"></span>
+                            </div>
+                        </form>
+                        <label>Показывать по </label> <input type="number" min="1" ng-model="pageSizeDict" style="width: 45px">
+                        <label>элементов</label>
+                        <input class="btn btn-info show-all" type="button" ng-click="loadAllDictionary('dict')" id="show-all-dict"
+                               value="Показать всё">
+                    </div>
+                    </caption>
+                    <tr>
+                        <th width="10%">Идентификатор</th>
+                        <th width="80%">Имя</th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="item in catalogTypes| orderBy: 'analyticTypeName'|filter:fdict | pagination: curPageDict * pageSizeDict |  limitTo: pageSizeDict"
+                        class="btn-default cursor-pointer"
+                        ng-click="loadDependency(item.analytic_type)"
+                        ng-class="{'success':selectedParentId == item.analytic_type}">
+                        <td>{{item.analytic_type}}</td>
+                        <td>{{item.analyticTypeName}}</td>
+                        <td width="7%">
+                            <button class="btn btn-primary" ng-click="showListDependency(item.analytic_type)">Добавить
+                                зависимость
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+                <div class="pagination pagination-centered center" ng-show="catalogTypes.length">
+                    <ul class="pagination-controle pagination">
+                        <li>
+                            <button type="button" class="btn btn-primary" ng-disabled="curPageDict == 0"
+                                    ng-click="curPageDict=curPageDict-1"> &lt; PREV
+                            </button>
+                        </li>
+                        <li>
+                            <span>Page {{curPageDict + 1}} of {{ numberOfPagesDict() }}</span>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-primary"
+                                    ng-disabled="curPageDict >= catalogTypes.length/pageSizeDict - 1"
+                                    ng-click="curPageDict = curPageDict+1">NEXT &gt;</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <table class="table table-bordered">
+                    <caption><h3 class="text-center">Зависимые словари </h3>
+                        <div class="panel-body center">
+                            <form class="form-horizontal center" role="form" id="depDict" style="visibility: hidden">
+                                <div class="col-sm-4 has-feedback">
+                                    <input class="form-control" placeholder="filter catalog..." type="search" ng-model="fdepdict">
+                                    <span class="form-control-feedback glyphicon glyphicon-search"></span>
+                                </div>
+                            </form>
+                            <label>Показывать по </label> <input type="number" min="1" ng-model="pageSizeDepDict" style="width: 45px">
+                            <label>элементов</label>
+                            <input class="btn btn-info show-all" type="button" ng-click="loadAllDictionaryDependency('depDict')" id="show-all-depDict"
+                                   value="Показать всё">
+                        </div>
+                    </caption>
+                    <tr>
+                        <th width="10%">Идентификатор</th>
+                        <th width="80%">Имя</th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="item in catalogDependency| orderBy: 'analyticTypeName'| filter:fdepdict | pagination: curPageDepDict * pageSizeDepDict |  limitTo: pageSizeDepDict"
+                        ng-class="{'success': selectedDependedType == item.analyticType.analytic_type}"
+                        ng-click="loadCatalogItems(item.parentAnalyticType.analytic_type, item.analyticType.analytic_type, item.dependencyId)"
+                        class="btn-default cursor-pointer">
+                        <td>{{item.analyticType.analytic_type}}</td>
+                        <td>{{item.analyticType.analyticTypeName}}</td>
+                        <td width="3%">
+                            <button class="btn btn-danger" ng-click="deleteDependencyType(item.dependencyId)">X</button>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="pagination pagination-centered center" ng-show="catalogDependency.length">
+                    <ul class="pagination-controle pagination">
+                        <li>
+                            <button type="button" class="btn btn-primary" ng-disabled="curPageDepDict == 0"
+                                    ng-click="curPageDepDict=curPageDepDict-1"> &lt; PREV
+                            </button>
+                        </li>
+                        <li>
+                            <span>Page {{curPageDepDict + 1}} of {{ numberOfPagesDepDict() }}</span>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-primary"
+                                    ng-disabled="curPageDepDict >= catalogDependency.length/pageSizeDepDict - 1"
+                                    ng-click="curPageDepDict = curPageDepDict+1">NEXT &gt;</button>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-6">
+                <table class="table table-bordered ">
+                    <caption><h3 class="text-center">Элементы родительского словаря </h3>
+                        <div class="panel-body center">
+                            <form class="form-horizontal center" role="form" id="parentDict" style="visibility: hidden">
+                                <div class="col-sm-4 has-feedback">
+                                    <input class="form-control" placeholder="filter catalog..." type="search" ng-model="fparentdict">
+                                    <span class="form-control-feedback glyphicon glyphicon-search"></span>
+                                </div>
+                            </form>
+                            <label>Показывать по </label> <input type="number" min="1" ng-model="pageSizeParentDict" style="width: 45px">
+                            <label>элементов</label>
+                            <input class="btn btn-info show-all" type="button" ng-click="loadAllParentDictionary('parentDict')" id="show-all-parentDict"
+                                   value="Показать всё">
+                        </div>
+                    </caption>
+                    <tr>
+                        <th width="10%">Идентификатор</th>
+                        <th width="40%">Короткое имя</th>
+                        <th width="40%">Имя</th>
+                        <th width="10%"></th>
+                    </tr>
+                    <tr ng-repeat="item in parentCatalog | orderBy: 'code_name' | filter:fparentdict | pagination: curPageParentDict * pageSizeParentDict |  limitTo: pageSizeParentDict"
+                        class="btn-default cursor-pointer"
+                        ng-click="loadDependedItem(item.code_id)"
+                        ng-class="{'success': selectedParentItem == item.code_id}">
+                        <td>{{item.code_id}}</td>
+                        <td>{{item.code_short_name}}</td>
+                        <td>{{item.code_name}}</td>
+                        <td>
+                          <button class="btn btn-primary" ng-click="showListItem(item.code_id)">
+                              Добавить зависимость
+                          </button>
+                        </td>
+                    </tr>
+                </table>
+                <div class="pagination pagination-centered center" ng-show="parentCatalog.length">
+                    <ul class="pagination-controle pagination">
+                        <li>
+                            <button type="button" class="btn btn-primary" ng-disabled="curPageParentDict == 0"
+                                    ng-click="curPageParentDict=curPageParentDict-1"> &lt; PREV
+                            </button>
+                        </li>
+                        <li>
+                            <span>Page {{curPageParentDict + 1}} of {{ numberOfPagesParentDict() }}</span>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-primary"
+                                    ng-disabled="curPageParentDict >= parentCatalog.length/pageSizeParentDict - 1"
+                                    ng-click="curPageParentDict = curPageParentDict+1">NEXT &gt;</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <table class="table table-bordered ">
+                    <caption><h3 class="text-center">Зависимые элементы</h3>
+                        <div class="panel-body center">
+                            <form class="form-horizontal center" role="form" id="dependEl" style="visibility: hidden">
+                                <div class="col-sm-4 has-feedback">
+                                    <input class="form-control" placeholder="filter catalog..." type="search" ng-model="fdepEl">
+                                    <span class="form-control-feedback glyphicon glyphicon-search"></span>
+                                </div>
+                            </form>
+                            <label>Показывать по </label> <input type="number" min="1" ng-model="pageSizeDependEl" style="width: 45px">
+                            <label>элементов</label>
+                            <input class="btn btn-info show-all" type="button" ng-click="loadAllDependencyElement('dependEl')" id="show-all-dependEl"
+                                   value="Показать всё">
+                        </div>
+                    </caption>
+                    <tr>
+                        <th width="10%">Идентификатор</th>
+                        <th width="40%">Короткое имя</th>
+                        <th width="80%">Имя</th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="item in dependedCatalog  | orderBy: 'code_name'| filter:fdepEl | pagination: curPageDependEl * pageSizeDependEl |  limitTo: pageSizeDependEl"
+                        class="btn-default cursor-pointer">
+                        <td>{{item.code_id}}</td>
+                        <td>{{item.code_short_name}}</td>
+                        <td>{{item.code_name}}</td>
+                        <td width="3%">
+                            <button class="btn btn-danger" ng-click="deleteDependedData(item.code_id)">X</button>
+                        </td>
+                    </tr>
+                </table>
+                <div class="pagination pagination-centered center" ng-show="dependedCatalog.length">
+                    <ul class="pagination-controle pagination">
+                        <li>
+                            <button type="button" class="btn btn-primary" ng-disabled="curPageDependEl == 0"
+                                    ng-click="curPageDependEl=curPageDependEl-1"> &lt; PREV
+                            </button>
+                        </li>
+                        <li>
+                            <span>Page {{curPageDependEl + 1}} of {{ numberOfPageDependEl() }}</span>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-primary"
+                                    ng-disabled="curPageDependEl >= dependedCatalog.length/pageSizeDependEl - 1"
+                                    ng-click="curPageDependEl = curPageDependEl+1">NEXT &gt;</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade in " ng-init="showListTypes = false" visible="showLoading" ng-class="{'in' : showListTypes }"
+     ng-style="{true: {display: 'block'}, false: {display: 'none'}}[showListTypes]">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                        ng-click="showListTypes = false">&times;</button>
+                <h4 class="modal-title">{{ title }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel">
+                    <div class="panel-body" style="overflow:auto; height: 550px">
+                        <table class="table table-bordered ">
+                            <caption><h3 class="text-center">Типы словарей </h3></caption>
+                            <tr>
+                                <th width="10%">Идентификатор</th>
+                                <th width="80%">Имя</th>
+                            </tr>
+                            <tr ng-repeat="item in catalogTypes"
+                                class="btn-default cursor-pointer"
+                                ng-click="addDependency(item.analytic_type)" ng-if="item.analytic_type != selectedParentId">
+                                <td>{{item.analytic_type}}</td>
+                                <td>{{item.analyticTypeName}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade in "  ng-init="showListItems = false" visible="showLoading" ng-class="{'in' : showListItems }"
+     ng-style="{true: {display: 'block'}, false: {display: 'none'}}[ showListItems ]">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                        ng-click="showListItems = false">&times;</button>
+                <h4 class="modal-title">{{ title }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel">
+                    <div class="panel-body" style="overflow:auto; height: 550px" >
+                        <table class="table table-bordered ">
+                            <caption><h3 class="text-center">Элкменты зависимого словаря </h3></caption>
+                            <tr>
+                                <th width="10%">Идентификатор</th>
+                                <th width="40%">Короткое имя</th>
+                                <th width="40%">Имя</th>
+                            </tr>
+                            <tr ng-repeat="item in listItems | orderBy: 'code_name'"
+                                class="btn-default cursor-pointer"
+                                ng-click="addDependedItem(item.code_id)"
+                                ng-class="{'success': selectedParentItem == item.code_id}">
+                                <td>{{item.code_id}}</td>
+                                <td>{{item.code_short_name}}</td>
+                                <td>{{item.code_name}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade in " ng-init="showLoading = true" visible="showLoading" ng-class="{'in' : showLoading }"
+     ng-style="{true: {display: 'block'}, false: {display: 'none'}}[showLoading]">
+    <div class="center_b">
+        <img src="./images/image_836733.gif" alt=""/>
+    </div>
+</div>
