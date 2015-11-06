@@ -12,7 +12,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             'Karma'
         ];
 
-        $scope.urlAddress = DOMAIN + '/nka_net3/#/address';
+        $scope.urlAddress = DOMAIN + '/nka_net3_web/#/address';
 
         $scope.var = {
             loading: false,
