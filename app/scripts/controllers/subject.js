@@ -12,7 +12,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             'Karma'
         ];
 
-        $scope.urlAddress = window.location.protocol + '//'+ window.location.hostname+":9000" + '/#/address';
+        $scope.urlAddress = DOMAIN + '/#/address';
 
         $scope.var = {
             loading: false,
