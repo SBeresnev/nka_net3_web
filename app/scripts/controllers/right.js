@@ -3,7 +3,11 @@
  */
 
 
-angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $location, $filter, httpServices, DOMAIN) {
+angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $location, $filter, DOMAIN) {
+
+    $scope.scrollTo = function (hash) {
+        $location.hash(hash);
+    };
 
 
 });

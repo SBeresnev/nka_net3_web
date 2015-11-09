@@ -20,7 +20,7 @@ var app = angular
         'kendo.directives'
     ])
     .constant('DOMAIN', "" + window.location.protocol + '//'+ window.location.hostname+":8080")
-    .constant('WEBDOM', "" + window.location.protocol + '//'+ window.location.hostname+":8080"+'//nka_net3_web')
+    .constant('WEBDOM', "" + window.location.protocol + '//'+ window.location.hostname+":9000")//+'//nka_net3_web')
     .config(function ($routeProvider, $httpProvider) {
         $httpProvider.defaults.useXDomain = true;
 
@@ -56,6 +56,10 @@ var app = angular
             .when('/subject', {
                 templateUrl: 'views/subject.html',
                 controller: 'SubjectCtrl'
+            })
+            .when('/right', {
+                templateUrl: 'views/right.html',
+                controller: 'RightCtrl'
             })
             .when('/items', {
                 templateUrl: 'views/items.html',
