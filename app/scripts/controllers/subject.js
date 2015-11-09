@@ -4,7 +4,7 @@
 
 'use strict';
 
-angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $location, $filter, httpServices, DOMAIN) {
+angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $location, $filter, httpServices, DOMAIN, DOMAIN_) {
 
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
@@ -12,7 +12,8 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             'Karma'
         ];
 
-        $scope.urlAddress = DOMAIN + '/nka_net3_web/#/address';
+        $scope.urlAddress = DOMAIN_ + '//#/address';
+        //window.location.protocol + '//'+ window.location.hostname+":9000" + '/#/address';
 
         $scope.var = {
             loading: false,
@@ -268,6 +269,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
         }
 
         $scope.openAddress = function () {
+
             sessionStorage.setItem("addObj",JSON.stringify([]));
 
             $scope.DlgOptions = {
@@ -276,19 +278,21 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
                 title: "Addresses", iframe: true, visible: false
             };
 
+            $scope.window.element.children(".k-content-frame").contents().find(".header")[0].style.display="none";
+
             $scope.window.setOptions($scope.DlgOptions);
 
             $scope.window.center();  // open dailog in center of screen
 
             $scope.window.open();
+
         }
 
-        $scope.closeAddress = function()
-        {
+        $scope.closeAddress = function() {
 
             var toSend = JSON.parse(sessionStorage.getItem("addressObj"));
 
-            $scope.var.subj.address = toSend.adr;
+            $scope.var.subj.address = toSend == null ? $scope.var.subj.address : toSend.adr;
 
         }
 
