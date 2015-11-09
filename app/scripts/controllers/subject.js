@@ -4,7 +4,7 @@
 
 'use strict';
 
-angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $location, $filter, httpServices, DOMAIN, DOMAIN_) {
+angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $location, $filter, httpServices, DOMAIN, WEBDOM) {
 
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
@@ -12,7 +12,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             'Karma'
         ];
 
-        $scope.urlAddress = DOMAIN_ + '//#/address';
+         $scope.urlAddress = WEBDOM + '//#/address';
         //window.location.protocol + '//'+ window.location.hostname+":9000" + '/#/address';
 
         $scope.var = {
@@ -24,6 +24,8 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
         };
 
         $scope.init = function () {
+
+
 
             $scope.var.loading = true;
             $http.get(DOMAIN + "/nka_net3/catalog/states")

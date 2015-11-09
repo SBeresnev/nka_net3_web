@@ -20,7 +20,7 @@ var app = angular
         'kendo.directives'
     ])
     .constant('DOMAIN', "" + window.location.protocol + '//'+ window.location.hostname+":8080")
-    .constant('DOMAIN_', "" + window.location.protocol + '//'+ window.location.hostname+":9000")
+    .constant('WEBDOM', "" + window.location.protocol + '//'+ window.location.hostname+":8080"+'//nka_net3_web')
     .config(function ($routeProvider, $httpProvider) {
         $httpProvider.defaults.useXDomain = true;
 
