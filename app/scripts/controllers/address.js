@@ -10,7 +10,6 @@
  */
 angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $location, DOMAIN){
 
-    $scope.url_address = DOMAIN + '/#/main';
 
     $scope.var = {
 
