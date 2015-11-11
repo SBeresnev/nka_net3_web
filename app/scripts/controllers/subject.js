@@ -23,9 +23,11 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             subjects: [{label: 'loading'}]
         };
 
+         function isEnoughType(value) {
+                return value.code_short_name.toUpperCase() == "Граждане РБ (паспорт нового образца)".toUpperCase();
+          }
+
         $scope.init = function () {
-
-
 
             $scope.var.loading = true;
             $http.get(DOMAIN + "/nka_net3/catalog/states")
@@ -40,8 +42,9 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
                 .then(function (res) {
                     $scope.var.subjecttypes = res.data;
                     $scope.var.loading = false;
+                    $scope.var.typeSearch = $scope.var.subjecttypes.filter(isEnoughType)[0];
+                    $scope.var.subjtype = $scope.var.typeSearch;
                 });
-
 
         };
 

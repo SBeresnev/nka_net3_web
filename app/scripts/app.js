@@ -17,6 +17,7 @@ var app = angular
         'ngSanitize',
         'ngTouch',
         'angularBootstrapNavTree',
+        'ngDropdowns',
         'kendo.directives'
     ])
     .constant('DOMAIN', "" + window.location.protocol + '//'+ window.location.hostname+":8080")

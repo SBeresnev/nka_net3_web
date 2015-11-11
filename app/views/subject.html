@@ -29,11 +29,12 @@
                                         </div>-->
 
                     <div class="input-group">
+
                         <select ng-model="var.typeSearch"
                                 ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes| filterSubjectTypeForCreate"
                                 class="form-control col-xs-6 mySelect"
                                 required="required">
-                            <option value="" disabled selected>Тип субъекта</option>
+
                         </select>
                     </div>
                 </div>
