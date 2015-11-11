@@ -1,0 +1,15 @@
+{
+  "name": "bootstrap-combined.min",
+  "_cacheHeaders": {
+    "ETag": "\"a4e7cc3c672f9dbc86ffe3517aff11a8\"",
+    "Last-Modified": "Fri, 27 Sep 2013 00:16:32 GMT",
+    "Content-Length": "126539",
+    "Content-Type": "text/css"
+  },
+  "_release": "e-tag:a4e7cc3c6",
+  "main": "index.css",
+  "_source": "http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css",
+  "_target": "*",
+  "_originalSource": "http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css",
+  "_direct": true
+}
