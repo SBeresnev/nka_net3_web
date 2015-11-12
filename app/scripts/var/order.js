@@ -65,7 +65,7 @@ angular.module('assetsApp').value('ordervar',
         decl: {},
         operationBase : null,
         operationSubType : null,
-        operationType: null,
+        operationType: null
     }
 
 );
