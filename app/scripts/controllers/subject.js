@@ -4,7 +4,7 @@
 
 'use strict';
 
-angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $location, $filter, httpServices, DOMAIN) {
+angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $location, $filter, httpServices, subjectvar, DOMAIN, WEBDOM) {
 
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
@@ -12,7 +12,8 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             'Karma'
         ];
 
-        $scope.urlAddress = DOMAIN + '/nka_net3_web/#/address';
+         $scope.urlAddress = WEBDOM + '//#/address';
+        //window.location.protocol + '//'+ window.location.hostname+":9000" + '/#/address';
 
         $scope.var = {
             loading: false,
@@ -22,6 +23,14 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             subjects: [{label: 'loading'}]
         };
 
+    function isEnoughType(value) {
+        return value.code_short_name.toUpperCase() == "Граждане РБ (паспорт нового образца)".toUpperCase();
+    }
+
+    function isSitezens(value) {
+        return value.code_short_name.toUpperCase() == "Беларусь".toUpperCase();
+    }
+
         $scope.init = function () {
 
             $scope.var.loading = true;
@@ -30,13 +39,15 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
                     $scope.var.states = res.data;
                     $scope.var.subj = {sitizens: $scope.var.states[81]};
                     $scope.var.loading = false;
-                    $scope.var.showForms = true;
+                    $scope.var.showForms = false;
                 });
 
             $http.get(DOMAIN + "/nka_net3/catalog/subjectTypes")
                 .then(function (res) {
                     $scope.var.subjecttypes = res.data;
                     $scope.var.loading = false;
+                    $scope.var.typeSearch = $scope.var.subjecttypes.filter(isEnoughType)[0];
+                    $scope.var.subjtype = $scope.var.typeSearch;
                 });
 
 
@@ -62,7 +73,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
         $scope.hiddenAll = function () {
             var inpt_hd = document.getElementById('hide-all');
             var filt = document.getElementById('flt1');
-            $scope.pageSize = 4;
+            $scope.pageSize = 3;
             if(inpt_hd!=null)
             {
                 inpt_hd.id='show-all';
@@ -84,15 +95,59 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
                 delete $http.defaults.headers.common['X-Requested-With'];
                 httpServices.searchSubjects($scope.var.typeSearch.code_id, $scope.var.searchSubject.number, $scope.var.searchSubject.fioAndName, $scope);
 
-
+                var butt = document.getElementById('add-subjects-id');
+                butt.classList.remove("btn-warning");
+                butt.classList.add("btn-primary");
+                butt.value = 'Добавить новый';
             } else {
                 alert("Не выбран тип субъекта!");
             }
         };
 
+    $scope.addSubjectsHide = function () {
+        var showForms = $scope.var.showForms;
+        var butt = document.getElementById('add-subjects-id');
+        var val = butt.value;
+        var hid = 'Скрыть', op = 'Добавить новый';
+        if (!showForms && val == op) {
+            $scope.var.showSubjectsTable = false;
+            $scope.var.showForms = true;
+            butt.classList.remove("btn-primary");
+            butt.classList.add("btn-warning");
+            butt.value = hid;
+            $scope.var.subj.sitizens = $scope.var.states.filter(isSitezens)[0];
+            butt.removeAttribute('disabled');
+        } else if(showForms && val == hid){
+            $scope.var.showForms = false;
+            butt.classList.remove("btn-warning");
+            butt.classList.add("btn-primary");
+            butt.value = op;
+        } else if (showForms && val == op) {
+            $scope.var.showSubjectsTable = false;
+            $scope.var.showForms = true;
+            butt.classList.remove("btn-primary");
+            butt.classList.add("btn-warning");
+            butt.value = hid;
+
+            $scope.var.subj.sitizens = $scope.var.states.filter(isSitezens)[0];
+            $scope.var.subj.firstname = "";
+            $scope.var.subj.surname = "";
+            $scope.var.subj.fathername = "";
+            $scope.var.subj.bothRegDate = "";
+            $scope.var.subj.bothRegDate = null;
+            $scope.var.subj.personalNumber = "";
+            $scope.var.subj.address = "";
+
+            var butt = document.getElementById('push-subject-button');
+            butt.removeAttribute('disabled');
+        }
+    };
+
         $scope.updateSubjectForm = function (subject) {
 
             if($scope.unReg(subject)) {
+
+                $scope.subjectForm=angular.copy(subject);
 
                 $scope.var.subj = [];
 
@@ -102,13 +157,19 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
                 subject = $scope.createJSON(subject);
 
-                $scope.var.sitizens = subject.sitizens;
-
                 $scope.var.subjtype = subject.subjectType;
 
                 $scope.var.subj = angular.copy(subject);
 
                 $scope.var.subj.bothRegDate = new Date(angular.copy(subject).bothRegDate);
+
+                var butt = document.getElementById('push-subject-button');
+                butt.setAttribute('disabled', 'disabled');
+
+                if($scope.subjectForm.address == null)
+                    $scope.var.subj.sitizens = $scope.var.states.filter(isSitezens)[0];
+                else
+                    $scope.var.sitizens = subject.sitizens;
             }
 
             else return false;
@@ -125,6 +186,12 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
                 $scope.var.subjects = [];
                 delete $http.defaults.headers.common['X-Requested-With'];
                 httpServices.searchPass($scope.var.searchSubject.passSeriesAndNumber, $scope.var.searchSubject.idNumber, $scope);
+
+                var butt = document.getElementById('add-subjects-id');
+                butt.classList.remove("btn-warning");
+                butt.classList.add("btn-primary");
+                butt.value = 'Добавить новый';
+
             } else {
                 alert("Ошибочно заполненны поля!");
             }
@@ -146,10 +213,17 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
                 $scope.var.subjects = [];
                 delete $http.defaults.headers.common['X-Requested-With'];
                 httpServices.searchUr(unp, nameUr, $scope);
-                $scope.numberOfPages = function () {
-                    return Math.ceil($scope.var.subjects.length / $scope.pageSize);
-                };
+
+                var butt = document.getElementById('add-subjects-id');
+                butt.classList.remove("btn-warning");
+                butt.classList.add("btn-primary");
+                butt.value = 'Добавить новый';
+
             }
+        };
+
+        $scope.numberOfPages = function () {
+                return Math.ceil($scope.var.subjects.length / $scope.pageSize);
         };
 
         $scope.pushSubject = function (subject) {
@@ -160,6 +234,8 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
                 alert(JSON.stringify(message.data));
             });
             $scope.var.subj = {};
+            alert('Добавлено');
+            $scope.updateSubjectForm(subject);
         };
 
         $scope.updateSubject = function (subject) {
@@ -167,6 +243,8 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             subject.subjectType = angular.copy($scope.var.subjtype);
             $http.put(url, subject);
             $scope.var.subj = {};
+            alert('Изменено');
+            $scope.updateSubjectForm(subject);
         };
 
         $scope.validPass = function () {
@@ -190,7 +268,18 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
         $scope.createJSON=function(subject) {
             if(subject.unp != null && subject.subjectType == null) {
-                var subjPush = {
+                var subjPush = angular.copy(subjectvar);
+                subjPush.fullname=subject.vnaim;
+                subjPush.shortname=subject.vn;
+                subjPush.regNumber=subject.unp;
+                subjPush.unp=subject.unp;
+                subjPush.orgRightForm.code_id=subject.nkOpf;
+                subjPush.orgRightForm.catalogPk.code_id=subject.nkOpf;
+                subjPush.bothRegDate = subject.regDate;
+                subjPush.address=subject.fullAddress;
+
+
+                /*var subjPush = {
                     subjectId:null,
                     reestrdataID:null,
                     isOwner:null,
@@ -253,7 +342,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
                     bothRegDate:subject.regDate,
                     remark:null,
                     address:subject.fullAddress
-                }
+                }*/
                 subject = subjPush;
             }
             return subject;
@@ -268,6 +357,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
         }
 
         $scope.openAddress = function () {
+
             sessionStorage.setItem("addObj",JSON.stringify([]));
 
             $scope.DlgOptions = {
@@ -276,19 +366,21 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
                 title: "Addresses", iframe: true, visible: false
             };
 
+            $scope.window.element.children(".k-content-frame").contents().find(".header")[0].style.display="none";
+
             $scope.window.setOptions($scope.DlgOptions);
 
             $scope.window.center();  // open dailog in center of screen
 
             $scope.window.open();
+
         }
 
-        $scope.closeAddress = function()
-        {
+        $scope.closeAddress = function() {
 
             var toSend = JSON.parse(sessionStorage.getItem("addressObj"));
 
-            $scope.var.subj.address = toSend.adr;
+            $scope.var.subj.address = toSend == null ? $scope.var.subj.address : toSend.adr;
 
         }
 
