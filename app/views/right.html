@@ -2,30 +2,39 @@
     <link href="bower_components/bootstrap-combined.min/index.css" rel="stylesheet">
 </head>
 
+    <p>{{ddSelectSelected.value}}</p>
+    <p>{{ddSelectSelected.id}}</p>
+
     <div class="row form-group page-header" ></div>
 
     <div class="tabbable tabs-left" ng-init>
      <ul class="nav nav-tabs">
-        <li ng-class="getTabClass(1)" ng-click="setActiveTab(1)"><a ui-sref="deal" href="" data-toggle="tab">Право</a></li>
-        <li  ng-class="getTabClass(2)" ng-click="setActiveTab(2)">
 
-           <ul  dropdown-select="ddSelectOptions"  dropdown-onchange="change(selected)"  dropdown-model="ddSelectSelected"></ul>
+        <li ng-class="getTabClass(1)" ng-click="setActiveTab(1)"> <a ui-sref="deal" href="" data-toggle="tab">Право</a></li>
 
-        </li>
+        <li ng-class="getTabClass(2)" ng-click="setActiveTab(2)" > <a ui-sref="deal" href="" data-toggle="tab">Поиск</a> </li>
 
-        <li ng-class="getTabClass(3)" ng-click="setActiveTab(3)"><a ui-sref="collateral" href="" data-toggle="tab">Collateral</a></li>
-        <li ng-class="getTabClass(4)" ng-click="setActiveTab(4)"><a ui-sref="rating" href="" data-toggle="tab">Rating</a></li>
+        <li ng-class="getTabClass(3)" ng-click="setActiveTab(3)"> <a ui-sref="collateral" href=""  data-toggle="tab">Детализация</a></li>
+
+        <li ng-class="getTabClass(4)" ng-click="setActiveTab(4)"> <a ui-sref="rating" href="" data-toggle="tab">Rating</a></li>
+
      </ul>
 
         <div class="tab-content">
 
         <div ng-class="getTabPaneClass(1)" id="deal">
-            deal
+           deal
         </div>
 
-        <div ng-class="getTabPaneClass(2)" id="bond">
-            bond
+        <div ng-class="getTabPaneClass(2)" id="Search">
+
+            <div class="btn-group" ng-init="class='btn btn-success active'; no_class='btn btn-primary active'">
+                <button type="button" ng-class="class" ng-click="pr_class = class; class = no_class; no_class = pr_class">По объекту</button>
+                <button type="button" ng-class="no_class" ng-click="pr_class = class; class = no_class; no_class = pr_class">По субъекту</button>
+            </div>
+
         </div>
+
 
         <div ng-class="getTabPaneClass(3)" id="collateral">
             collateral
@@ -34,15 +43,6 @@
         <div ng-class="getTabPaneClass(4)" id="rating">
             rating
         </div>
-
-        <div ng-class="getTabPaneClass(5)" id="objSearch">
-                object search
-        </div>
-
-        <div ng-class="getTabPaneClass(6)" id="subjSearch">
-                subject search
-        </div>
-
 
         </div>
 </div>

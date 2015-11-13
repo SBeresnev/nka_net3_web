@@ -37,16 +37,22 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
     $scope.ddSelectOptions = [
         {
             text: 'Поиск по субъекту',
-            value: 'objSearch'
+            value: 'objSearch',
+            class: 'active',
+            id: 3
         }, {
             text: 'Поиск по объекту',
-            value: 'subjSearch'
+            value: 'subjSearch',
+            class: 'active',
+            id: 4
         }
     ];
 
     $scope.ddSelectSelected = {
         text: "Поиск по субъекту",
-        value: 'objSearch'
+        value: 'objSearch',
+        class: 'active',
+        id: 3
     };
 
 });

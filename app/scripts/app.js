@@ -153,6 +153,20 @@ var app = angular
             return input.slice(start);
         }
     })
+    .filter('filterSubjectTypeForSubject', function () {
+        return function (items) {
+            var filtered = [];
+            if (items != undefined) {
+                for (var i = 0; i < items.length; i++) {
+                    var item = items[i];
+                    if (item.parent_code == 100 && item.code_id != 100) {
+                        filtered.push(item);
+                    }
+                }
+            }
+            return filtered;
+        };
+    })
     .filter('filterSubjectTypeForCreate', function () {
         return function (items) {
             var filtered = [];
@@ -166,7 +180,8 @@ var app = angular
             }
             return filtered;
         };
-    }).directive('clickAnywhereButHere', function($document){
+    })
+    .directive('clickAnywhereButHere', function($document){
         return {
             restrict: 'A',
             link: function(scope, elem, attr, ctrl) {
