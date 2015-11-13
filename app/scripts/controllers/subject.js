@@ -230,20 +230,41 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
         var url = DOMAIN + '/nka_net3/subject/add';
         subject.subjectType = angular.copy($scope.var.subjtype);
         console.log(JSON.stringify(subject));
-        $http.post(url, subject).catch(function (message) {
-            alert(JSON.stringify(message.data));
+        $http.post(url, subject).success(function (data, status, headers) {
+
+            subject = data;
+
+            $scope.var.subj = {};
+
+            $scope.updateSubjectForm(subject);
+
+            swal("оk!", "", "success");
+
+        }).error(function (data, status, header, config) {
+
+            swal("Error", "status: " + status , "error");
+
         });
-        $scope.var.subj = {};
-        alert('Добавлено');
-        $scope.updateSubjectForm(subject);
+
+
     };
 
     $scope.updateSubject = function (subject) {
         var url = DOMAIN + '/nka_net3/subject/update';
         subject.subjectType = angular.copy($scope.var.subjtype);
-        $http.put(url, subject);
+        $http.put(url, subject).success(function (data, status, headers) {
+
+            subject = data;
+            swal("оk!", "", "success");
+
+        }).error(function (data, status, header, config) {
+
+            swal("Error", "status: " + status , "error");
+
+        });
+
         $scope.var.subj = {};
-        alert('Изменено');
+
         $scope.updateSubjectForm(subject);
     };
 
