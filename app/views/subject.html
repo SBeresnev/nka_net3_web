@@ -29,7 +29,6 @@
                                         </div>-->
 
                     <div class="input-group">
-
                         <select ng-model="var.typeSearch"
                                 ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes| filterSubjectTypeForCreate"
                                 class="form-control col-sm-2"
@@ -79,7 +78,7 @@
 
                 <div class="col-xs-1">
                     <input class="btn btn-primary" type="button"
-                            ng-click="addSubjectsHide()" id="add-subjects-id" value="Добавить новый"/>
+                           ng-click="addSubjectsHide()" id="add-subjects-id" value="Добавить новый"/>
                 </div>
 
                 <div class="col-xs-5" ng-hide="!mvdSearch">
@@ -109,7 +108,7 @@
                                                       </button>
                                                  </span>
                     </div>
-					
+
                 </div>
 
             </div>
@@ -212,13 +211,13 @@
                     <div class="form-group row">
 
                         <label class="col-xs-3 control-label">
-                             <span class="pull-right"> Тип субъекта: </span>
+                            <span class="pull-right"> Тип субъекта: </span>
                         </label>
 
                         <select ng-model="var.subjtype"
-                                         ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes | filterSubjectTypeForSubject track by subjecttype.code_id"
-                                         class="form-control col-xs-6 mySelect width310">
-                    </select>
+                                ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes | filterSubjectTypeForSubject track by subjecttype.code_id"
+                                class="form-control col-xs-6 mySelect width310">
+                        </select>
 
                     </div>
 
@@ -236,9 +235,9 @@
 
                     <div class="form-group" ng-model="var.client" ng-show="100 < var.subjtype.code_id&& var.subjtype.code_id< 200">
 
-                       <label class="col-xs-3  control-label">
-                         <span class="pull-right">  Имя: </span>
-                       </label>
+                        <label class="col-xs-3  control-label">
+                            <span class="pull-right">  Имя: </span>
+                        </label>
 
                         <div class="col-xs-6">
                             <input class="form-control" ng-model="var.subj.surname">
@@ -248,7 +247,7 @@
                     <div class="form-group" ng-model="var.subj" ng-show="100 < var.subjtype.code_id&& var.subjtype.code_id< 200">
 
                         <label class="col-xs-3  control-label">
-                           <span class="pull-right"> Отчество: </span>
+                            <span class="pull-right"> Отчество: </span>
                         </label>
 
                         <div class="col-xs-6">
@@ -291,13 +290,13 @@
                     </div>
 
                     <div class="form-group" ng-show="100 < var.subjtype.code_id&& var.subjtype.code_id< 200">
-                       <label class="col-xs-3  control-label">
-                           <span class="pull-right">  Идентификационный номер: </span>
-                       </label>
+                        <label class="col-xs-3  control-label">
+                            <span class="pull-right">  Идентификационный номер: </span>
+                        </label>
 
-                       <div class="col-xs-6">
-                         <input class="form-control" ng-model="var.subj.personalNumber">
-                       </div>
+                        <div class="col-xs-6">
+                            <input class="form-control" ng-model="var.subj.personalNumber">
+                        </div>
                     </div>
 
                     <div class="form-group"  ng-show="100 < var.subjtype.code_id&& var.subjtype.code_id< 400">
@@ -331,7 +330,7 @@
                     <div class="form-group" ng-show="200 < var.subjtype.code_id&& var.subjtype.code_id< 400">
 
                         <label class="col-xs-3  control-label">
-                           <span class="pull-right"> УНП: </span>
+                            <span class="pull-right"> УНП: </span>
                         </label>
 
                         <div class="col-xs-6">
@@ -372,9 +371,9 @@
                     </div>
 
                     <div class="form-group" ng-show="100 < var.subjtype.code_id&& var.subjtype.code_id< 500">
-                      <label class="col-xs-3  control-label">
-                        <span class="pull-right"> Страна: </span>
-                      </label>
+                        <label class="col-xs-3  control-label">
+                            <span class="pull-right"> Страна: </span>
+                        </label>
 
                         <div class="col-xs-6">
                             <select ng-model="var.subj.sitizens"
