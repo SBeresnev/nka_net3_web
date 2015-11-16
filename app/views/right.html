@@ -1,18 +1,13 @@
-<head>
-    <link href="bower_components/bootstrap-combined.min/index.css" rel="stylesheet">
-</head>
 
-    <p>{{ddSelectSelected.value}}</p>
-    <p>{{ddSelectSelected.id}}</p>
+<div class="page-header" ></div>
 
-    <div class="row form-group page-header" ></div>
+<div class=" container tabbable " ng-init>
 
-    <div class="tabbable tabs-left" ng-init>
      <ul class="nav nav-tabs">
 
-        <li ng-class="getTabClass(1)" ng-click="setActiveTab(1)"> <a ui-sref="deal" href="" data-toggle="tab">Право</a></li>
+        <li ng-class="getTabClass(1)" ng-click="setActiveTab(1)"> <a ui-sref="main" href="" data-toggle="tab">Право</a></li>
 
-        <li ng-class="getTabClass(2)" ng-click="setActiveTab(2)" > <a ui-sref="deal" href="" data-toggle="tab">Поиск</a> </li>
+        <li ng-class="getTabClass(2)" ng-click="setActiveTab(2)" > <a ui-sref="search" href="" data-toggle="tab">Поиск</a> </li>
 
         <li ng-class="getTabClass(3)" ng-click="setActiveTab(3)"> <a ui-sref="collateral" href=""  data-toggle="tab">Детализация</a></li>
 
@@ -20,21 +15,34 @@
 
      </ul>
 
-        <div class="tab-content">
+     <div class="tab-content">
 
-        <div ng-class="getTabPaneClass(1)" id="deal">
-           deal
-        </div>
+        <div ng-class="getTabPaneClass(1)" id="main">deal</div>
 
-        <div ng-class="getTabPaneClass(2)" id="Search">
+        <div ng-class="getTabPaneClass(2)" id="search">
 
-            <div class="btn-group" ng-init="class='btn btn-success active'; no_class='btn btn-primary active'">
-                <button type="button" ng-class="class" ng-click="pr_class = class; class = no_class; no_class = pr_class">По объекту</button>
-                <button type="button" ng-class="no_class" ng-click="pr_class = class; class = no_class; no_class = pr_class">По субъекту</button>
+            <div class="row form-group page-header " >
+
+                <div class="col-sm-4 btn-group" ng-init="obj_class='btn btn-danger active'; sbj_class='btn btn-default'">
+
+                    <button type="btn-lg" ng-class="obj_class" ng-click="pr_class = obj_class; obj_class = sbj_class; sbj_class = pr_class">По объекту</button>
+                    <button type="btn-lg" ng-class="sbj_class" ng-click="pr_class = obj_class; obj_class = sbj_class; sbj_class = pr_class">По субъекту</button>
+
+                </div>
+
+                <div class="col-sm-7 input-group">
+
+                    <input type="text " class="form-control" placeholder="Поиск прав" ng-init="var.nameAte = ''" ng-value="var.curAte.ate_name +' ' + var.fullStr" disabled/>
+                    <span style="background-color: #fff;" class="input-group-addon"><button class="glyphicon glyphicon-plus btn-warning" ng-click="osubSearch()"></button></span>
+                    <button style="background-color:#0c779b" class="btn form-control btn-info" ng-click="Search()"> Поиск </button>
+
+                 </div>
+
+                <div class="window"></div>
+
             </div>
 
         </div>
-
 
         <div ng-class="getTabPaneClass(3)" id="collateral">
             collateral
@@ -44,9 +52,11 @@
             rating
         </div>
 
-        </div>
+     </div>
+
 </div>
 
+ <div kendo-window="window" k-visible="false" k-modal="true" k-on-close="csubSearch()" k-content="{url: '{{urlAddress}}'}"> </div>
 
 
 

@@ -164,6 +164,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             $scope.var.subj.bothRegDate = new Date(angular.copy(subject).bothRegDate);
 
             var butt = document.getElementById('push-subject-button');
+
             butt.setAttribute('disabled', 'disabled');
 
             if($scope.subjectForm.address == null)
@@ -402,6 +403,13 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
         var toSend = JSON.parse(sessionStorage.getItem("addressObj"));
 
         $scope.var.subj.address = toSend == null ? $scope.var.subj.address : toSend.adr;
+
+    }
+
+    $scope.bind = function()
+    {
+
+      sessionStorage.setItem('sbjObj',JSON.stringify($scope.var.subj));
 
     }
 

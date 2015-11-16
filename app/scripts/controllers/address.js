@@ -403,6 +403,26 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
 
     }
 
+    $scope.openAddress = function () {
+
+        sessionStorage.setItem("addObj",JSON.stringify([]));
+
+        $scope.DlgOptions = {
+            width: "1300px", height: "500px", modal: true,
+            actions: ["Custom", "Minimize", "Maximize", "Close"],
+            title: "Addresses", iframe: true, visible: false
+        };
+
+        $scope.window.element.children(".k-content-frame").contents().find(".header")[0].style.display="none";
+
+        $scope.window.setOptions($scope.DlgOptions);
+
+        $scope.window.center();  // open dailog in center of screen
+
+        $scope.window.open();
+
+    }
+
     function getCurate(item){
 
         var cur_item = item;
