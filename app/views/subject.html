@@ -42,7 +42,7 @@
                            ng-model="var.searchSubject.number">
                 </div>
 
-                <div class="col-xs-5" ng-hide="!mvdSearch">
+                <div class="col-xs-4" ng-hide="!mvdSearch">
                     <div class="input-group-btn">
                         <input type="text" class="form-control" placeholder="Серия и номер паспорта "
                                ng-init="var.searchSubject.passSeriesAndNumber = ''"
@@ -51,7 +51,7 @@
                     </div>
                 </div>
 
-                <div class="col-xs-5" ng-hide="!urSearch">
+                <div class="col-xs-4" ng-hide="!urSearch">
                     <div class="input-group-btn">
                         <input type="text" class="form-control" placeholder="Номер УНП "
                                ng-init="var.searchSubject.unp = ''"
@@ -74,11 +74,6 @@
                                                  </span>
                     </div>
 
-                </div>
-
-                <div class="col-xs-1">
-                    <input class="btn btn-primary" type="button"
-                           ng-click="addSubjectsHide()" id="add-subjects-id" value="Добавить новый"/>
                 </div>
 
                 <div class="col-xs-5" ng-hide="!mvdSearch">
@@ -109,6 +104,11 @@
                                                  </span>
                     </div>
 
+                </div>
+
+                <div class="col-sm-1">
+                    <input class="btn btn-primary" type="button"
+                           ng-click="addSubjectsHide()" id="add-subjects-id" value="Добавить новый"/>
                 </div>
 
             </div>
