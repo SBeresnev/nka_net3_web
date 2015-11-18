@@ -10,53 +10,58 @@
 
      <ul class="nav nav-tabs">
 
-        <li ng-class="getTabClass(1)" ng-click="setActiveTab(1)"> <a ui-sref="main" href="" data-toggle="tab">Главная</a></li>
+        <li ng-class="getTabClass(1)" ng-click="setActiveTab(1)"> <a ui-sref="main" href="" data-toggle="tab">Поиск</a></li>
 
-        <li ng-class="getTabClass(2)" ng-click="setActiveTab(2)" > <a ui-sref="search" href="" data-toggle="tab">Поиск</a> </li>
+        <li ng-class="getTabClass(2)" ng-click="setActiveTab(2)" > <a ui-sref="search" href="" data-toggle="tab">Главная</a> </li>
 
         <li ng-class="getTabClass(3)" ng-click="setActiveTab(3)"> <a ui-sref="collateral" href=""  data-toggle="tab">Детализация</a></li>
 
-        <li ng-class="getTabClass(4)" ng-click="setActiveTab(4)"> <a ui-sref="rating" href="" data-toggle="tab">Rating</a></li>
+        <li ng-class="getTabClass(4)" ng-click="setActiveTab(4)"> <a ui-sref="rating" href="" data-toggle="tab">Сделки</a></li>
 
      </ul>
 
      <div class="tab-content">
 
-        <div ng-class="getTabPaneClass(1)" id="main">deal</div>
+         <!------------------------ Search block ------------------------------------->
 
-        <div ng-class="getTabPaneClass(2)" id="search">
+        <div ng-class="getTabPaneClass(1)" id="search">
 
-            <div class = "page-header " >
+             <div class = "page-header " >
 
-                <div class="btn-group" ng-init="obj_class='btn  btn-default '; sbj_class='btn active btn-danger '">
+                 <div class="btn-group" ng-init="obj_class='btn  btn-default '; sbj_class='btn active btn-danger '">
 
-                    <button type="btn-lg" ng-class="obj_class" ng-click="pr_class = obj_class; obj_class = sbj_class; sbj_class = pr_class">По объекту</button>
-                    <button type="btn-lg" ng-class="sbj_class" ng-click="pr_class = obj_class; obj_class = sbj_class; sbj_class = pr_class">По субъекту</button>
+                     <button type="btn-lg" ng-class="obj_class" ng-click="pr_class = obj_class; obj_class = sbj_class; sbj_class = pr_class">По объекту</button>
+                     <button type="btn-lg" ng-class="sbj_class" ng-click="pr_class = obj_class; obj_class = sbj_class; sbj_class = pr_class">По субъекту</button>
 
-                </div>
+                 </div>
 
-            </div>
+             </div>
 
-                <div class="input-group input-group-lg">
+             <div class="input-group input-group-lg">
 
-                    <input type="text" class="form-control"  placeholder="Поиск прав" ng-init="sel_subject = ''" ng-model="sel_subject.fullname" disabled />
-                    <span class="input-group-addon" style="background-color:transparent"><span class=" glyphicon glyphicon-zoom-in" ng-click="osubSearch()"></span></span>
-                    <span class="input-group-addon btn" style="background-color:transparent"> Поиск </span>
+                 <input type="text" class="form-control"  placeholder="Поиск прав" ng-init="sel_subject = ''" ng-model="sel_subject.fullname" disabled />
+                 <span class="input-group-addon" style="background-color:transparent"><span class=" glyphicon glyphicon-zoom-in" ng-click="osubSearch()"></span></span>
+                 <span class="input-group-addon btn" style="background-color:transparent"> Поиск </span>
 
-                </div>
+             </div>
 
-            <div class="window"></div>
+             <div class="window"></div>
 
 
-        </div>
+         </div>
 
-        <div ng-class="getTabPaneClass(3)" id="collateral">
-            collateral
-        </div>
+         <!------------------------ Main block ---------------------------------------->
 
-        <div ng-class="getTabPaneClass(4)" id="rating">
-            rating
-        </div>
+        <div ng-class="getTabPaneClass(2)" id="main">Главная</div>
+
+         <!------------------------ Details block ---------------------------------------->
+
+        <div ng-class="getTabPaneClass(3)" id="detail">Детализация</div>
+
+
+         <!------------------------ Bargain block ---------------------------------------->
+
+        <div ng-class="getTabPaneClass(4)" id="bargain">Сделки</div>
 
      </div>
 

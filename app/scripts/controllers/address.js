@@ -376,6 +376,8 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
 
         var myElement = angular.element(document.querySelector('#AddressID'));
 
+        $scope.var.toSend.address_id = '';
+
         $scope.var.toSend.adr = $scope.var.curAte.ate_name +' ' + $scope.var.fullStr;
 
         $scope.var.toSend.soato = $scope.var.curAte.soato ;
@@ -405,7 +407,7 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
 
     $scope.openAddress = function () {
 
-        sessionStorage.setItem("addObj",JSON.stringify([]));
+        sessionStorage.setItem("addressObj",JSON.stringify([]));
 
         $scope.DlgOptions = {
             width: "1300px", height: "500px", modal: true,

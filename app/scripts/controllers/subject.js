@@ -384,7 +384,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
     $scope.openAddress = function () {
 
-        sessionStorage.setItem("addObj",JSON.stringify([]));
+        sessionStorage.setItem("addressObj",JSON.stringify([]));
 
         $scope.DlgOptions = {
             width: "1300px", height: "500px", modal: true,
