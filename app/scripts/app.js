@@ -58,6 +58,14 @@ var app = angular
                 templateUrl: 'views/subject.html',
                 controller: 'SubjectCtrl'
             })
+            .when('/subject', {
+                templateUrl: 'views/subject.html',
+                controller: 'SubjectCtrl'
+            })
+            .when('/subject/:typeMod', {
+                templateUrl: 'views/subject.html',
+                controller: 'SubjectCtrl'
+            })
             .when('/right', {
                 templateUrl: 'views/right.html',
                 controller: 'RightCtrl'

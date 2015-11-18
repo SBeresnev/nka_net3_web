@@ -7,7 +7,7 @@
 
                 <div class="col-xs-2">
                     <div class="input-group">
-                        <div class="checkbox">
+                        <div class="checkbox" ng-hide="typeMod">
                             <label ng-hide="urSearch"><input type="checkbox" ng-init="mvdSearch=false" ng-model="mvdSearch">Поиск по
                                 паспорту</label>
                             <label ng-hide="mvdSearch"><input type="checkbox" ng-init="urSearch=false" ng-model="urSearch">Поиск по
@@ -107,7 +107,7 @@
                 </div>
 
                 <div class="col-sm-1">
-                    <input class="btn btn-primary" type="button"
+                    <input class="btn btn-primary" ng-hide ="typeMod" type="button"
                            ng-click="addSubjectsHide()" id="add-subjects-id" value="Добавить новый"/>
                 </div>
 
@@ -205,6 +205,7 @@
                           </div>
                       </div>
                   </form>-->
+
 
                 <div class="form-horizontal distance-top" ng-show="var.showForms">
 
@@ -308,7 +309,7 @@
                         </label>
 
 
-                    <span id = "k-my-spn" class=" k-textbox k-space-right" >
+                       <span id = "k-my-spn" class=" k-textbox k-space-right" >
                         <input type="text" id="icon-right" ng-model="var.subj.address" />
                         <a href="" class="k-icon k-i-search" ng-click = "openAddress()" >&nbsp;</a>
                     </span>
@@ -325,7 +326,7 @@
 
                         <div class="col-xs-6">
                             <input class="form-control" type="date"  ng-model="var.subj.bothRegDate" readonly="true">
-                        </div>cd
+                        </div>
                     </div>
 
                     <div class="form-group" ng-show="200 < var.subjtype.code_id&& var.subjtype.code_id< 400">
@@ -386,21 +387,27 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-xs-3  control-label">
-                        </label>
+
+                        <label class="col-xs-3 control-label"> </label>
 
                         <div class="col-xs-3">
-                            <button class="btn btn-primary" ng-click="pushSubject(var.subj)" id="push-subject-button">
+                            <button class="btn btn-primary" ng-hide="typeMod" ng-click="pushSubject(var.subj)" id="push-subject-button">
                                 Добавить
                             </button>
                         </div>
 
                         <div class="col-xs-3" ng-show="100 < var.subjtype.code_id&& var.subjtype.code_id< 200">
-                            <div class="btn btn-primary" ng-click="updateSubject(var.subj)">
+                            <div class="btn btn-primary" ng-hide="typeMod" ng-click="updateSubject(var.subj)">
                                 Изменить
                             </div>
                         </div>
+
                     </div>
+
+                    <div class="row well col-md-6 col-md-offset-3 " ng-hide="!typeMod">
+                        <button class="btn btn-block btn-primary"  ng-click="bind()" > Привязать  </button>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -408,7 +415,7 @@
     </div>
 </div>
 
-<div kendo-window="window" k-visible="false" k-modal="true" k-on-close="closeAddress()" k-content="{url: '{{urlAddress}}'}"> </div>
+<div id="modWin" kendo-window="window" k-visible="false" k-modal="true" k-on-close="closeAddress()" k-content="{url: '{{urlAddress}}'}"> </div>
 
 <div class="modal fade in" ng-init="var.loading = true" visible="showLoading" ng-class="{'in' : var.loading }"
      ng-style="{true: {display: 'block'}, false: {display: 'none'}}[var.loading ]">

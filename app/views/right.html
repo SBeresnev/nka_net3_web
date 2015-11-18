@@ -1,11 +1,16 @@
 
-<div class="page-header" ></div>
 
-<div class=" container tabbable " ng-init>
+<div class="page-header row" >
+
+    <h2 class = "col-md-2 col-md-offset-5 text-muted"> ПРАВА </h2>
+
+</div>
+
+<div class="container tabbable " ng-init>
 
      <ul class="nav nav-tabs">
 
-        <li ng-class="getTabClass(1)" ng-click="setActiveTab(1)"> <a ui-sref="main" href="" data-toggle="tab">Право</a></li>
+        <li ng-class="getTabClass(1)" ng-click="setActiveTab(1)"> <a ui-sref="main" href="" data-toggle="tab">Главная</a></li>
 
         <li ng-class="getTabClass(2)" ng-click="setActiveTab(2)" > <a ui-sref="search" href="" data-toggle="tab">Поиск</a> </li>
 
@@ -21,26 +26,27 @@
 
         <div ng-class="getTabPaneClass(2)" id="search">
 
-            <div class="row form-group page-header " >
+            <div class = "page-header " >
 
-                <div class="col-sm-4 btn-group" ng-init="obj_class='btn btn-danger active'; sbj_class='btn btn-default'">
+                <div class="btn-group" ng-init="obj_class='btn  btn-default '; sbj_class='btn active btn-danger '">
 
                     <button type="btn-lg" ng-class="obj_class" ng-click="pr_class = obj_class; obj_class = sbj_class; sbj_class = pr_class">По объекту</button>
                     <button type="btn-lg" ng-class="sbj_class" ng-click="pr_class = obj_class; obj_class = sbj_class; sbj_class = pr_class">По субъекту</button>
 
                 </div>
 
-                <div class="col-sm-7 input-group">
-
-                    <input type="text " class="form-control" placeholder="Поиск прав" ng-init="var.nameAte = ''" ng-value="var.curAte.ate_name +' ' + var.fullStr" disabled/>
-                    <span style="background-color: #fff;" class="input-group-addon"><button class="glyphicon glyphicon-plus btn-warning" ng-click="osubSearch()"></button></span>
-                    <button style="background-color:#0c779b" class="btn form-control btn-info" ng-click="Search()"> Поиск </button>
-
-                 </div>
-
-                <div class="window"></div>
-
             </div>
+
+                <div class="input-group input-group-lg">
+
+                    <input type="text" class="form-control"  placeholder="Поиск прав" ng-init="sel_subject = ''" ng-model="sel_subject.fullname" disabled />
+                    <span class="input-group-addon" style="background-color:transparent"><span class=" glyphicon glyphicon-zoom-in" ng-click="osubSearch()"></span></span>
+                    <span class="input-group-addon btn" style="background-color:transparent"> Поиск </span>
+
+                </div>
+
+            <div class="window"></div>
+
 
         </div>
 
@@ -56,7 +62,9 @@
 
 </div>
 
- <div kendo-window="window" k-visible="false" k-modal="true" k-on-close="csubSearch()" k-content="{url: '{{urlAddress}}'}"> </div>
+<p> {{toSend.personalNumber}}</p>
+
+ <div kendo-window="sbjwindow" k-visible="false" k-modal="true" k-on-close="csubSearch()" k-content="{url: '{{urlmodSbj}}'}"> </div>
 
 
 

@@ -3,9 +3,11 @@
  */
 
 
-angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $location, $filter, DOMAIN, WEBDOM) {
+angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $location, DOMAIN, WEBDOM) {
 
-    $scope.urlAddress = WEBDOM + '//#/subject';
+    $scope.urlmodSbj = WEBDOM + '//#/subject/true';
+
+    $scope.sel_subject = '';
 
     $scope.DlgOptions = {width: "1300px", height: "500px", modal: true, actions: ["Custom", "Minimize", "Maximize", "Close"], iframe: true, visible: false };
 
@@ -23,14 +25,15 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
         /********correct subj form**********/
 
-        $scope.window.element.children(".k-content-frame").contents().find(".header")[0].style.display="none";
+        $scope.sbjwindow.element.children(".k-content-frame").contents().find(".header")[0].style.display="none";
 
-        $scope.window.element.children(".k-content-frame").contents().find(".checkbox")[0].style.display="none";
+        //$scope.window.element.children(".k-content-frame").contents().find(".checkbox")[0].style.display="none";
 
-        $scope.window.element.children(".k-content-frame").contents().find("input.btn")[0].style.display="none";
+        //$scope.window.element.children(".k-content-frame").contents().find("input.btn")[0].style.display="none";
 
-        $scope.window.element.children(".k-content-frame").contents().find("div.btn")[0].style.display="none";
+        //$scope.window.element.children(".k-content-frame").contents().find("div.btn")[0].style.display="none";
 
+        /*
         var btn_elem = $scope.window.element.children(".k-content-frame").contents().find("#push-subject-button");
 
         if ( btn_elem.length != 0 ) {
@@ -45,24 +48,31 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
             btn_elem.setAttribute("ng-click", "sessionStorage.setItem('sbjObj',JSON.stringify($scope.var.subj))");
 
-        }
+        } */
 
         /***************************************/
 
+        sessionStorage.setItem('sbjObj',JSON.stringify({}));
 
-        $scope.window.setOptions($scope.DlgOptions);
+        $scope.sbjwindow.setOptions($scope.DlgOptions);
 
-        $scope.window.center();  // open dailog in center of screen
+        $scope.sbjwindow.center();  // open dailog in center of screen
 
-        $scope.window.open();
+        var modInst =  $scope.sbjwindow.open();
 
     }
 
     $scope.csubSearch = function () {
 
-        var toSend = JSON.parse(sessionStorage.getItem("sbjObj"));
+        var sel_subject_test = JSON.parse(sessionStorage.getItem("sbjObj"));
 
-        $scope.var.subj.address = toSend == null ? $scope.var.subj.address : toSend.adr;
+        if (sel_subject_test.dtype == "private") {
+
+            sel_subject_test.fullname = sel_subject_test.surname + ' ' + sel_subject_test.firstname + ' ' + sel_subject_test.fathername
+
+        }
+
+        $scope.sel_subject = sel_subject_test;
 
     }
 

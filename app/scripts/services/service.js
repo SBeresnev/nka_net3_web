@@ -7,6 +7,7 @@
 angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
   var httpServices = {};
 
+
   var XMLHttpFactories = [
     function () {
       return new XMLHttpRequest()
@@ -35,6 +36,7 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
     }
     return xmlhttp;
   };
+
 
 
   httpServices.updateSubject = function (subject) {

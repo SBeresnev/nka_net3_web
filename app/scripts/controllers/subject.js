@@ -4,13 +4,15 @@
 
 'use strict';
 
-angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $location, $filter, httpServices, subjectvar, DOMAIN, WEBDOM) {
+angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $location, $filter, $routeParams, httpServices, DOMAIN, WEBDOM) {
 
     $scope.awesomeThings = [
         'HTML5 Boilerplate',
         'AngularJS',
         'Karma'
     ];
+
+    $scope.typeMod = false ;  /* view mode */
 
     $scope.urlAddress = WEBDOM + '//#/address';
     //window.location.protocol + '//'+ window.location.hostname+":9000" + '/#/address';
@@ -32,6 +34,8 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
     }
 
     $scope.init = function () {
+
+        $scope.typeMod = typeof($routeParams.typeMod) == 'undefined' ? false : true;
 
         $scope.var.loading = true;
         $http.get(DOMAIN + "/nka_net3/catalog/states")
@@ -410,6 +414,16 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
     {
 
       sessionStorage.setItem('sbjObj',JSON.stringify($scope.var.subj));
+
+      swal("оk!", "", "success");
+     //$window.close();
+
+     // var elem = angular.element(document.querySelector('#modWin'));
+
+     //var tty = elem.data("kendoWindow");
+
+     // alert(elem);
+
 
     }
 
