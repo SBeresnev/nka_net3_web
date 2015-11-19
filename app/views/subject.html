@@ -17,16 +17,6 @@
                 </div>
 
                 <div class="col-xs-2" ng-hide="mvdSearch || urSearch">
-                    <!--                    <div class="input-group">
-                                            <select ng-model="var.typeSearchBase"
-                                                    ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes| filterSubjectTypeBase"
-                                                    class="form-control col-xs-6 mySelect"
-                                                    required="required">
-                                                <option value="" disabled selected>Тип субъекта</option>
-                                                <option value="200">Физ. лица</option>
-                                                <option value="100">Юр. лица</option>
-                                            </select>
-                                        </div>-->
 
                     <div class="input-group">
                         <select ng-model="var.typeSearch"
@@ -180,31 +170,6 @@
                     </div>
 
                 </div>
-                <!--  <form>
-                      <div class="col-xs-6">
-                          <div class="input-group">
-                                  <span class="input-group-btn">
-                                     <select ng-model="var.typeSearch"
-                                            ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes | filterSubjectType track by subjecttype.code_id"
-                                            class="form-control col-xs-6 mySelect width310" required="required">
-                                     </select>
-                                  </span>
-                              <input type="text" class="form-control" placeholder="Номер" ng-model="var.searchSubject.number" required="required">
-                          </div>
-                      </div>
-                      <div class="col-xs-6">
-                          <div class="input-group">
-                              <input type="text" class="form-control"
-                                     placeholder="ФИО/Наименование организации"
-                                     ng-model="var.searchSubject.fioAndName" required="required">
-                             <span class="input-group-btn">
-                               <button class="btn btn-default" type="submit" ng-click="searchSubjects()">
-                                 Поиск
-                               </button>
-                             </span>
-                          </div>
-                      </div>
-                  </form>-->
 
 
                 <div class="form-horizontal distance-top" ng-show="var.showForms">
@@ -216,7 +181,7 @@
                         </label>
 
                         <select ng-model="var.subjtype"
-                                ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes track by subjecttype.code_id"
+                                ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes | filterSubjectTypeForCreate track by subjecttype.code_id"
                                 class="form-control col-xs-6 mySelect width310"
                                 required="required">
                         </select>
