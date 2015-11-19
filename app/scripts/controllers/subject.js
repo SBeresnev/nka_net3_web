@@ -133,14 +133,17 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             butt.classList.add("btn-warning");
             butt.value = hid;
 
+            $scope.var.subj = {};
+
             $scope.var.subj.sitizens = $scope.var.states.filter(isSitezens)[0];
-            $scope.var.subj.firstname = "";
+
+            /*$scope.var.subj.firstname = "";
             $scope.var.subj.surname = "";
             $scope.var.subj.fathername = "";
             $scope.var.subj.bothRegDate = "";
             $scope.var.subj.bothRegDate = null;
             $scope.var.subj.personalNumber = "";
-            $scope.var.subj.address = "";
+            $scope.var.subj.address = "";*/
 
             var butt = document.getElementById('push-subject-button');
             butt.removeAttribute('disabled');
@@ -234,6 +237,10 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
     $scope.pushSubject = function (subject) {
         var url = DOMAIN + '/nka_net3/subject/add';
         subject.subjectType = angular.copy($scope.var.subjtype);
+
+        if ( subject.subjectType.parent_code == 200 )
+        {  swal("Error", "Добавление юр лиц запрещено" , "error");  return;}
+
         console.log(JSON.stringify(subject));
         $http.post(url, subject).success(function (data, status, headers) {
 
@@ -304,71 +311,6 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             subjPush.bothRegDate = subject.regDate;
             subjPush.address=subject.fullAddress;
 
-
-            /*var subjPush = {
-             subjectId:null,
-             reestrdataID:null,
-             isOwner:null,
-             subjectType:
-             {
-             code_id:210,
-             analytic_type:null,
-             code_name:null,
-             code_short_name:null,
-             parent_code:null,
-             n_prm1:null,
-             v_prm1:"Регистр юридических лиц",
-             unitmeasure:null,
-             status:1,
-             catalogPk:
-             {
-             code_id:210,
-             analytic_type:null
-             }
-             },
-             dtype:"juridical",
-             subjectdataid:null,
-             fullname: subject.vnaim,
-             shortname:subject.vn,
-             regNumber:subject.unp,
-             unp:subject.unp,
-             orgRightForm:
-             {
-             code_id:subject.nkOpf,
-             analytic_type:210,
-             code_name:null,
-             code_short_name:null,
-             parent_code:null,
-             n_prm1:null,
-             v_prm1:null,
-             unitmeasure:null,
-             status:1,
-             catalogPk:
-             {
-             code_id:subject.nkOpf,
-             analytic_type:220
-             }
-             },
-             sitizens:
-             {code_id:112,
-             analytic_type:200,
-             code_name:"Республика Беларусь",
-             code_short_name:"БЕЛАРУСЬ",
-             parent_code:null,
-             n_prm1:null,
-             v_prm1:"BLR",
-             unitmeasure:null,
-             status:1,
-             catalogPk:
-             {
-             code_id:112,
-             analytic_type:200
-             }
-             },
-             bothRegDate:subject.regDate,
-             remark:null,
-             address:subject.fullAddress
-             }*/
             subject = subjPush;
         }
         return subject;
