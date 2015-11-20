@@ -20,6 +20,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
     $scope.var = {
         loading: false,
         states: '',
+        sitizens: '',
         items: '',
         subjecttypes: '',
         subjects: [{label: 'loading'}]
@@ -41,7 +42,8 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
         $http.get(DOMAIN + "/nka_net3/catalog/states")
             .then(function (res) {
                 $scope.var.states = res.data;
-                $scope.var.subj = {sitizens: $scope.var.states[81]};
+                $scope.var.sitizens = $scope.var.states.filter(isSitezens)[0];
+                $scope.var.subj = {sitizens: $scope.var.sitizens};
                 $scope.var.loading = false;
                 $scope.var.showForms = false;
             });
@@ -119,8 +121,12 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             butt.classList.remove("btn-primary");
             butt.classList.add("btn-warning");
             butt.value = hid;
-            $scope.var.subj.sitizens = $scope.var.states.filter(isSitezens)[0];
+
+            $scope.var.sitizens = $scope.var.states.filter(isSitezens)[0];
+            $scope.var.subj.sitizens = $scope.var.sitizens.code_id;
+
             butt.removeAttribute('disabled');
+
         } else if(showForms && val == hid){
             $scope.var.showForms = false;
             butt.classList.remove("btn-warning");
@@ -135,7 +141,8 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
             $scope.var.subj = {};
 
-            $scope.var.subj.sitizens = $scope.var.states.filter(isSitezens)[0];
+            $scope.var.sitizens = $scope.var.states.filter(isSitezens)[0];
+            $scope.var.subj.sitizens = $scope.var.sitizens.code_id;
 
             /*$scope.var.subj.firstname = "";
             $scope.var.subj.surname = "";
@@ -154,7 +161,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
         if($scope.unReg(subject)) {
 
-            $scope.subjectForm=angular.copy(subject);
+            $scope.subjectForm= angular.copy(subject);
 
             $scope.var.subj = [];
 
@@ -164,7 +171,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
             subject = $scope.createJSON(subject);
 
-            $scope.var.subjtype = subject.subjectType;
+            $scope.var.subjtype = $scope.var.subjecttypes.filter(function(v) {return v.code_id === subject.subjectType;})[0];
 
             $scope.var.subj = angular.copy(subject);
 
@@ -175,9 +182,11 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             butt.setAttribute('disabled', 'disabled');
 
             if($scope.subjectForm.address == null)
-                $scope.var.subj.sitizens = $scope.var.states.filter(isSitezens)[0];
+                $scope.var.sitizens = $scope.var.states.filter(isSitezens)[0];
             else
-                $scope.var.sitizens = subject.sitizens;
+                $scope.var.sitizens =  $scope.var.states.filter(function(v) {
+                    return v.code_id == subject.sitizens; })[0];
+
         }
 
         else return false;
@@ -236,9 +245,8 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
     $scope.pushSubject = function (subject) {
         var url = DOMAIN + '/nka_net3/subject/add';
-        subject.subjectType = angular.copy($scope.var.subjtype);
 
-        if ( subject.subjectType.parent_code == 200 )
+        if ( $scope.var.subjtype.parent_code == 200 )
         {  swal("Error", "Добавление юр лиц запрещено" , "error");  return;}
 
         console.log(JSON.stringify(subject));
@@ -262,8 +270,9 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
     };
 
     $scope.updateSubject = function (subject) {
+
         var url = DOMAIN + '/nka_net3/subject/update';
-        subject.subjectType = angular.copy($scope.var.subjtype);
+
         $http.put(url, subject).success(function (data, status, headers) {
 
             subject = data;
@@ -274,6 +283,8 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             swal("Error", "status: " + status , "error");
 
         });
+
+
 
         $scope.var.subj = {};
 

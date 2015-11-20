@@ -141,7 +141,7 @@
                             ng-click="updateSubjectForm(subject)"
                             ng-style="{false:{'background-color': '#F7BABA'}}[unReg(subject)]">
                             <td width="2%">{{$index + 1}}</td>
-                            <td width="5%">{{subject.subjectType.code_short_name}}{{subject.opf}}</td>
+                            <td width="5%">{{var.typeSearch.code_short_name}}{{subject.opf}}</td>
                             <td width="20%">{{subject.surname}}{{" "+subject.firstname}}{{" "+subject.fathername }}{{subject.fullname}}{{subject.vnaim}}
                             </td>
                             <td width="10%">{{subject.personalNumber}} {{subject.unp}}</td>
@@ -183,6 +183,7 @@
                         <select ng-model="var.subjtype"
                                 ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes | filterSubjectTypeForCreate track by subjecttype.code_id"
                                 class="form-control col-xs-6 mySelect width310"
+                                ng-value="var.subj.subjectType = var.subjtype.code_id"
                                 required="required">
                         </select>
 
@@ -231,7 +232,7 @@
                         </label>
 
                         <div class="col-xs-6">
-                            <input class="form-control" type="date" ng-model="var.subj.bothRegDate" value = "{{var.subj.bothRegDate | date:'yyyy-MM-dd'}}" />
+                            <input class="form-control" type="date" ng-model="var.subj.bothRegDate" value = "{{var.subj.bothRegDate | date:'medium'}}" />
                         </div>
 
                     </div>
@@ -344,8 +345,9 @@
                         </label>
 
                         <div class="col-xs-6">
-                            <select ng-model="var.subj.sitizens"
+                            <select ng-model="var.sitizens"
                                     ng-options="state as state.code_short_name for state in var.states | orderBy: ['code_short_name'] track by state.code_id"
+                                    ng-value="var.subj.sitizens = var.sitizens.code_id"
                                     class="form-control col-xs-6 "
                                     ng-disabled="200 < var.subjtype.code_id&& var.subjtype.code_id< 400">
                             </select>
