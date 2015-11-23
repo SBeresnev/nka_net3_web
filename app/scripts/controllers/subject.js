@@ -39,8 +39,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
         $scope.typeMod = typeof($routeParams.typeMod) == 'undefined' ? false : true;
 
         $scope.var.loading = true;
-        $http.get(DOMAIN + "/nka_net3/catalog/states")
-            .then(function (res) {
+        $http.get(DOMAIN + "/nka_net3/catalog/states").then(function (res) {
                 $scope.var.states = res.data;
                 $scope.var.sitizens = $scope.var.states.filter(isSitezens)[0];
                 $scope.var.subj = {sitizens: $scope.var.sitizens};
@@ -48,8 +47,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
                 $scope.var.showForms = false;
             });
 
-        $http.get(DOMAIN + "/nka_net3/catalog/subjectTypes")
-            .then(function (res) {
+        $http.get(DOMAIN + "/nka_net3/catalog/subjectTypes").then(function (res) {
                 $scope.var.subjecttypes = res.data;
                 $scope.var.loading = false;
                 $scope.var.typeSearch = $scope.var.subjecttypes.filter(isEnoughType)[0];
