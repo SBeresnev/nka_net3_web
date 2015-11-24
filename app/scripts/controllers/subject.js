@@ -88,6 +88,55 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
         }
     };
 
+
+    $scope.pushSubject = function (subject) {
+
+        if ( $scope.var.subjtype.parent_code == 200 ) { swal("Error", "Добавление юр лиц запрещено" , "error");  return;}
+
+        var url = DOMAIN + '/nka_net3/subject/add';
+
+        $scope.timetoUTC(subject);
+
+        console.log(JSON.stringify(subject));
+
+        $http.post(url, subject).success(function (data, status, headers) {
+
+            subject = data;
+
+            $scope.updateSubjectForm(subject);
+
+            swal("оk!", "", "success");
+
+        }).error(function (data, status, header, config) {
+
+            swal("Error", "status: " + status , "error");
+
+        });
+
+
+    };
+
+    $scope.updateSubject = function (subject) {
+
+        var url = DOMAIN + '/nka_net3/subject/update';
+
+        $scope.timetoUTC(subject);
+
+        $http.put(url, subject).success(function (data, status, headers) {
+
+            subject = data;
+
+            swal("оk!", "", "success");
+
+        }).error(function (data, status, header, config) {
+
+            swal("Error", "status: " + status , "error");
+
+        });
+
+        $scope.updateSubjectForm(subject);
+    };
+
     $scope.searchSubjects = function () {
         if ($scope.var.typeSearch != undefined) {
             $scope.var.loading = true;
@@ -113,6 +162,11 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
         var butt = document.getElementById('add-subjects-id');
         var val = butt.value;
         var hid = 'Скрыть', op = 'Добавить новый';
+
+        $scope.var.subj = {};
+
+        document.getElementById('push-subject-button').removeAttribute('disabled');
+
         if (!showForms && val == op) {
             $scope.var.showSubjectsTable = false;
             $scope.var.showForms = true;
@@ -126,32 +180,23 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             butt.removeAttribute('disabled');
 
         } else if(showForms && val == hid){
+
             $scope.var.showForms = false;
             butt.classList.remove("btn-warning");
             butt.classList.add("btn-primary");
             butt.value = op;
+
         } else if (showForms && val == op) {
+
             $scope.var.showSubjectsTable = false;
             $scope.var.showForms = true;
             butt.classList.remove("btn-primary");
             butt.classList.add("btn-warning");
             butt.value = hid;
 
-            $scope.var.subj = {};
-
             $scope.var.sitizens = $scope.var.states.filter(isSitezens)[0];
             $scope.var.subj.sitizens = $scope.var.sitizens.code_id;
 
-            /*$scope.var.subj.firstname = "";
-            $scope.var.subj.surname = "";
-            $scope.var.subj.fathername = "";
-            $scope.var.subj.bothRegDate = "";
-            $scope.var.subj.bothRegDate = null;
-            $scope.var.subj.personalNumber = "";
-            $scope.var.subj.address = "";*/
-
-            var butt = document.getElementById('push-subject-button');
-            butt.removeAttribute('disabled');
         }
     };
 
@@ -159,9 +204,9 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
         if($scope.unReg(subject)) {
 
-            $scope.subjectForm= angular.copy(subject);
+            $scope.var.subj = {};
 
-            $scope.var.subj = [];
+            $scope.subjectForm= angular.copy(subject);
 
             $scope.var.showForms = true;
 
@@ -177,7 +222,11 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
             var butt = document.getElementById('push-subject-button');
 
-            butt.setAttribute('disabled', 'disabled');
+            if (mvdSearch || urSearch) {
+                butt.removeAttribute('disabled', 'disabled');
+            } else {
+                butt.setAttribute('disabled', 'disabled');
+            }
 
             if($scope.subjectForm.address == null)
                 $scope.var.sitizens = $scope.var.states.filter(isSitezens)[0];
@@ -241,53 +290,14 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
         return Math.ceil($scope.var.subjects.length / $scope.pageSize);
     };
 
-    $scope.pushSubject = function (subject) {
-        var url = DOMAIN + '/nka_net3/subject/add';
+    $scope.timetoUTC = function(subject) {
 
-        if ( $scope.var.subjtype.parent_code == 200 )
-        {  swal("Error", "Добавление юр лиц запрещено" , "error");  return;}
+        var sub_date = new Date(subject.bothRegDate);
 
-        console.log(JSON.stringify(subject));
-        $http.post(url, subject).success(function (data, status, headers) {
-
-            subject = data;
-
-            $scope.var.subj = {};
-
-            $scope.updateSubjectForm(subject);
-
-            swal("оk!", "", "success");
-
-        }).error(function (data, status, header, config) {
-
-            swal("Error", "status: " + status , "error");
-
-        });
+        subject.bothRegDate = Date.UTC( sub_date.getFullYear(), sub_date.getMonth() , sub_date.getDate(), 0, 0, 0);
 
 
-    };
-
-    $scope.updateSubject = function (subject) {
-
-        var url = DOMAIN + '/nka_net3/subject/update';
-
-        $http.put(url, subject).success(function (data, status, headers) {
-
-            subject = data;
-            swal("оk!", "", "success");
-
-        }).error(function (data, status, header, config) {
-
-            swal("Error", "status: " + status , "error");
-
-        });
-
-
-
-        $scope.var.subj = {};
-
-        $scope.updateSubjectForm(subject);
-    };
+    }
 
     $scope.validPass = function () {
         var exp = /^[A-Z,a-z]{2}(\d){7}$/;
@@ -361,8 +371,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
     }
 
-    $scope.bind = function()
-    {
+    $scope.bind = function(){
 
       sessionStorage.setItem('sbjObj',JSON.stringify($scope.var.subj));
 

@@ -146,8 +146,8 @@
                             </td>
                             <td width="10%">{{subject.personalNumber}} {{subject.unp}}</td>
                             <td  width="10%">{{subject.address}}{{subject.fullAddress}}</td>
-                            <td width="5%">{{ var.date = subject.bothRegDate | date:'yyyy-MM-dd HH:mm'  }}{{ subject.regDate | date:'yyyy-MM-dd HH:mm' }}</td>
-                            <td width="5%" ng-show="subject.unp != ''">{{ subject.unRegDate | date:'yyyy-MM-dd HH:mm' }}</td>
+                            <td width="5%">{{ var.date = subject.bothRegDate | date:'yyyy-MM-dd' }}{{ subject.regDate | date:'yyyy-MM-dd' }}</td>
+                            <td width="5%" ng-show="subject.unp != ''">{{ subject.unRegDate | date:'yyyy-MM-dd' }}</td>
                         </tr>
                     </table>
 
@@ -232,7 +232,7 @@
                         </label>
 
                         <div class="col-xs-6">
-                            <input class="form-control" type="date" ng-model="var.subj.bothRegDate" value = "{{var.subj.bothRegDate | date:'medium'}}" />
+                            <input class="form-control" type="date" ng-model="var.subj.bothRegDate" value = "{{ var.subj.bothRegDate | date:'yyyy-M-dd'}}" />
                         </div>
 
                     </div>
@@ -292,7 +292,7 @@
                         </label>
 
                         <div class="col-xs-6">
-                            <input class="form-control" type="date"  ng-model="var.subj.bothRegDate" readonly="true">
+                            <input class="form-control" type="date"  ng-model="var.subj.bothRegDate" value = "{{var.subj.bothRegDate | date:'yyyy-MM-dd' : 'UTC'}}"  readonly="true">
                         </div>
                     </div>
 
