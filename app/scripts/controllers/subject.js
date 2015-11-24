@@ -91,7 +91,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
     $scope.pushSubject = function (subject) {
 
-        if ( $scope.var.subjtype.parent_code == 200 ) { swal("Error", "Добавление юр лиц запрещено" , "error");  return;}
+        if ( $scope.var.subjtype.parent_code == 200 && !urSearch ) { swal("Error", "Добавление юр лиц запрещено" , "error");  return;}
 
         var url = DOMAIN + '/nka_net3/subject/add';
 
@@ -109,7 +109,9 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
         }).error(function (data, status, header, config) {
 
-            swal("Error", "status: " + status , "error");
+            var str = data.substring(data.indexOf("<u>")+3, data.indexOf("</u>"));
+
+            swal("Error", "status: " + status + '\n' + str , "error");
 
         });
 
@@ -221,6 +223,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             $scope.var.subj.bothRegDate = new Date(angular.copy(subject).bothRegDate);
 
             var butt = document.getElementById('push-subject-button');
+
 
             if (mvdSearch || urSearch) {
                 butt.removeAttribute('disabled', 'disabled');
