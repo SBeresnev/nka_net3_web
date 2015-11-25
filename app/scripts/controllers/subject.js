@@ -39,6 +39,12 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
         $scope.typeMod = typeof($routeParams.typeMod) == 'undefined' ? false : true;
 
         $scope.var.loading = true;
+
+        $scope.mvdSearch=false;
+
+        $scope.urSearch=false;
+
+
         $http.get(DOMAIN + "/nka_net3/catalog/states").then(function (res) {
                 $scope.var.states = res.data;
                 $scope.var.sitizens = $scope.var.states.filter(isSitezens)[0];
@@ -225,7 +231,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
             var butt = document.getElementById('push-subject-button');
 
 
-            if (mvdSearch || urSearch) {
+            if ($scope.mvdSearch || $scope.urSearch) {
                 butt.removeAttribute('disabled', 'disabled');
             } else {
                 butt.setAttribute('disabled', 'disabled');
