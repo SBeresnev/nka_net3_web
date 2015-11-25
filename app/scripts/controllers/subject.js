@@ -15,7 +15,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
     $scope.typeMod = false ;  /* view mode */
 
     $scope.urlAddress = WEBDOM + '//#/address';
-    //window.location.protocol + '//'+ window.location.hostname+":9000" + '/#/address';
+
 
     $scope.var = {
         loading: false,
@@ -94,7 +94,6 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
         }
     };
 
-
     $scope.pushSubject = function (subject) {
 
         if ( $scope.var.subjtype.parent_code == 200 && !urSearch ) { swal("Error", "Добавление юр лиц запрещено" , "error");  return;}
@@ -115,9 +114,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
         }).error(function (data, status, header, config) {
 
-            var str = data.substring(data.indexOf("<u>")+3, data.indexOf("</u>"));
-
-            swal("Error", "status: " + status + '\n' + str , "error");
+            swal("Error", data.message , "error");
 
         });
 
@@ -138,7 +135,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
         }).error(function (data, status, header, config) {
 
-            swal("Error", "status: " + status , "error");
+            swal("Error", data.message , "error");
 
         });
 

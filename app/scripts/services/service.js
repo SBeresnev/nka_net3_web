@@ -96,6 +96,11 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
           }
           scope.$apply();
         }
+       else {
+          swal("Error", JSON.parse(http.responseText).message , "error"); // вызвать обработчик ошибки с текстом ответа
+
+          scope.$apply();
+      }
       }
     }
   };
