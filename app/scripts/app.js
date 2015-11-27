@@ -24,7 +24,6 @@ var app = angular
     .constant('WEBDOM', "" + window.location.protocol + '//'+ window.location.hostname+":8080"+'//nka_net3_web')
     .config(function ($routeProvider, $httpProvider) {
         $httpProvider.defaults.useXDomain = true;
-
         $routeProvider
             .when('/', {
                 templateUrl: 'views/main.html',

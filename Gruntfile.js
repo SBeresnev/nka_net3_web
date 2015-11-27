@@ -30,7 +30,7 @@ module.exports = function (grunt) {
           password: 'admin',
           path: '/nka_net3_web',
           port: 8080,
-          war: 'out/app.war',
+          war: 'out/nka_net3_web.war',
           deploy: '/manager/text/deploy',
           undeploy: '/manager/text/undeploy'
         },
@@ -39,7 +39,7 @@ module.exports = function (grunt) {
           target: {
             options: {
               war_dist_folder: 'out',    /* Folder where to generate the WAR. */
-              war_name: 'i_nka_net3_web'                    /* The name fo the WAR file (.war will be the extension) */
+              war_name: 'nka_net3_web'                    /* The name fo the WAR file (.war will be the extension) */
             },
             files: [
               {
