@@ -130,6 +130,8 @@ angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, 
 
             subject = data;
 
+            $scope.updateSubjectForm(subject);
+
             swal("оk!", "", "success");
 
         }).error(function (data, status, header, config) {
@@ -138,7 +140,7 @@ angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, 
 
         });
 
-        $scope.updateSubjectForm(subject);
+
     };
 
     $scope.searchSubjects = function () {
