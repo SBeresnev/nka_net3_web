@@ -4,7 +4,7 @@
 
 'use strict';
 
-angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $location, $filter, $routeParams, httpServices, DOMAIN, WEBDOM) {
+angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, $location, $filter, $routeParams, httpServices, DOMAIN, subjectvar ,WEBDOM) {
 
     $scope.awesomeThings = [
         'HTML5 Boilerplate',
@@ -43,7 +43,6 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
         $scope.mvdSearch=false;
 
         $scope.urSearch=false;
-
 
         $http.get(DOMAIN + "/nka_net3/catalog/states").then(function (res) {
                 $scope.var.states = res.data;
@@ -96,7 +95,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
 
     $scope.pushSubject = function (subject) {
 
-        if ( $scope.var.subjtype.parent_code == 200 && !urSearch ) { swal("Error", "Добавление юр лиц запрещено" , "error");  return;}
+        if ( $scope.var.subjtype.parent_code == 200 && !$scope.urSearch ) { swal("Error", "Добавление юр лиц запрещено" , "error");  return;}
 
         var url = DOMAIN + '/nka_net3/subject/add';
 
@@ -234,7 +233,7 @@ angular.module('assetsApp').controller('SubjectCtrl', function ($scope, $http, $
                 butt.setAttribute('disabled', 'disabled');
             }
 
-            if($scope.subjectForm.address == null)
+            if($scope.var.subj.address == null)
                 $scope.var.sitizens = $scope.var.states.filter(isSitezens)[0];
             else
                 $scope.var.sitizens =  $scope.var.states.filter(function(v) {

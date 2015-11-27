@@ -24,6 +24,35 @@ module.exports = function (grunt) {
   // Define the configuration for all the tasks
   grunt.initConfig({
 
+       tomcat_deploy: {
+          host: 'localhost',
+          login: 'admin',
+          password: 'admin',
+          path: '/nka_net3_web',
+          port: 8080,
+          war: 'out/app.war',
+          deploy: '/manager/text/deploy',
+          undeploy: '/manager/text/undeploy'
+        },
+
+        war: {
+          target: {
+            options: {
+              war_dist_folder: 'out',    /* Folder where to generate the WAR. */
+              war_name: 'i_nka_net3_web'                    /* The name fo the WAR file (.war will be the extension) */
+            },
+            files: [
+              {
+                expand: true,
+                cwd: 'app',
+                src: ['**'],
+                dest: ''
+              }
+            ]
+          }
+        },
+
+
     // Project settings
     yeoman: appConfig,
 
@@ -352,7 +381,8 @@ module.exports = function (grunt) {
         singleRun: true
       }
     }
-  });
+  }
+  );
 
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {

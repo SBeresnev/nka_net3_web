@@ -4,7 +4,8 @@
 'use strict';
 
 angular.module('assetsApp')
-    .controller('DependencyCtrl', function ($scope, $http, $location, DOMAIN) {
+    .controller('DependencyCtrl', function ($scope, $http, $location,DOMAIN) {
+
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
@@ -259,13 +260,3 @@ angular.module('assetsApp')
         }
 
     });
-
-
-angular.module('assetsApp').filter('pagination', function()
-{
-    return function(input, start)
-    {
-        start = +start;
-        return input.slice(start);
-    };
-});

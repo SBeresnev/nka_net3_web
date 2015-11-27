@@ -5,7 +5,7 @@
 'use strict';
 
 angular.module('assetsApp')
-    .controller('OrderCtrl', function ($scope, $http, $routeParams, httpServices, ordervar, DOMAIN) {
+    .controller('OrderCtrl', function ($scope, $http, $routeParams, httpServices,ordervar , DOMAIN) {
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
