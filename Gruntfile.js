@@ -52,6 +52,14 @@ module.exports = function (grunt) {
           }
         },
 
+       copy: {
+          files: {
+            cwd: './bower_components',          // set working folder / root to copy
+            src: '**/*',           // copy all files and subfolders
+            dest: 'app/bower_components/',          // destination folder
+            expand: true           // required when using cwd
+          }
+        },
 
     // Project settings
     yeoman: appConfig,
@@ -323,8 +331,10 @@ module.exports = function (grunt) {
       }
     },
 
+
+
     // Copies remaining files to places other tasks can use
-    copy: {
+    copy_old: {
       dist: {
         files: [{
           expand: true,
