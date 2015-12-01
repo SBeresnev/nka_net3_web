@@ -231,8 +231,10 @@
                             <span class="pull-right"> Дата рождения: </span>
                         </label>
 
-                        <div class="col-xs-6">
-                            <input class="form-control" type="date" ng-model="var.subj.bothRegDate" value = "{{var.subj.bothRegDate}}" />
+                        <div id="k-time" class="col-xs-6 ">
+
+                            <input id="k-picker" kendo-date-picker k-format="'yyyy-MM-dd'" k-ng-model="var.subj.bothRegDate" style="width: 100%; background-color:#ffffff; height:30px; color:#555;" />
+
                         </div>
 
                     </div>

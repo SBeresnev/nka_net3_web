@@ -115,6 +115,8 @@ angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, 
 
             swal("Error", data.message , "error");
 
+            //alert(data.message);
+
         });
 
 
@@ -123,6 +125,8 @@ angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, 
     $scope.updateSubject = function (subject) {
 
         var url = DOMAIN + '/nka_net3/subject/update';
+
+        if(subject.subjectId == undefined ) { swal("Error", "Добавьте объект перед изменением либо воспользуйтесь стандартным поиском" , "error"); return; }
 
         $scope.timetoUTC(subject);
 

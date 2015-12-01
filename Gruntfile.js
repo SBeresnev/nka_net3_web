@@ -21,6 +21,7 @@ module.exports = function (grunt) {
     dist: 'dist'
   };
 
+
   // Define the configuration for all the tasks
   grunt.initConfig({
 
@@ -31,8 +32,8 @@ module.exports = function (grunt) {
           path: '/nka_net3_web',
           port: 8080,
           war: 'out/nka_net3_web.war',
-          deploy: '/manager/text/deploy',
-          undeploy: '/manager/text/undeploy'
+          undeploy: '/manager/text/undeploy',
+          deploy: '/manager/text/deploy'
         },
 
         war: {
