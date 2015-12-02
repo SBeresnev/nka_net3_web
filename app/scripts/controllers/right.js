@@ -27,42 +27,20 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
         $scope.sbjwindow.element.children(".k-content-frame").contents().find(".header")[0].style.display="none";
 
-        //$scope.window.element.children(".k-content-frame").contents().find(".checkbox")[0].style.display="none";
-
-        //$scope.window.element.children(".k-content-frame").contents().find("input.btn")[0].style.display="none";
-
-        //$scope.window.element.children(".k-content-frame").contents().find("div.btn")[0].style.display="none";
-
-        /*
-        var btn_elem = $scope.window.element.children(".k-content-frame").contents().find("#push-subject-button");
-
-        if ( btn_elem.length != 0 ) {
-
-            btn_elem = btn_elem[0];
-
-            btn_elem.id = "bind-subject-button";
-
-            btn_elem.innerHTML = "Привязать";
-
-            btn_elem._initialText = "Привязать";
-
-            btn_elem.setAttribute("ng-click", "sessionStorage.setItem('sbjObj',JSON.stringify($scope.var.subj))");
-
-        } */
-
         /***************************************/
 
         sessionStorage.setItem('sbjObj',JSON.stringify({}));
 
         $scope.sbjwindow.setOptions($scope.DlgOptions);
 
-        $scope.sbjwindow.center();  // open dailog in center of screen
+        $scope.sbjwindow.center();
 
         var modInst =  $scope.sbjwindow.open();
 
     }
 
     $scope.csubSearch = function () {
+
 
         var sel_subject_test = JSON.parse(sessionStorage.getItem("sbjObj"));
 

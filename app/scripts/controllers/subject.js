@@ -4,7 +4,7 @@
 
 'use strict';
 
-angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, $location, $filter, $routeParams, httpServices, DOMAIN, subjectvar ,WEBDOM) {
+angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, $location, $filter, $routeParams, httpServices, DOMAIN, WEBDOM) {
 
     $scope.awesomeThings = [
         'HTML5 Boilerplate',
@@ -387,14 +387,6 @@ angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, 
       sessionStorage.setItem('sbjObj',JSON.stringify($scope.var.subj));
 
       swal("оk!", "", "success");
-     //$window.close();
-
-     // var elem = angular.element(document.querySelector('#modWin'));
-
-     //var tty = elem.data("kendoWindow");
-
-     // alert(elem);
-
 
     }
 
