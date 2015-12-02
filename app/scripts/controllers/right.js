@@ -19,6 +19,27 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
         tabClasses = ["","","","",""];
     }
 
+    $scope.rightSearch = function(){
+
+
+
+        var pos =  $scope.sbj_class.indexOf("active");
+
+        $scope.var.url = DOMAIN + "/nka_net3/address/getAtebyName_apr?parent_id="+ $scope.var.curAte.ate_id + "&ate_name=" +  $scope.var.ateForm.nameAte.toString();
+
+        $http.get($scope.var.url).then(function (res) {
+
+            $scope.var.ateDataSearch = res.data;
+
+            $scope.ateTabShow=true;
+
+            myElement.removeClass("wait");
+
+        });
+
+
+    }
+
     $scope.osubSearch = function () {
 
         $scope.DlgOptions.title = "Subjects";
