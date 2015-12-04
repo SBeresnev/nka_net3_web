@@ -22,7 +22,7 @@
                         <select ng-model="var.typeSearch"
                                 ng-options="subjecttype as subjecttype.code_short_name for subjecttype in var.subjecttypes| filterSubjectTypeForCreate"
                                 class="form-control col-sm-2"
-                                ng-change="var.showForms=false; var.showSubjectsTable=false"
+                                ng-change="initSelect()"
                                 required="required">
                         </select>
                     </div>

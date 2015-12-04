@@ -145,6 +145,21 @@ angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, 
 
     };
 
+    $scope.initSelect = function () {
+
+        var butt = document.getElementById('add-subjects-id');
+
+        butt.classList.remove("btn-warning");
+        butt.classList.add("btn-primary");
+        butt.value = 'Добавить новый';
+
+        $scope.var.showForms=false;
+        $scope.var.showSubjectsTable=false;
+
+    }
+
+
+
     $scope.searchSubjects = function () {
         if ($scope.var.typeSearch != undefined) {
             $scope.var.loading = true;
