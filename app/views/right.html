@@ -1,6 +1,4 @@
-
-
-<div class="page-header row" >
+<div class="page-header row" ng-init="init()">
 
     <h2 class = "col-md-2 col-md-offset-5 text-muted"> ПРАВА </h2>
 
@@ -45,6 +43,32 @@
 
              </div>
 
+             <table class="table table-bordered"  ng-hide="!rightstDataSearchTabShow">
+
+                <tr>
+
+                    <th>Номер</th>
+
+                    <th>ID</th>
+
+                    <th>Улица</th>
+
+                    <th>Дом/Корпус-Квартира</th>
+
+                </tr>
+
+                <tr ng-repeat="right in var.rightstDataSearch  " class="btn-default">
+
+                    <td >{{$index +1}}</td>
+
+                    <td width="fit-content">{{right.elementName}}</td>
+
+                    <td width="fit-content">{{getFormat(street)}}</td>
+
+                </tr>
+
+            </table>
+
              <div class="window"></div>
 
 
@@ -53,7 +77,6 @@
          <!------------------------ Main block ---------------------------------------->
 
         <div ng-class="getTabPaneClass(2)" id="main">
-
 
              <div class="col-lg-4">
 
@@ -74,10 +97,10 @@
 
 
         </div>
+
          <!------------------------ Details block ---------------------------------------->
 
         <div ng-class="getTabPaneClass(3)" id="detail">Детализация</div>
-
 
          <!------------------------ Bargain block ---------------------------------------->
 
@@ -87,9 +110,8 @@
 
 </div>
 
-<p> {{toSend.personalNumber}}</p>
+<div kendo-window="sbjwindow" k-visible="false" k-modal="true" k-on-close="csubSearch()" k-content="{url: '{{urlmodSbj}}'}"> </div>
 
- <div kendo-window="sbjwindow" k-visible="false" k-modal="true" k-on-close="csubSearch()" k-content="{url: '{{urlmodSbj}}'}"> </div>
 
 
 

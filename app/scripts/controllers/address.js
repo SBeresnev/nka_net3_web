@@ -300,7 +300,6 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
 
         $scope.var.fullStr = '';
 
-
         $scope.var.curStreet.ate_id = $scope.var.curAte.ate_id;
 
         $scope.var.curStreet.street_name = item.elementName;

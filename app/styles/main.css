@@ -1,36 +1,5 @@
-.k-treeview .k-in {
-   color: #000000;
-   background-color: #ffffff;
-}
-
-.k-treeview .k-in .k-selected {
-  color: #000000;
-  background-color: #ff4324;
-}
-
-
-#k-my-spn {
-  width:555px;
-  margin-left: 15px;
-}
-
-#k-my-spn  * {
-  height:34px;
-  color:#555;
-}
-
-
-.k-treeview .k-in {
-  padding: 5px;
-}
-
-.k-input-cust {
-  background-color: #fff;
-  color: #5f2200;
-}
-
 .wait *
- {
+{
   cursor:wait
 }
 
@@ -77,19 +46,9 @@ body {
   padding: 14px 24px;
 }
 
-
-
 .distance-top{
   margin-top: 40px;
   height: 50px;
-}
-
-.mybtn{
-  margin: -5px;
-}
-
-.width150{
-  width: 150px !important;
 }
 
 .width310{
@@ -99,70 +58,6 @@ body {
 .mySelect{
   margin-left: 15px !important;
   border-radius: 4px !important;
-}
-
-.plus{
-  font-size: 100%;
-}
-
-.padding-top{
-  padding-top: 15px;
-}
-
-
-.treeview, .treeview ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border: none;
-  overflow: hidden;
-}
-
-.treeview li
-{
-  position: relative;
-  padding: 0 0 0 20px;
-  line-height: 20px;
-}
-
-.treeview li .expanded
-{
-  padding: 1px 10px;
-  background-image: url("images/folder.png");
-  background-repeat: no-repeat;
-}
-
-.treeview li .collapsed
-{
-  padding: 1px 10px;
-  background-image: url("images/folder-closed.png");
-  background-repeat: no-repeat;
-}
-
-.treeview li .normal
-{
-  padding: 1px 10px;
-  background-image: url("images/file.png");
-  background-repeat: no-repeat;
-}
-
-.treeview li i, .treeview li span
-{
-  cursor: pointer;
-}
-
-
-.litle-left{
-  margin-left: -15px;
-}
-
-.litle-right{
-  margin-left: 10px;
-}
-
-
-.datepicker > input{
-  visibility: hidden !important;
 }
 
 .margin-top{
@@ -190,8 +85,6 @@ button.btn.active.btn-danger {
 .right-span-addon{
   background-color: #d9edf7;
 }
-
-
 
 .window{
   z-index: 1000;

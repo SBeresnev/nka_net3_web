@@ -7,38 +7,48 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     $scope.urlmodSbj = WEBDOM + '//#/subject/true';
 
-    $scope.sel_subject = '';
-
     $scope.DlgOptions = {width: "1300px", height: "500px", modal: true, actions: ["Custom", "Minimize", "Maximize", "Close"], iframe: true, visible: false };
 
-    $scope.tabClasses;
+    $scope.tabClasses = ["","","","",""];
 
-    initTabs();
+    $scope.sel_subject = {};
 
-    function initTabs() {
-        tabClasses = ["","","","",""];
+    $scope.sel_oject = {};
+
+
+    $scope.var = {
+
+         rightstDataSearch: {}
+
     }
+
+
+    $scope.init = function () {
+
+        $scope.var.loading = true;
+
+    };
 
     $scope.rightSearch = function(){
 
-
-
         var pos =  $scope.sbj_class.indexOf("active");
 
-        $scope.var.url = DOMAIN + "/nka_net3/address/getAtebyName_apr?parent_id="+ $scope.var.curAte.ate_id + "&ate_name=" +  $scope.var.ateForm.nameAte.toString();
+        pos == -1 ? $scope.sel_oject = {} : $scope.sel_subject = {};
 
-        $http.get($scope.var.url).then(function (res) {
+        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.sel_oject.obj_id + "&person_id=" +  $scope.sel_subject.subjectId;
 
-            $scope.var.ateDataSearch = res.data;
+        $http.get($scope.url).then(function (res) {
 
-            $scope.ateTabShow=true;
+            $scope.rightstDataSearch = res.data;
 
-            myElement.removeClass("wait");
+            $scope.rightstDataSearchTabShow=true;
 
         });
 
 
     }
+
+    //////////////////////////// Modal for Subjects ////////////////////////////////////////////////////////
 
     $scope.osubSearch = function () {
 
@@ -62,7 +72,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     $scope.csubSearch = function () {
 
-
         var sel_subject_test = JSON.parse(sessionStorage.getItem("sbjObj"));
 
         if (sel_subject_test.dtype == "private") {
@@ -75,6 +84,14 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     }
 
+    //////////////////////////// Modal for Objects /////////////////////////////////////////////////////////
+
+    $scope.oobjSearch = function () {}
+
+    $scope.cobjSearch = function () {}
+
+    ///////////////////////////// Service part //////////////////////////////////////////////////////////////
+
     $scope.getTabClass = function (tabNum) {
         return tabClasses[tabNum];
     };
@@ -84,12 +101,37 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
     }
 
     $scope.setActiveTab = function (tabNum) {
+
         initTabs();
+
         tabClasses[tabNum] = "active";
+
+        switch(tabNum) {
+            case 1:
+
+                $scope.rightstDataSearchTabShow=true;
+                $scope.rightstDataSearch = [];
+
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+
+
+        }
+
     };
 
     $scope.setActiveTab(1);
 
+    function initTabs() {
+
+        tabClasses = ["","","","",""];
+
+    }
 
 });
 

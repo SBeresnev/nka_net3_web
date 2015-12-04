@@ -4,7 +4,7 @@
 
 'use strict';
 
-angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, $location, $filter, $routeParams, httpServices, DOMAIN, WEBDOM) {
+angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, $location, $filter, $routeParams, httpServices, subjectvar, DOMAIN, WEBDOM) {
 
     $scope.awesomeThings = [
         'HTML5 Boilerplate',
@@ -115,8 +115,6 @@ angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, 
 
             swal("Error", data.message , "error");
 
-            //alert(data.message);
-
         });
 
 
@@ -163,7 +161,9 @@ angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, 
             butt.classList.add("btn-primary");
             butt.value = 'Добавить новый';
         } else {
-            alert("Не выбран тип субъекта!");
+
+            swal("Error", "Не выбран тип субъекта!", "error");
+
         }
     };
 
@@ -211,6 +211,7 @@ angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, 
     };
 
     $scope.updateSubjectForm = function (subject) {
+
 
         if($scope.unReg(subject)) {
 
@@ -268,7 +269,9 @@ angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, 
             butt.value = 'Добавить новый';
 
         } else {
-            alert("Ошибочно заполненны поля!");
+
+            swal("Error", "Ошибочно заполненны поля!", "error");
+
         }
     };
 
@@ -276,9 +279,11 @@ angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, 
         var unp = $scope.var.searchSubject.unp;
         var nameUr = $scope.var.searchSubject.nameUr;
         if(!$scope.isFillingField(nameUr, unp))
-            alert("Не заполненны поля!");
+            swal("Error", "Не заполненны поля!", "error");
+
         else if (unp.trim() != "" && !$scope.validUnp())
-            alert("Ошибочно заполненны поля!");
+            swal("Error", "Ошибочно заполненны поля!", "error");
+
         else {
             $scope.var.loading = true;
             $scope.var.showForms = false;
@@ -338,6 +343,7 @@ angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, 
             subjPush.unp=subject.unp;
             subjPush.orgRightForm.code_id=subject.nkOpf;
             subjPush.orgRightForm.catalogPk.code_id=subject.nkOpf;
+            subjPush.orgRightForm.code_name=subject.opf;
             subjPush.bothRegDate = subject.regDate;
             subjPush.address=subject.fullAddress;
 
