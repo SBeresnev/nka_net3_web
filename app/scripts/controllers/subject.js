@@ -158,8 +158,6 @@ angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, 
 
     }
 
-
-
     $scope.searchSubjects = function () {
         if ($scope.var.typeSearch != undefined) {
             $scope.var.loading = true;

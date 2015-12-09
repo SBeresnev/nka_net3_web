@@ -43,7 +43,7 @@
 
              </div>
 
-             <table class="table table-bordered"  ng-hide="!rightstDataSearchTabShow">
+             <table class="table table-bordered"  ng-hide="rightstDataSearchTabHide">
 
                 <tr>
 
@@ -51,25 +51,29 @@
 
                     <th>ID</th>
 
-                    <th>Улица</th>
+                    <th>Правообладатель</th>
 
-                    <th>Дом/Корпус-Квартира</th>
+                    <th>Объект</th>
+
+                    <th>Доля в праве</th>
 
                 </tr>
 
-                <tr ng-repeat="right in var.rightstDataSearch  " class="btn-default">
+                <tr ng-repeat="right in var.rightstDataSearch" class="btn-default">
 
                     <td >{{$index +1}}</td>
 
-                    <td width="fit-content">{{right.elementName}}</td>
+                    <td width="fit-content">{{right_owner.right_owner_id}}</td>
 
-                    <td width="fit-content">{{getFormat(street)}}</td>
+                    <td width="fit-content">{{right_owner.owner.surname}}{{" "+right_owner.owner.firstname}}{{" "+right_owner.owner.fathername }}{{right_owner.owner.fullname}}</td>
+
+                    <td width="fit-content">{{right_owner.right.bindedObj.cadastre_number}}</td>
+
+                    <td width="fit-content">{{right_owner.numerator_part}}{{right_owner.denominator_part}}</td>
 
                 </tr>
 
             </table>
-
-             <div class="window"></div>
 
 
          </div>

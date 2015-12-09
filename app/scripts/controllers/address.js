@@ -64,7 +64,6 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
 
         $scope.var.url = DOMAIN + "/nka_net3/address/getate?parent_id=";
 
-
         $http.get($scope.var.url).then(function (res) {
 
             $scope.var.treeData = res.data;
@@ -250,7 +249,7 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
 
         $scope.var.streetDataSearch = [];
 
-        if ( typeof $scope.var.curAte.ate_id == 'undefined' ) alert('Не указан АТЕ');
+        if ( typeof $scope.var.curAte.ate_id === 'undefined' ) swal("Error", 'Не указан АТЕ' , "error");
 
         if ( $scope.var.streetForm.house_num == null )  $scope.var.streetForm.house_num = '' ;
 

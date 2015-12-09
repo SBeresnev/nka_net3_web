@@ -15,10 +15,19 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     $scope.sel_oject = {};
 
-
     $scope.var = {
 
          rightstDataSearch: {}
+
+    }
+
+    $scope.dict = {
+
+        rightCountType : {},
+
+        rightEntytyType : {},
+
+        rightType : {}
 
     }
 
@@ -27,21 +36,52 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
         $scope.var.loading = true;
 
+        $scope.rightstDataSearchTabHide = true;
+
+
+        $scope.var.url = DOMAIN + "/nka_net3/catalog/rightCountType";
+
+        $http.get($scope.var.url).then(function (res) {
+
+            $scope.dict.rightCountType = res.data;
+
+        });
+
+        $scope.var.url = DOMAIN + "/nka_net3/catalog/rightEntytyType";
+
+        $http.get($scope.var.url).then(function (res) {
+
+            $scope.dict.rightEntytyType = res.data;
+
+        });
+
+        $scope.var.url = DOMAIN + "/nka_net3/catalog/rightType";
+
+        $http.get($scope.var.url).then(function (res) {
+
+            $scope.dict.rightType = res.data;
+
+        });
+
     };
 
     $scope.rightSearch = function(){
 
         var pos =  $scope.sbj_class.indexOf("active");
 
-        pos == -1 ? $scope.sel_oject = {} : $scope.sel_subject = {};
+        pos == -1 ? $scope.sel_subject = {} : $scope.sel_oject = {};
 
-        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.sel_oject.obj_id + "&person_id=" +  $scope.sel_subject.subjectId;
+        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.nullIfundefine($scope.sel_oject.obj_id) + "&person_id=" +  $scope.nullIfundefine($scope.sel_subject.subjectId);
 
-        $http.get($scope.url).then(function (res) {
+        $http.get($scope.urlSearch).success(function (res) {
 
             $scope.rightstDataSearch = res.data;
 
-            $scope.rightstDataSearchTabShow=true;
+            $scope.rightstDataSearchTabHide=false;
+
+        }).error(function (data, status, header, config) {
+
+            swal("Error", data.message , "error");
 
         });
 
@@ -109,7 +149,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
         switch(tabNum) {
             case 1:
 
-                $scope.rightstDataSearchTabShow=true;
+                $scope.rightstDataSearchTabHide=true;
+
                 $scope.rightstDataSearch = [];
 
                 break;
@@ -125,7 +166,16 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     };
 
+    $scope.nullIfundefine = function(obj){
+
+        return obj === undefined ? '' : obj;
+
+    }
+
+
     $scope.setActiveTab(1);
+
+
 
     function initTabs() {
 
