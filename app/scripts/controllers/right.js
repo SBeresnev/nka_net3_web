@@ -15,9 +15,13 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     $scope.sel_oject = {};
 
+    $scope.sel_buffer = [];
+
+    $scope.checked=[];
+
     $scope.var = {
 
-         rightstDataSearch: {}
+         rightsDataSearch: {}
 
     }
 
@@ -36,8 +40,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
         $scope.var.loading = true;
 
-        $scope.rightstDataSearchTabHide = true;
-
+        $scope.rightsDataSearchTabHide = true;
 
         $scope.var.url = DOMAIN + "/nka_net3/catalog/rightCountType";
 
@@ -67,17 +70,26 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     $scope.rightSearch = function(){
 
+        $scope.rightstDataSearchTabHide=true;
+
+        $scope.var.rightsDataSearch = [];
+
+
         var pos =  $scope.sbj_class.indexOf("active");
 
         pos == -1 ? $scope.sel_subject = {} : $scope.sel_oject = {};
 
         $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.nullIfundefine($scope.sel_oject.obj_id) + "&person_id=" +  $scope.nullIfundefine($scope.sel_subject.subjectId);
 
+       // $scope.urlSearch = "http://localhost:8080/nka_net3/right/getRightObjectPerson?obj_ids=&person_id=2942"; // потом удалить
+
         $http.get($scope.urlSearch).success(function (res) {
 
-            $scope.rightstDataSearch = res.data;
+            $scope.var.rightsDataSearch = res;
 
-            $scope.rightstDataSearchTabHide=false;
+            $scope.rightsDataSearchTabHide=false;
+
+            //$scope.sel_subject = $scope.var.rightsDataSearch[0].owner; // потом удалить
 
         }).error(function (data, status, header, config) {
 
@@ -149,9 +161,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
         switch(tabNum) {
             case 1:
 
-                $scope.rightstDataSearchTabHide=true;
 
-                $scope.rightstDataSearch = [];
 
                 break;
             case 2:
@@ -172,10 +182,14 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     }
 
-
     $scope.setActiveTab(1);
 
+    $scope.addtoBufer = function(index){
 
+        $scope.students.sel_buffer.push();
+        //(function(record){return $scope.checked[$index];},1);
+
+    };
 
     function initTabs() {
 

@@ -43,7 +43,7 @@
 
              </div>
 
-             <table class="table table-bordered"  ng-hide="rightstDataSearchTabHide">
+             <table class="table table-bordered vert-offset-top-2"  ng-hide="rightsDataSearchTabHide">
 
                 <tr>
 
@@ -53,13 +53,20 @@
 
                     <th>Правообладатель</th>
 
-                    <th>Объект</th>
+                    <th>Объект (кадастровый/инвентарный номер)</th>
+
+                    <th>Объект (адрес)</th>
+
+                    <th>Объект (название)</th>
 
                     <th>Доля в праве</th>
 
+                    <th><span class="btn btn-warning">Буфер</span></th>
+
+
                 </tr>
 
-                <tr ng-repeat="right in var.rightstDataSearch" class="btn-default">
+                <tr ng-style="checked[$index] && {'background-color': '#F7BABA'}" style="background-color:transparent" ng-repeat="right_owner in var.rightsDataSearch" class="btn-default">
 
                     <td >{{$index +1}}</td>
 
@@ -67,9 +74,15 @@
 
                     <td width="fit-content">{{right_owner.owner.surname}}{{" "+right_owner.owner.firstname}}{{" "+right_owner.owner.fathername }}{{right_owner.owner.fullname}}</td>
 
-                    <td width="fit-content">{{right_owner.right.bindedObj.cadastre_number}}</td>
+                    <td width="fit-content">{{right_owner.right.bindedObj.cadastre_number}}{{right_owner.right.bindedObj.inventory_number}}</td>
 
-                    <td width="fit-content">{{right_owner.numerator_part}}{{right_owner.denominator_part}}</td>
+                    <td width="fit-content">{{right_owner.right.bindedObj.objectType.code_name}}</td>
+
+                    <td width="fit-content">{{right_owner.right.bindedObj.object_name}}</td>
+
+                    <td width="fit-content">{{right_owner.numerator_part}}{{right_owner.denominator_part == 1 ?'':'/'+right_owner.denominator_part}}</td>
+
+                    <td width="fit-content"> <input type="checkbox" ng-model="checked[$index]"></td>
 
                 </tr>
 
