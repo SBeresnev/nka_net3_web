@@ -81,7 +81,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
         $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.nullIfundefine($scope.sel_oject.obj_id) + "&person_id=" +  $scope.nullIfundefine($scope.sel_subject.subjectId);
 
-       // $scope.urlSearch = "http://localhost:8080/nka_net3/right/getRightObjectPerson?obj_ids=&person_id=2942"; // потом удалить
+        $scope.urlSearch = "http://localhost:8080/nka_net3/right/getRightObjectPerson?obj_ids=&person_id=2942"; // потом удалить
+
 
         $http.get($scope.urlSearch).success(function (res) {
 
@@ -89,7 +90,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
             $scope.rightsDataSearchTabHide=false;
 
-            //$scope.sel_subject = $scope.var.rightsDataSearch[0].owner; // потом удалить
+            $scope.sel_subject = $scope.var.rightsDataSearch[0].owner; // потом удалить
 
         }).error(function (data, status, header, config) {
 
@@ -184,9 +185,24 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     $scope.setActiveTab(1);
 
-    $scope.addtoBufer = function(index){
+    $scope.BufferChange = function(rec,index){
 
-        $scope.students.sel_buffer.push();
+        if($scope.checked[index]){
+
+            $scope.sel_buffer.push(rec);
+
+            alert($scope.sel_buffer.length);
+
+        } else {
+
+            var idx = $scope.sel_buffer.indexOf(rec);
+
+            $scope.sel_buffer.splice(idx,1);
+
+            alert($scope.sel_buffer.length);
+
+        }
+
         //(function(record){return $scope.checked[$index];},1);
 
     };
