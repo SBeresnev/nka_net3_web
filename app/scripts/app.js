@@ -107,7 +107,7 @@ var app = angular
             '<button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="modal()">&times;</button>' +
             '<h4 class="modal-title">{{ title }}</h4>' +
             '</div>' +
-            '<div class="modal-body" ng-transclude>' +
+            '<div class="modal-body" style="height: 750px; overflow-y: auto;" ng-transclude>' +
             '</div></div>' +
             '</div>' +
             '</div>',

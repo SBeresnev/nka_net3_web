@@ -35,8 +35,6 @@ body {
 }
 
 /* Customize container */
-
-
 .jumbotron {
   text-align: center;
   border-bottom: 1px solid #e5e5e5;
@@ -91,4 +89,16 @@ button.btn.active.btn-danger {
   position: absolute;
   margin: 40px;
 }
+
+.inputtd
+{
+  width: 100%;
+  padding: 10px;
+  margin: 0px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  border: 1px solid #ffffff;
+}
+
 

@@ -43,7 +43,9 @@
 
              </div>
 
-             <table class="table table-bordered vert-offset-top-2"  ng-hide="rightsDataSearchTabHide">
+            <!--***************************************************************************************************************************************************-->
+
+            <table class="table table-bordered vert-offset-top-2"  ng-hide="rightsDataSearchTabHide">
 
                 <tr>
 
@@ -53,20 +55,22 @@
 
                     <th>Правообладатель</th>
 
-                    <th>Объект (кадастровый/инвентарный номер)</th>
+                    <th>Объект (кадастровый/<br>инвентарный номер)</br></th>
 
-                    <th>Объект (адрес)</th>
+                    <th>Объект <br>(тип)</br></th>
 
-                    <th>Объект (название)</th>
+                    <th>Объект <br>(название)</br></th>
 
-                    <th>Доля в праве</th>
+                    <th><nobr>Доля в праве</nobr></th>
+
+                    <th><nobr>Дата возникновения доли</nobr></th>
 
                     <th><span class="btn btn-warning" disabled><b style="color:black">Буфер</b></span></th>
 
-
                 </tr>
 
-                <tr ng-style="checked[$index]&&{'background-color': 'lightcoral'}" ng-repeat="right_owner in var.rightsDataSearch" class="btn-default">
+
+                <tr ng-style="checked[$index]&&{'background-color': 'bisque'}" ng-click="detailModal(right_owner,$event)" ng-repeat="right_owner in var.rightsDataSearch" class="btn-default">
 
                     <td >{{$index +1}}</td>
 
@@ -82,7 +86,10 @@
 
                     <td width="fit-content">{{right_owner.numerator_part}}{{right_owner.denominator_part == 1 ?'':'/'+right_owner.denominator_part}}</td>
 
-                    <td width="fit-content"> <input type="checkbox" ng-click="BufferChange(right_owner,$index)" ng-model="checked[$index]"></td>
+                    <td width="fit-content"><span>{{right_owner.date_in | date:'yyyy-MM-dd'}}</span></td>
+
+                    <td width="fit-content" > <input type="checkbox" class="inputtd" ng-click="BufferChange(right_owner,$index)" ng-model="checked[$index]"></td>
+
 
                 </tr>
 
@@ -126,6 +133,81 @@
      </div>
 
 </div>
+
+
+<!--***********************************************modal block****************************************************************************************************-->
+
+<modal title="Детализация" visible="showModal">
+    <form role="form">
+
+        <div class="form-group">
+            <label>ID:</label>
+            <input type="text" class="form-control" ng-value = "var.rightDetail.right_owner_id" disabled/>
+        </div>
+
+        <div class="form-group">
+            <label>Вид права:</label>
+            <input type="text" class="form-control" ng-value = "var.rightDetail.right.right_type_name" disabled/>
+        </div>
+
+        <div class="form-group">
+            <label>Объект операции (сущность):</label>
+            <input type="text" class="form-control" ng-value = "var.rightDetail.right.right_entyty_type_name" disabled/>
+        </div>
+
+        <div class="form-group">
+            <label>Тип права по числу правообладателей:</label>
+            <input type="text" class="form-control" ng-value = "var.rightDetail.right.right_count_type_name" disabled/>
+        </div>
+
+        <div class="form-group">
+            <label>Имя/название правообладателя:</label>
+            <input type="text" class="form-control" ng-value = "var.rightDetail.owner.fullname+var.rightDetail.owner.surname+' '+var.rightDetail.owner.firstname+' '+var.rightDetail.owner.fathername" disabled/>
+        </div>
+
+        <div class="form-group">
+            <label>Адресс правообладателя:</label>
+            <input type="text" class="form-control" ng-value = "var.rightDetail.owner.address" disabled/>
+        </div>
+
+        <div class="form-group">
+            <label>Тип субъекта:</label>
+            <input type="text" class="form-control" ng-value = "var.rightDetail.owner.dtype=='private'?'физ. лицо':'юр. лицо'" disabled/>
+        </div>
+
+        <div class="form-group">
+            <label>Имя объекта:</label>
+            <input type="text" class="form-control" ng-value = "var.rightDetail.right.bindedObj.object_name" disabled/>
+        </div>
+
+        <div class="form-group">
+            <label>Кадастровый номер:</label>
+            <input type="text" class="form-control" ng-value = "var.rightDetail.right.bindedObj.cadastre_number" disabled/>
+        </div>
+
+        <div class="form-group">
+            <label>Инвентарный номер:</label>
+            <input type="text" class="form-control" ng-value = "var.rightDetail.right.bindedObj.inventory_number" disabled/>
+        </div>
+
+
+        <div class="form-group">
+            <label>Тип объекта:</label>
+            <input type="text" class="form-control" ng-value = "var.rightDetail.right.bindedObj.objectType.code_name" disabled/>
+        </div>
+
+        <div class="form-group">
+            <label>Адрес объекта:</label>
+            <input type="text" class="form-control" ng-value = "var.rightDetail.right.bindedObj.address" disabled/>
+        </div>
+
+
+        <button type="submit" ng-click="sbmclk()" class="btn btn-default">Submit</button>
+
+    </form>
+</modal>
+
+<!--************************************************************************************************************************************************************-->
 
 <div kendo-window="sbjwindow" k-visible="false" k-modal="true" k-on-close="csubSearch()" k-content="{url: '{{urlmodSbj}}'}"> </div>
 

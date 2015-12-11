@@ -11,16 +11,19 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     $scope.tabClasses = ["","","","",""];
 
-    $scope.sel_subject = {};
+    $scope.sel_subject = {};  ///// субъект поиска
 
-    $scope.sel_oject = {};
+    $scope.sel_oject = {};    ///// объект поиска
 
-    $scope.sel_buffer = [];
+    $scope.sel_buffer = [];   ///// данные буфера
+
+    $scope.showModal = false;
 
     $scope.checked=[];
 
     $scope.var = {
 
+         rightDetail:{},
          rightsDataSearch: {}
 
     }
@@ -101,6 +104,21 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     }
 
+    $scope.getAddress = function (obj){
+
+        obj.adr_num == null ? obj.adr_num ='' : true;
+
+        $scope.var.url = DOMAIN + "/nka_net3/address/findDestAddress?address_id=" + obj.address_id + "&adr_num=" + obj.adr_num;
+
+        $http.get($scope.var.url).then(function (res) {
+
+            obj.address = res.data.adr;
+
+        });
+
+    }
+
+
     //////////////////////////// Modal for Subjects ////////////////////////////////////////////////////////
 
     $scope.osubSearch = function () {
@@ -143,6 +161,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     $scope.cobjSearch = function () {}
 
+
     ///////////////////////////// Service part //////////////////////////////////////////////////////////////
 
     $scope.getTabClass = function (tabNum) {
@@ -183,15 +202,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     }
 
-    $scope.setActiveTab(1);
-
     $scope.BufferChange = function(rec,index){
 
         if($scope.checked[index]){
 
             $scope.sel_buffer.push(rec);
 
-            alert($scope.sel_buffer.length);
 
         } else {
 
@@ -199,19 +215,51 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
             $scope.sel_buffer.splice(idx,1);
 
-            alert($scope.sel_buffer.length);
-
         }
 
-        //(function(record){return $scope.checked[$index];},1);
-
     };
+
+    $scope.detailModal = function(rec,$event){
+
+        if($event.target.cellIndex < 7  ) {
+
+            rec.right.right_type_name = $scope.dict.rightType.find(this.initType,{curType:rec.right.right_type}).code_name;
+
+            rec.right.right_entyty_type_name = $scope.dict.rightEntytyType.find(this.initType,{curType:rec.right.right_entyty_type}).code_name;
+
+            rec.right.right_count_type_name = $scope.dict.rightCountType.find(this.initType,{curType:rec.right.right_count_type}).code_name;
+
+
+            if (rec.right.bindedObj.address === undefined)
+            {
+                rec.right.bindedObj.address = $scope.getAddress(rec.right.bindedObj);
+            }
+
+
+
+            $scope.var.rightDetail = angular.copy(rec);
+
+            $scope.showModal = !$scope.showModal;
+
+        }
+    };
+
+    $scope.initType = function(value){
+
+        return value.code_id == this.curType;
+
+    }
+
+    $scope.sbmclk = function (){}
+
+    $scope.setActiveTab(1);
 
     function initTabs() {
 
         tabClasses = ["","","","",""];
 
     }
+
 
 });
 
