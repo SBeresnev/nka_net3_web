@@ -3,9 +3,10 @@
  */
 
 
-angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $location, DOMAIN, WEBDOM) {
+angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $location , DOMAIN, WEBDOM) {
 
     $scope.urlmodSbj = WEBDOM + '//#/subject/true';
+
 
     $scope.DlgOptions = {width: "1300px", height: "500px", modal: true, actions: ["Custom", "Minimize", "Maximize", "Close"], iframe: true, visible: false };
 
@@ -22,6 +23,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
     $scope.checked=[];
 
     $scope.var = {
+
+        loading: false,
 
          rightDetail:{},
          rightsDataSearch: {}
@@ -67,6 +70,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
             $scope.dict.rightType = res.data;
 
+            $scope.var.loading = false;
+
         });
 
     };
@@ -104,17 +109,22 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     }
 
-    $scope.getAddress = function (obj){
+    $scope.getAddress = function (obj,callback){
+
+        $scope.var.loading = true;
 
         obj.adr_num == null ? obj.adr_num ='' : true;
 
         $scope.var.url = DOMAIN + "/nka_net3/address/findDestAddress?address_id=" + obj.address_id + "&adr_num=" + obj.adr_num;
 
-        $http.get($scope.var.url).then(function (res) {
+            $http.get($scope.var.url).then(function (res) {
 
-            obj.address = res.data.adr;
+                obj.address = res.data.adr;
 
-        });
+                if(callback){ callback(); }
+
+                $scope.var.loading = false;
+            });
 
     }
 
@@ -229,20 +239,31 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
             rec.right.right_count_type_name = $scope.dict.rightCountType.find(this.initType,{curType:rec.right.right_count_type}).code_name;
 
+            $scope.var.rightDetail = rec;
 
             if (rec.right.bindedObj.address === undefined)
             {
-                rec.right.bindedObj.address = $scope.getAddress(rec.right.bindedObj);
+                $scope.getAddress(rec.right.bindedObj, dispalyModal);
+
+            } else
+            {
+                dispalyModal ();
             }
 
 
-
-            $scope.var.rightDetail = angular.copy(rec);
-
-            $scope.showModal = !$scope.showModal;
-
         }
     };
+
+
+    function dispalyModal () {
+
+        var myElement = angular.element(document.querySelector('#custModal'));
+
+        myElement.modal("show");
+
+    }
+
+
 
     $scope.initType = function(value){
 

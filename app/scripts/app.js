@@ -100,7 +100,7 @@ var app = angular
     })
     .directive('modal', function () {
         return {
-            template: '<div class="modal fade">' +
+            template: '<div id="custModal" class="modal fade" >' +
             '<div class="modal-dialog">' +
             '<div class="modal-content">' +
             '<div class="modal-header">' +

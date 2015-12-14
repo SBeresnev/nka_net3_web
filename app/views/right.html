@@ -65,12 +65,12 @@
 
                     <th><nobr>Дата возникновения доли</nobr></th>
 
-                    <th><span class="btn btn-warning" disabled><b style="color:black">Буфер</b></span></th>
+                    <th><span class="btn" style="background-color:beige" disabled><b style="color:black">Буфер</b></span></th>
 
                 </tr>
 
 
-                <tr ng-style="checked[$index]&&{'background-color': 'bisque'}" ng-click="detailModal(right_owner,$event)" ng-repeat="right_owner in var.rightsDataSearch" class="btn-default">
+                <tr ng-style="checked[$index]&&{'background-color': 'beige'}" ng-click="detailModal(right_owner,$event)" ng-repeat="right_owner in var.rightsDataSearch" class="btn-default">
 
                     <td >{{$index +1}}</td>
 
@@ -136,82 +136,18 @@
 
 
 <!--***********************************************modal block****************************************************************************************************-->
-
-<modal title="Детализация" visible="showModal">
-    <form role="form">
-
-        <div class="form-group">
-            <label>ID:</label>
-            <input type="text" class="form-control" ng-value = "var.rightDetail.right_owner_id" disabled/>
-        </div>
-
-        <div class="form-group">
-            <label>Вид права:</label>
-            <input type="text" class="form-control" ng-value = "var.rightDetail.right.right_type_name" disabled/>
-        </div>
-
-        <div class="form-group">
-            <label>Объект операции (сущность):</label>
-            <input type="text" class="form-control" ng-value = "var.rightDetail.right.right_entyty_type_name" disabled/>
-        </div>
-
-        <div class="form-group">
-            <label>Тип права по числу правообладателей:</label>
-            <input type="text" class="form-control" ng-value = "var.rightDetail.right.right_count_type_name" disabled/>
-        </div>
-
-        <div class="form-group">
-            <label>Имя/название правообладателя:</label>
-            <input type="text" class="form-control" ng-value = "var.rightDetail.owner.fullname+var.rightDetail.owner.surname+' '+var.rightDetail.owner.firstname+' '+var.rightDetail.owner.fathername" disabled/>
-        </div>
-
-        <div class="form-group">
-            <label>Адресс правообладателя:</label>
-            <input type="text" class="form-control" ng-value = "var.rightDetail.owner.address" disabled/>
-        </div>
-
-        <div class="form-group">
-            <label>Тип субъекта:</label>
-            <input type="text" class="form-control" ng-value = "var.rightDetail.owner.dtype=='private'?'физ. лицо':'юр. лицо'" disabled/>
-        </div>
-
-        <div class="form-group">
-            <label>Имя объекта:</label>
-            <input type="text" class="form-control" ng-value = "var.rightDetail.right.bindedObj.object_name" disabled/>
-        </div>
-
-        <div class="form-group">
-            <label>Кадастровый номер:</label>
-            <input type="text" class="form-control" ng-value = "var.rightDetail.right.bindedObj.cadastre_number" disabled/>
-        </div>
-
-        <div class="form-group">
-            <label>Инвентарный номер:</label>
-            <input type="text" class="form-control" ng-value = "var.rightDetail.right.bindedObj.inventory_number" disabled/>
-        </div>
-
-
-        <div class="form-group">
-            <label>Тип объекта:</label>
-            <input type="text" class="form-control" ng-value = "var.rightDetail.right.bindedObj.objectType.code_name" disabled/>
-        </div>
-
-        <div class="form-group">
-            <label>Адрес объекта:</label>
-            <input type="text" class="form-control" ng-value = "var.rightDetail.right.bindedObj.address" disabled/>
-        </div>
-
-
-        <button type="submit" ng-click="sbmclk()" class="btn btn-default">Submit</button>
-
-    </form>
-</modal>
+<div ng-include="'views/modal.html'"></div>
 
 <!--************************************************************************************************************************************************************-->
 
 <div kendo-window="sbjwindow" k-visible="false" k-modal="true" k-on-close="csubSearch()" k-content="{url: '{{urlmodSbj}}'}"> </div>
 
+<div class="modal fade in" ng-init="var.loading = true" ng-style="{true: {display: 'block'}, false: {display: 'none'}}[var.loading ]">
+    <div class="center_b">
+        <img src="./images/image_836733.gif" alt=""/>
+    </div>
+</div>
 
-
+<!--************************************************************************************************************************************************************-->
 
 
