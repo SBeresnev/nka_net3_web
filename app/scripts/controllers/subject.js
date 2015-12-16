@@ -16,7 +16,6 @@ angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, 
 
     $scope.urlAddress = WEBDOM + '//#/address';
 
-
     $scope.var = {
         loading: false,
         states: '',

@@ -4,9 +4,9 @@
 
 'use strict';
 
-angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
-  var httpServices = {};
+angular.module('assetsApp').factory('httpServices', function ( $controller, $rootScope, DOMAIN) {
 
+  var httpServices = {};
 
   var XMLHttpFactories = [
     function () {
@@ -36,8 +36,6 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
     }
     return xmlhttp;
   };
-
-
 
   httpServices.updateSubject = function (subject) {
     var url = DOMAIN+'/nka_net3/subject/update';
@@ -140,5 +138,17 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
     http.open(method, url + params, true);
     http.send(JSON.stringify(subject));
   };
+
+  httpServices.getInstance = function (objName)
+  {
+    var scope = $rootScope.$new(true);
+
+    var ctrl = $controller(objName, {$scope:scope});
+
+    return scope;
+
+  }
+
   return httpServices;
+
 });

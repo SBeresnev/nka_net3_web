@@ -3,12 +3,13 @@
  */
 
 
-angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $location , DOMAIN, WEBDOM) {
+angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOMAIN, WEBDOM) {
 
     $scope.urlmodSbj = WEBDOM + '//#/subject/true';
 
+    $scope.urlmodObj = WEBDOM + '//#/object';
 
-    $scope.DlgOptions = {width: "1300px", height: "500px", modal: true, actions: ["Custom", "Minimize", "Maximize", "Close"], iframe: true, visible: false };
+    $scope.DlgOptions = {width: "1300px", height: "500px", modal: true, actions: [ "Minimize", "Maximize", "Close"], iframe: true, visible: false };
 
     $scope.tabClasses = ["","","","",""];
 
@@ -18,15 +19,14 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     $scope.sel_buffer = [];   ///// данные буфера
 
-    $scope.showModal = false;
-
     $scope.checked=[];
 
     $scope.var = {
 
-        loading: false,
+         loading: false,
 
          rightDetail:{},
+
          rightsDataSearch: {}
 
     }
@@ -37,10 +37,24 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
         rightEntytyType : {},
 
-        rightType : {}
+        rightType : {},
+
+        operTypes : {},
+
+        operSubTypes : {},
+
+        operBases : {},
+
+        curoprTyp : {},
+
+        curoprSubTyp : {},
+
+        curoprBase : {}
 
     }
 
+
+    /////////////////////////////// Search block ///////////////////////////////////////////////////////////////////////
 
     $scope.init = function () {
 
@@ -56,6 +70,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
         });
 
+
         $scope.var.url = DOMAIN + "/nka_net3/catalog/rightEntytyType";
 
         $http.get($scope.var.url).then(function (res) {
@@ -63,6 +78,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
             $scope.dict.rightEntytyType = res.data;
 
         });
+
 
         $scope.var.url = DOMAIN + "/nka_net3/catalog/rightType";
 
@@ -74,7 +90,42 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
         });
 
-    };
+
+        $scope.var.url = DOMAIN + "/nka_net3/catalog/operationType";
+
+        $http.get($scope.var.url).then(function (res) {
+
+            $scope.dict.operTypes = res.data;
+
+            //$scope.dict.curoprTyp = $scope.dict.operTypes.find(function(value){ return value.code_name == this.curType ;},{curType:"Государственная регистрация"});
+
+        });
+
+
+        $scope.var.url = DOMAIN + "/nka_net3/catalog/operationSubType";
+
+        $http.get($scope.var.url).then(function (res) {
+
+            $scope.dict.operSubTypes = res.data;
+
+           //$scope.dict.curoprSubTyp = $scope.dict.operSubTypes.find(function(value){ return value.code_name == this.curType;},{curType:"Создание/возникновение"});
+
+        });
+
+
+        $scope.var.url = DOMAIN + "/nka_net3/catalog/operationBase";
+
+        $http.get($scope.var.url).then(function (res) {
+
+            $scope.dict.operBases = res.data;
+
+            //$scope.dict.curoprBase = $scope.dict.operBases.find(function(value){ return value.code_name == this.curType;},{curType:"Купля-продажа"});
+
+        });
+
+
+
+    }
 
     $scope.rightSearch = function(){
 
@@ -128,26 +179,72 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     }
 
+    /////////////////////////////// Filter operation block /////////////////////////////////////////////////////////////
 
-    //////////////////////////// Modal for Subjects ////////////////////////////////////////////////////////
+    $scope.setOperFiletr = function()
+    {
+        var subBase = {};
 
-    $scope.osubSearch = function () {
+        $scope.var.url = DOMAIN + "/nka_net3/catalog/childCodeAndType?id=" + this.nullIfundefine(this.dict.curoprTyp.code_id)+ "&childType=" + this.nullIfundefine(this.dict.curoprTyp.analytic_type) +"&parentType=" + this.nullIfundefine(this.dict.operSubTypes[0].analytic_type);
 
-        $scope.DlgOptions.title = "Subjects";
+        $http.get($scope.var.url).then(function (res) {
 
-        /********correct subj form**********/
+            subBase = res.data;
 
-        $scope.sbjwindow.element.children(".k-content-frame").contents().find(".header")[0].style.display="none";
+        });
 
-        /***************************************/
+    }
 
-        sessionStorage.setItem('sbjObj',JSON.stringify({}));
 
-        $scope.sbjwindow.setOptions($scope.DlgOptions);
+    //////////////////////////// Modal for Objects and Subjects/////////////////////////////////////////////////////////
 
-        $scope.sbjwindow.center();
+    $scope.oSearch = function () {
 
-        var modInst =  $scope.sbjwindow.open();
+        var pos =  $scope.sbj_class.indexOf("active");
+
+        /*******************************************correct subj form************************************************************/
+
+        if( pos == -1)  {
+
+            $scope.DlgOptions.title = "Objects";
+
+            $scope.objwindow.setOptions($scope.DlgOptions);
+
+            $scope.objwindow.center();
+
+            $scope.objwindow.element.children(".k-content-frame").contents().find(".header")[0].style.display="none";
+
+            sessionStorage.setItem('objObj',JSON.stringify({}));
+
+            var modInst =  $scope.objwindow.open();
+
+
+        } else {
+
+            $scope.DlgOptions.title = "Subjects";
+
+            $scope.sbjwindow.setOptions($scope.DlgOptions);
+
+            $scope.sbjwindow.center();
+
+            $scope.sbjwindow.element.children(".k-content-frame").contents().find(".header")[0].style.display="none";
+
+            sessionStorage.setItem('sbjObj',JSON.stringify({}));
+
+            var modInst =  $scope.sbjwindow.open();
+
+        }
+
+        /*************************************************************************************************************************/
+
+
+    }
+
+    $scope.cobjSearch = function () {
+
+        var sel_object_test = JSON.parse(sessionStorage.getItem("objObj"));
+
+        $scope.sel_object = sel_object_test;
 
     }
 
@@ -165,17 +262,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     }
 
-    //////////////////////////// Modal for Objects /////////////////////////////////////////////////////////
-
-    $scope.oobjSearch = function () {}
-
-    $scope.cobjSearch = function () {}
-
-
     ///////////////////////////// Service part //////////////////////////////////////////////////////////////
 
     $scope.getTabClass = function (tabNum) {
+
         return tabClasses[tabNum];
+
     };
 
     $scope.getTabPaneClass = function (tabNum) {
@@ -190,9 +282,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
         switch(tabNum) {
             case 1:
-
-
-
                 break;
             case 2:
                 break;
@@ -247,7 +336,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
             } else
             {
-                dispalyModal ();
+                dispalyModal();
             }
 
 
@@ -255,7 +344,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
     };
 
 
-    function dispalyModal () {
+
+
+    function dispalyModal() {
 
         var myElement = angular.element(document.querySelector('#custModal'));
 
@@ -263,15 +354,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $lo
 
     }
 
-
-
     $scope.initType = function(value){
 
         return value.code_id == this.curType;
 
     }
-
-    $scope.sbmclk = function (){}
 
     $scope.setActiveTab(1);
 

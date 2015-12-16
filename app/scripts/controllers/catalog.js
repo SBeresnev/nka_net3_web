@@ -16,6 +16,7 @@ angular.module('assetsApp')
         $scope.showNewCatalog = false;
         $scope.selectedType = null;
         $scope.selectedItem = null;
+
         $scope.modal = function(s){
             $scope.selectedItem = s.code_id;
             $scope.modalCatalog = angular.copy(s);
@@ -227,4 +228,5 @@ angular.module('assetsApp')
                 filt.style.visibility = "visible";
             }
         };
+
     });

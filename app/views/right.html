@@ -38,7 +38,7 @@
              <div class="input-group input-group-lg">
 
                  <input type="text" class="form-control"  placeholder="Поиск прав" ng-init="sel_subject = ''" ng-model="sel_subject.fullname" disabled />
-                 <span class="input-group-addon right-span-addon" ><span class="glyphicon glyphicon-zoom-in" ng-click="osubSearch()"></span></span>
+                 <span class="input-group-addon right-span-addon" ><span class="glyphicon glyphicon-zoom-in" ng-click="oSearch()"></span></span>
                  <span class="input-group-addon btn" style="background-color:transparent" ng-click = "rightSearch()"> Поиск </span>
 
              </div>
@@ -100,7 +100,7 @@
 
          <!------------------------ Main block ---------------------------------------->
 
-        <div ng-class="getTabPaneClass(2)" id="main">
+        <div id="main" ng-class="getTabPaneClass(2)">
 
              <div class="col-lg-4">
 
@@ -110,15 +110,35 @@
 
                     <div class="panel-body">
 
-                        <select class="selectpicker" data-live-search="true" ng-model="var.OperGround" ng-options="c.code_short_name for c in var.OperGround" required="required"></select>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
+                        <div class="form-group">
+
+                          <label class="control-label">Тип операции:</label>
+
+                          <select class="form-control" data-live-search="true" ng-change="setOperFiletr()"  ng-model="dict.curoprTyp" ng-options="type.code_short_name for type in dict.operTypes | orderBy: ['code_short_name']  track by type.code_id " required="required"></select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="control-label">Подтип операции:</label>
+
+                            <select class="form-control" data-live-search="true" ng-change="setSubFiletr()" ng-model="dict.curoprSubTyp" ng-options="subtype.code_short_name for subtype in dict.filterSubTypes | orderBy: ['code_short_name'] track by subtype.code_id" required="required"></select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="control-label">Базовые операции:</label>
+
+                            <select class="form-control" data-live-search="true" ng-model="dict.curoprBase" ng-options="base.code_short_name for base in dict.filterBases | orderBy: ['code_short_name'] track by base.code_id" required="required"></select>
+
+                        </div>
+
                     </div>
 
                 </div>
 
              </div>
-
-
 
         </div>
 
@@ -136,11 +156,12 @@
 
 
 <!--***********************************************modal block****************************************************************************************************-->
-<div ng-include="'views/modal.html'"></div>
 
-<!--************************************************************************************************************************************************************-->
+<div ng-include="'views/modright.html'"></div>
 
 <div kendo-window="sbjwindow" k-visible="false" k-modal="true" k-on-close="csubSearch()" k-content="{url: '{{urlmodSbj}}'}"> </div>
+
+<div kendo-window="objwindow" k-visible="false" k-modal="true" k-on-close="cobjSearch()" k-content="{url: '{{urlmodObj}}'}"> </div>
 
 <div class="modal fade in" ng-init="var.loading = true" ng-style="{true: {display: 'block'}, false: {display: 'none'}}[var.loading ]">
     <div class="center_b">
