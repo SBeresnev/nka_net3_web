@@ -6,7 +6,7 @@
 
 <div class="container tabbable " ng-init>
 
-     <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs">
 
         <li ng-class="getTabClass(1)" ng-click="setActiveTab(1)"> <a ui-sref="main" href="" data-toggle="tab">Поиск</a></li>
 
@@ -16,32 +16,32 @@
 
         <li ng-class="getTabClass(4)" ng-click="setActiveTab(4)"> <a ui-sref="rating" href="" data-toggle="tab">Сделки</a></li>
 
-     </ul>
+    </ul>
 
-     <div class="tab-content">
+    <div class="tab-content">
 
-         <!------------------------ Search block ------------------------------------->
+        <!------------------------ Search block ------------------------------------->
 
-        <div ng-class="getTabPaneClass(1)" id="search">
+        <div id="search" ng-class="getTabPaneClass(1)" >
 
-             <div class = "page-header " >
+            <div class = "page-header " >
 
-                 <div class="btn-group" ng-init="obj_class='btn  btn-default '; sbj_class='btn active btn-danger '">
+                <div class="btn-group" ng-init="obj_class='btn  btn-default '; sbj_class='btn active btn-danger '">
 
-                     <button type="btn-lg" ng-class="obj_class" ng-click="pr_class = obj_class; obj_class = sbj_class; sbj_class = pr_class">По объекту</button>
-                     <button type="btn-lg" ng-class="sbj_class" ng-click="pr_class = obj_class; obj_class = sbj_class; sbj_class = pr_class">По субъекту</button>
+                    <button type="btn-lg" ng-class="obj_class" ng-click="pr_class = obj_class; obj_class = sbj_class; sbj_class = pr_class">По объекту</button>
+                    <button type="btn-lg" ng-class="sbj_class" ng-click="pr_class = obj_class; obj_class = sbj_class; sbj_class = pr_class">По субъекту</button>
 
-                 </div>
+                </div>
 
-             </div>
+            </div>
 
-             <div class="input-group input-group-lg">
+            <div class="input-group input-group-lg">
 
-                 <input type="text" class="form-control"  placeholder="Поиск прав" ng-init="sel_subject = ''" ng-model="sel_subject.fullname" disabled />
-                 <span class="input-group-addon right-span-addon" ><span class="glyphicon glyphicon-zoom-in" ng-click="oSearch()"></span></span>
-                 <span class="input-group-addon btn" style="background-color:transparent" ng-click = "rightSearch()"> Поиск </span>
+                <input type="text" class="form-control"  placeholder="Поиск прав" ng-init="sel_subject = ''" ng-model="sel_subject.fullname" disabled />
+                <span class="input-group-addon right-span-addon" ><span class="glyphicon glyphicon-zoom-in" ng-click="oSearch()"></span></span>
+                <span class="input-group-addon btn" style="background-color:transparent" ng-click = "rightSearch()"> Поиск </span>
 
-             </div>
+            </div>
 
             <!--***************************************************************************************************************************************************-->
 
@@ -96,41 +96,44 @@
             </table>
 
 
-         </div>
+        </div>
 
-         <!------------------------ Main block ---------------------------------------->
+        <!------------------------ Main block ---------------------------------------->
 
         <div id="main" ng-class="getTabPaneClass(2)">
 
-             <div class="col-lg-4">
+            <div class="row">
 
-                <div class="panel panel-info vert-offset-top-2">
+                <!-------- Right  --------------->
+                <div class = "col-lg-6">
 
-                    <div class="panel-heading"> Операции </div>
+                    <div class="panel panel-info vert-offset-top-2">
 
-                    <div class="panel-body">
+                        <div class="panel-heading fa fa-balance-scale"> Право </div>
 
-                        <div class="form-group">
+                        <div class="panel-body ">
 
-                          <label class="control-label">Тип операции:</label>
+                            <div class="form-group well">
 
-                          <select class="form-control" data-live-search="true" ng-change="setOperFiletr()"  ng-model="dict.curoprTyp" ng-options="type.code_short_name for type in dict.operTypes | orderBy: ['code_short_name']  track by type.code_id " required="required"></select>
+                                <label class="control-label">Объект операции (сущность)</label>
 
-                        </div>
+                                <select class="form-control" data-live-search="true" ng-change="setEntityType()"  ng-model="dict.curentTyp" ng-options="type.code_name group by type.v_prm1 for type in dict.rightEntityTypes | pick:'v_prm1==\'Объект\'|| v_prm1==\'Право\''" required="required"></select>
 
-                        <div class="form-group">
+                                <label class="control-label vert-offset-top-half">Тип права по числу правообладателей:</label>
 
-                            <label class="control-label">Подтип операции:</label>
+                                <select class="form-control" data-live-search="true"  ng-change="setCountType()"  ng-model="dict.currgtCountTyp" ng-options="subtype.code_short_name for subtype in dict.rightCountTypes | orderBy: ['code_short_name'] track by subtype.code_id" required="required"></select>
 
-                            <select class="form-control" data-live-search="true" ng-change="setSubFiletr()" ng-model="dict.curoprSubTyp" ng-options="subtype.code_short_name for subtype in dict.filterSubTypes | orderBy: ['code_short_name'] track by subtype.code_id" required="required"></select>
+                                <label class="control-label vert-offset-top-half">Вид права:</label>
 
-                        </div>
+                                <select class="form-control" data-live-search="true"   ng-model="dict.currgtTyp" ng-options="rgttype.code_short_name for rgttype in dict.filterRightTypes | orderBy: ['code_short_name'] track by rgttype.code_id" required="required"></select>
 
-                        <div class="form-group">
+                            </div>
 
-                            <label class="control-label">Базовые операции:</label>
 
-                            <select class="form-control" data-live-search="true" ng-model="dict.curoprBase" ng-options="base.code_short_name for base in dict.filterBases | orderBy: ['code_short_name'] track by base.code_id" required="required"></select>
+                            <input  kendo-date-picker k-format="'yyyy-MM-dd'" k-ng-model="date" />
+
+
+
 
                         </div>
 
@@ -138,19 +141,22 @@
 
                 </div>
 
-             </div>
+                <!-------- ----  --------------->
+
+
+            </div>
 
         </div>
 
-         <!------------------------ Details block ---------------------------------------->
+        <!------------------------ Details block ---------------------------------------->
 
-        <div ng-class="getTabPaneClass(3)" id="detail">Детализация</div>
+        <div id="detail" ng-class="getTabPaneClass(3)">Детализация</div>
 
-         <!------------------------ Bargain block ---------------------------------------->
+        <!------------------------ Bargain block ---------------------------------------->
 
-        <div ng-class="getTabPaneClass(4)" id="bargain">Сделки</div>
+        <div id="bargain" ng-class="getTabPaneClass(4)">Сделки</div>
 
-     </div>
+    </div>
 
 </div>
 
@@ -158,6 +164,8 @@
 <!--***********************************************modal block****************************************************************************************************-->
 
 <div ng-include="'views/modright.html'"></div>
+
+<div ng-include="'views/modrigtoper.html'"></div>
 
 <div kendo-window="sbjwindow" k-visible="false" k-modal="true" k-on-close="csubSearch()" k-content="{url: '{{urlmodSbj}}'}"> </div>
 

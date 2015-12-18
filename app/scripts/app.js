@@ -10,18 +10,13 @@
  */
 var app = angular
     .module('assetsApp', [
-        'ngAnimate',
-        'ngCookies',
         'ngResource',
         'ngRoute',
-        'ngSanitize',
-        'ngTouch',
-        'angularBootstrapNavTree',
-        'ngDropdowns',
+        'angular.filter',
         'kendo.directives'
     ])
     .constant('DOMAIN', "" + window.location.protocol + '//'+ window.location.hostname+":8080")
-    .constant('WEBDOM', "" + window.location.protocol + '//'+ window.location.hostname+":8080"+'//nka_net3_web')
+    .constant('WEBDOM', "" + window.location.protocol + '//'+ window.location.hostname+":9000")//+'//nka_net3_web')
     .config(function ($routeProvider, $httpProvider) {
         $httpProvider.defaults.useXDomain = true;
         $routeProvider

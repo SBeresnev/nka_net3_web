@@ -11,6 +11,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.DlgOptions = {width: "1300px", height: "500px", modal: true, actions: [ "Minimize", "Maximize", "Close"], iframe: true, visible: false };
 
+    $scope.date = '2000-03-12';
+
+
     $scope.tabClasses = ["","","","",""];
 
     $scope.sel_subject = {};  ///// субъект поиска
@@ -23,33 +26,36 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.var = {
 
-         loading: false,
+        loading: false,
 
-         rightDetail:{},
+        rightDetail:{},
 
-         rightsDataSearch: {}
+        rightsDataSearch: {}
 
     }
 
+
     $scope.dict = {
 
-        rightCountType : {},
+        rightEntityTypes : {},
 
-        rightEntytyType : {},
+        rightTypes : {},
 
-        rightType : {},
+        rightCountTypes : {},
+
 
         operTypes : {},
 
         operSubTypes : {},
 
-        operBases : {},
+        operBases : {}
 
-        curoprTyp : {},
 
-        curoprSubTyp : {},
+        /*curoprTyp : {},
 
-        curoprBase : {}
+         curoprSubTyp : {},
+
+         curoprBase : {} */
 
     }
 
@@ -62,20 +68,21 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.rightsDataSearchTabHide = true;
 
+
         $scope.var.url = DOMAIN + "/nka_net3/catalog/rightCountType";
 
         $http.get($scope.var.url).then(function (res) {
 
-            $scope.dict.rightCountType = res.data;
+            $scope.dict.rightCountTypes = res.data;
 
         });
 
 
-        $scope.var.url = DOMAIN + "/nka_net3/catalog/rightEntytyType";
+        $scope.var.url = DOMAIN + "/nka_net3/catalog/rightEntityType";
 
         $http.get($scope.var.url).then(function (res) {
 
-            $scope.dict.rightEntytyType = res.data;
+            $scope.dict.rightEntityTypes = res.data;
 
         });
 
@@ -84,7 +91,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $http.get($scope.var.url).then(function (res) {
 
-            $scope.dict.rightType = res.data;
+            $scope.dict.rightTypes = res.data;
 
             $scope.var.loading = false;
 
@@ -108,7 +115,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             $scope.dict.operSubTypes = res.data;
 
-           //$scope.dict.curoprSubTyp = $scope.dict.operSubTypes.find(function(value){ return value.code_name == this.curType;},{curType:"Создание/возникновение"});
+            //$scope.dict.curoprSubTyp = $scope.dict.operSubTypes.find(function(value){ return value.code_name == this.curType;},{curType:"Создание/возникновение"});
 
         });
 
@@ -160,7 +167,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     }
 
-    $scope.getAddress = function (obj,callback){
+    $scope.getAddress = function (obj, callback){
 
         $scope.var.loading = true;
 
@@ -168,30 +175,94 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.var.url = DOMAIN + "/nka_net3/address/findDestAddress?address_id=" + obj.address_id + "&adr_num=" + obj.adr_num;
 
-            $http.get($scope.var.url).then(function (res) {
+        $http.get($scope.var.url).then(function (res) {
 
-                obj.address = res.data.adr;
+            obj.address = res.data.adr;
 
-                if(callback){ callback(); }
+            if(callback){ callback(); }
 
-                $scope.var.loading = false;
-            });
+            $scope.var.loading = false;
+        });
 
     }
 
     /////////////////////////////// Filter operation block /////////////////////////////////////////////////////////////
 
-    $scope.setOperFiletr = function()
-    {
-        var subBase = {};
+    $scope.setEntityType = function() {
+
+        var subType = {};
+
+        $scope.var.url = DOMAIN + "/nka_net3/catalog/childCodeAndType?id=" + this.nullIfundefine(this.dict.curentTyp.code_id)+ "&childType=" + this.nullIfundefine(this.dict.curentTyp.analytic_type) +"&parentType=" + this.nullIfundefine(this.dict.rightTypes[0].analytic_type);
+
+        $http.get($scope.var.url).then(function (res) {
+
+            subType = res.data;
+
+            $scope.dict.filterRightTypes = $scope.dict.rightTypes.filter($scope.filterType,{curType:subType});
+
+        });
+
+    }
+
+    $scope.setCountType = function(){
+
+        var subType = {};
+
+        $scope.var.url = DOMAIN + "/nka_net3/catalog/childCodeAndType?id=" + this.nullIfundefine(this.dict.currgtCountTyp.code_id)+ "&childType=" + this.nullIfundefine(this.dict.currgtCountTyp.analytic_type) +"&parentType=" + this.nullIfundefine(this.dict.rightTypes[0].analytic_type);
+
+        $http.get($scope.var.url).then(function (res) {
+
+            subType = res.data;
+
+            $scope.dict.filterRightTypes = $scope.dict.filterRightTypes.filter($scope.filterType,{curType:subType});
+
+        });
+
+
+    }
+
+    $scope.setOperFiletr = function() {
+
+        var subType = {};
+
+        var baseType = {};
 
         $scope.var.url = DOMAIN + "/nka_net3/catalog/childCodeAndType?id=" + this.nullIfundefine(this.dict.curoprTyp.code_id)+ "&childType=" + this.nullIfundefine(this.dict.curoprTyp.analytic_type) +"&parentType=" + this.nullIfundefine(this.dict.operSubTypes[0].analytic_type);
 
         $http.get($scope.var.url).then(function (res) {
 
-            subBase = res.data;
+            subType = res.data;
+
+            $scope.dict.filterSubTypes = $scope.dict.operSubTypes.filter($scope.filterType,{curType:subType} );
 
         });
+
+
+        $scope.var.url = DOMAIN + "/nka_net3/catalog/childCodeAndType?id=" + this.nullIfundefine(this.dict.curoprTyp.code_id)+ "&childType=" + this.nullIfundefine(this.dict.curoprTyp.analytic_type) +"&parentType=" + this.nullIfundefine(this.dict.operBases[0].analytic_type);
+
+        $http.get($scope.var.url).then(function (res) {
+
+            baseType = res.data;
+
+            $scope.dict.filterBases = $scope.dict.operBases.filter($scope.filterType,{curType:baseType} );
+
+        });
+    }
+
+    $scope.setSubFiletr = function(){
+
+        var baseType = {};
+
+        $scope.var.url = DOMAIN + "/nka_net3/catalog/childCodeAndType?id=" + this.nullIfundefine(this.dict.curoprSubTyp.code_id)+ "&childType=" + this.nullIfundefine(this.dict.curoprSubTyp.analytic_type) +"&parentType=" + this.nullIfundefine(this.dict.operBases[0].analytic_type);
+
+        $http.get($scope.var.url).then(function (res) {
+
+            baseType = res.data;
+
+            $scope.dict.filterBases = $scope.dict.filterBases.filter($scope.filterType,{curType:baseType} );
+
+        });
+
 
     }
 
@@ -322,11 +393,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         if($event.target.cellIndex < 7  ) {
 
-            rec.right.right_type_name = $scope.dict.rightType.find(this.initType,{curType:rec.right.right_type}).code_name;
+            rec.right.right_type_name = $scope.dict.rightTypes.find(this.initType,{curType:rec.right.right_type}).code_name;
 
-            rec.right.right_entyty_type_name = $scope.dict.rightEntytyType.find(this.initType,{curType:rec.right.right_entyty_type}).code_name;
+            rec.right.right_entity_type_name = $scope.dict.rightEntityTypes.find(this.initType,{curType:rec.right.right_entity_type}).code_name;
 
-            rec.right.right_count_type_name = $scope.dict.rightCountType.find(this.initType,{curType:rec.right.right_count_type}).code_name;
+            rec.right.right_count_type_name = $scope.dict.rightCountTypes.find(this.initType,{curType:rec.right.right_count_type}).code_name;
 
             $scope.var.rightDetail = rec;
 
@@ -345,12 +416,18 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
 
 
-
     function dispalyModal() {
 
         var myElement = angular.element(document.querySelector('#custModal'));
 
         myElement.modal("show");
+
+    }
+
+
+    $scope.filterType = function(value){
+
+        return this.curType.some(function(parValue){ return parValue.parentAnalyticCode == this.curType;} , {curType:value.code_id});
 
     }
 
