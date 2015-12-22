@@ -90,12 +90,12 @@ var app = angular
             settings: "НАСТРОЙКИ",
             exit: "ВЫХОД",
             technicalSupport: "Тех поддержка"
-        }
+        };
 
     })
     .directive('modal', function () {
         return {
-            template: '<div id="custModal" class="modal fade" >' +
+            template: '<div class="modal fade" >' +
             '<div class="modal-dialog">' +
             '<div class="modal-content">' +
             '<div class="modal-header">' +

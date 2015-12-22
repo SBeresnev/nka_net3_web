@@ -5,20 +5,25 @@
 
 angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOMAIN, WEBDOM) {
 
+    kendo.culture("ru-RU");
+
     $scope.urlmodSbj = WEBDOM + '//#/subject/true';
 
     $scope.urlmodObj = WEBDOM + '//#/object';
 
     $scope.DlgOptions = {width: "1300px", height: "500px", modal: true, actions: [ "Minimize", "Maximize", "Close"], iframe: true, visible: false };
 
-    $scope.date = '2000-03-12';
+    $scope.start_date = new Date();
 
+    $scope.end_date = '';
+
+    $scope.tabNum = 1 ;
 
     $scope.tabClasses = ["","","","",""];
 
-    $scope.sel_subject = {};  ///// субъект поиска
+    $scope.sel_subject = [];  ///// субъект поиска
 
-    $scope.sel_oject = {};    ///// объект поиска
+    $scope.sel_oject = [];    ///// объект поиска
 
     $scope.sel_buffer = [];   ///// данные буфера
 
@@ -50,12 +55,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         operBases : {}
 
-
-        /*curoprTyp : {},
-
-         curoprSubTyp : {},
-
-         curoprBase : {} */
 
     }
 
@@ -143,9 +142,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         var pos =  $scope.sbj_class.indexOf("active");
 
-        pos == -1 ? $scope.sel_subject = {} : $scope.sel_oject = {};
+        pos == -1 ? $scope.sel_subject[$scope.tabNum] = {} : $scope.sel_oject[$scope.tabNum] = {};
 
-        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.nullIfundefine($scope.sel_oject.obj_id) + "&person_id=" +  $scope.nullIfundefine($scope.sel_subject.subjectId);
+        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.nullIfundefine($scope.sel_oject[$scope.tabNum].obj_id) + "&person_id=" +  $scope.nullIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
 
         $scope.urlSearch = "http://localhost:8080/nka_net3/right/getRightObjectPerson?obj_ids=&person_id=2942"; // потом удалить
 
@@ -156,7 +155,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             $scope.rightsDataSearchTabHide=false;
 
-            $scope.sel_subject = $scope.var.rightsDataSearch[0].owner; // потом удалить
+            $scope.sel_subject[$scope.tabNum] = $scope.var.rightsDataSearch[0].owner; // потом удалить
 
         }).error(function (data, status, header, config) {
 
@@ -266,7 +265,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     }
 
-
     //////////////////////////// Modal for Objects and Subjects/////////////////////////////////////////////////////////
 
     $scope.oSearch = function () {
@@ -275,47 +273,50 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         /*******************************************correct subj form************************************************************/
 
-        if( pos == -1)  {
-
-            $scope.DlgOptions.title = "Objects";
-
-            $scope.objwindow.setOptions($scope.DlgOptions);
-
-            $scope.objwindow.center();
-
-            $scope.objwindow.element.children(".k-content-frame").contents().find(".header")[0].style.display="none";
-
-            sessionStorage.setItem('objObj',JSON.stringify({}));
-
-            var modInst =  $scope.objwindow.open();
-
-
-        } else {
-
-            $scope.DlgOptions.title = "Subjects";
-
-            $scope.sbjwindow.setOptions($scope.DlgOptions);
-
-            $scope.sbjwindow.center();
-
-            $scope.sbjwindow.element.children(".k-content-frame").contents().find(".header")[0].style.display="none";
-
-            sessionStorage.setItem('sbjObj',JSON.stringify({}));
-
-            var modInst =  $scope.sbjwindow.open();
-
-        }
+        pos == -1 ? $scope.objOpen() : $scope.sbjOpen();
 
         /*************************************************************************************************************************/
 
+    }
+
+    $scope.objOpen = function () {
+
+        $scope.DlgOptions.title = "Objects";
+
+        $scope.objwindow.setOptions($scope.DlgOptions);
+
+        $scope.objwindow.center();
+
+        $scope.objwindow.element.children(".k-content-frame").contents().find(".header")[0].style.display="none";
+
+        sessionStorage.setItem('objObj',JSON.stringify({}));
+
+        var modInst =  $scope.objwindow.open();
 
     }
+
+    $scope.sbjOpen = function () {
+
+        $scope.DlgOptions.title = "Subjects";
+
+        $scope.sbjwindow.setOptions($scope.DlgOptions);
+
+        $scope.sbjwindow.center();
+
+        $scope.sbjwindow.element.children(".k-content-frame").contents().find(".header")[0].style.display="none";
+
+        sessionStorage.setItem('sbjObj',JSON.stringify({}));
+
+        var modInst =  $scope.sbjwindow.open();
+
+    }
+
 
     $scope.cobjSearch = function () {
 
         var sel_object_test = JSON.parse(sessionStorage.getItem("objObj"));
 
-        $scope.sel_object = sel_object_test;
+         $scope.sel_object[$scope.tabNum] = sel_object_test;
 
     }
 
@@ -329,40 +330,30 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         }
 
-        $scope.sel_subject = sel_subject_test;
+        $scope.sel_subject[$scope.tabNum] = sel_subject_test;
+
 
     }
 
     ///////////////////////////// Service part //////////////////////////////////////////////////////////////
 
-    $scope.getTabClass = function (tabNum) {
+    $scope.getTabClass = function (tabN) {
 
-        return tabClasses[tabNum];
+        return tabClasses[tabN];
 
     };
 
-    $scope.getTabPaneClass = function (tabNum) {
-        return "tab-pane " + tabClasses[tabNum];
+    $scope.getTabPaneClass = function (tabN) {
+        return "tab-pane " + tabClasses[tabN];
     }
 
-    $scope.setActiveTab = function (tabNum) {
+    $scope.setActiveTab = function (tabN) {
 
         initTabs();
 
-        tabClasses[tabNum] = "active";
+        $scope.tabNum = tabN;
 
-        switch(tabNum) {
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-
-
-        }
+        tabClasses[tabN] = "active";
 
     };
 
@@ -391,7 +382,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.detailModal = function(rec,$event){
 
-        if($event.target.cellIndex < 7  ) {
+        if($event.target.cellIndex < 8  ) {
 
             rec.right.right_type_name = $scope.dict.rightTypes.find(this.initType,{curType:rec.right.right_type}).code_name;
 
@@ -403,22 +394,20 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             if (rec.right.bindedObj.address === undefined)
             {
-                $scope.getAddress(rec.right.bindedObj, dispalyModal);
+                $scope.getAddress(rec.right.bindedObj, $scope.dispalyModal('#rgtModal'));
 
             } else
             {
-                dispalyModal();
+                $scope.dispalyModal('#rgtModal');
             }
 
 
         }
     };
 
+    $scope.dispalyModal = function(modid) {
 
-
-    function dispalyModal() {
-
-        var myElement = angular.element(document.querySelector('#custModal'));
+        var myElement = angular.element(document.querySelector(modid));
 
         myElement.modal("show");
 

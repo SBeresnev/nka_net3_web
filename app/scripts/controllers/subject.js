@@ -6,6 +6,8 @@
 
 angular.module('assetsApp').controller('SubjectCtrl',  function ($scope, $http, $location, $filter, $routeParams, httpServices, subjectvar, DOMAIN, WEBDOM) {
 
+    kendo.culture("ru-RU");
+
     $scope.awesomeThings = [
         'HTML5 Boilerplate',
         'AngularJS',

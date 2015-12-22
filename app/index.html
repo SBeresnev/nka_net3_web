@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="bower_components/kendo.all.min/kendo.common.min.css"/>
   <link rel="stylesheet" href="bower_components/kendo.all.min/kendo.rtl.min.css"/>
   <link rel="stylesheet" href="bower_components/kendo.all.min/kendo.default.min.css"/>
-  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" type="text/css">
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css"/>
 
   <link rel="stylesheet" href="styles/bootstrap-3-vert-offset-shim.css"/>
 
@@ -36,7 +36,7 @@
 
 <!-- Add your site or application content here -->
 <div >
-  <div style="min-height: 800px">
+  <div style="min-height:800px">
     <div class="header">
       <ul class="nav pull-left">
         <li class="btn btn-primary" onclick="javascript:window.location.href= '#/'">{{text.general}}</li>
@@ -87,6 +87,8 @@
 <!-- endbuild -->
 
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="bower_components/kendo.all.min/kendo.culture.ru-RU.min.js"></script>
+
 <script src="scripts/app.js"></script>
 <script src="scripts/controllers/address.js"></script>
 <script src="scripts/var/order.js"></script>

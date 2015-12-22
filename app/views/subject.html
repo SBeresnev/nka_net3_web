@@ -233,7 +233,7 @@
 
                         <div class="col-xs-6 ">
 
-                            <input  kendo-date-picker  k-format="'yyyy-MM-dd'" k-ng-model="var.subj.bothRegDate" style="margin-bottom: 0.1em; width: 100%; background-color:white; height:30px; color:#555;}" />
+                            <input  kendo-date-picker  k-format="'yyyy-MM-dd'" k-ng-model="var.subj.bothRegDate" style="margin-bottom: 0.1em; width: 100%; background-color:white; height:30px; color:#555;" />
 
                         </div>
 
@@ -277,9 +277,10 @@
                              </span>
                         </label>
 
-                         <span id = "k-my-spn" class=" k-textbox k-space-right">
+                         <span id = "k-my-spn" class="k-textbox k-space-right">
 
                            <input type="text" id="icon-right" ng-model="var.subj.address"  ng-disabled="200 < var.subjtype.code_id&& var.subjtype.code_id< 400" />
+
                            <a href="" class="k-icon k-i-search" ng-click = "openAddress()" ng-hide="200 < var.subjtype.code_id&& var.subjtype.code_id< 400" >&nbsp;</a>
 
                           </span>
