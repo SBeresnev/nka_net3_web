@@ -44,7 +44,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         rightDetail:{},
 
-        rightsDataSearch: {}
+        rightsDataSearch: {},
+
+        rightsDataTrnsform: {}
 
     }
 
@@ -191,6 +193,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             $scope.rightsDataSearchTabHide=false;
 
+            $scope.rightsDataTrnsform = $scope.transformRight();
+
             $scope.sel_subject[$scope.tabNum] = $scope.var.rightsDataSearch[0].owner; // потом удалить
 
         }).error(function (data, status, header, config) {
@@ -220,6 +224,49 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         });
 
     }
+
+    /////////////////////////////// Filter operation block /////////////////////////////////////////////////////////////
+
+
+    $scope.transformRight = function(){
+
+        var myMap = new Map();
+
+        $scope.var.rightsDataSearch.forEach(function(value){
+
+                var item = {};
+
+                angular.copy( value, item);
+
+                var right_map = myMap.get(item.right.right_id);
+
+                if (typeof right_map === 'undefined') {
+
+                    var right = item.right;
+
+                    delete item['right'];
+
+                    right["rightowner"] = new Array(item);  //item.omit('right');
+
+                    myMap.set(right.right_id, right);
+
+                } else {
+
+
+                    delete item['right'];
+
+                    right_map["rightowner"].push(item);
+
+                    myMap.set(item.right.right_id, right_map);
+
+                }
+
+            } )
+
+        return myMap.getValues();
+
+    }
+
 
     /////////////////////////////// Filter operation block /////////////////////////////////////////////////////////////
 
@@ -448,7 +495,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         myElement.modal("show");
 
     }
-
 
     $scope.filterType = function(value){
 
