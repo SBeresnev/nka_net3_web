@@ -12,6 +12,8 @@ var app = angular
     .module('assetsApp', [
         'ngResource',
         'ngRoute',
+        'ngAnimate',
+        'ui.bootstrap',
         'angular.filter',
         'kendo.directives'
     ])

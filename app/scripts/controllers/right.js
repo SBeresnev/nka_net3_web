@@ -7,6 +7,15 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     kendo.culture("ru-RU");
 
+
+    $scope.oneAtATime = true;
+
+    $scope.status = {
+        isFirstOpen: true,
+        isFirstDisabled: false
+    };
+
+
     $scope.urlmodSbj = WEBDOM + '//#/subject/true';
 
     $scope.urlmodObj = WEBDOM + '//#/object';
@@ -39,27 +48,26 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     }
 
-
     $scope.dict = {
 
-        rightEntityTypes : {},
+        rightEntityTypes : [],
 
-        rightTypes : {},
+        rightTypes : [],
 
-        rightCountTypes : {},
+        rightCountTypes : [],
 
 
-        operTypes : {},
+        operTypes : [],
 
-        operSubTypes : {},
+        operSubTypes : [],
 
-        operBases : {}
+        operBases : []
 
 
     }
 
 
-    /////////////////////////////// Search block ///////////////////////////////////////////////////////////////////////
+    /////////////////////////////// Init block ///////////////////////////////////////////////////////////////////////
 
     $scope.init = function () {
 
@@ -97,41 +105,69 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         });
 
 
-        $scope.var.url = DOMAIN + "/nka_net3/catalog/operationType";
-
-        $http.get($scope.var.url).then(function (res) {
-
-            $scope.dict.operTypes = res.data;
-
-            //$scope.dict.curoprTyp = $scope.dict.operTypes.find(function(value){ return value.code_name == this.curType ;},{curType:"Государственная регистрация"});
-
-        });
-
-
-        $scope.var.url = DOMAIN + "/nka_net3/catalog/operationSubType";
-
-        $http.get($scope.var.url).then(function (res) {
-
-            $scope.dict.operSubTypes = res.data;
-
-            //$scope.dict.curoprSubTyp = $scope.dict.operSubTypes.find(function(value){ return value.code_name == this.curType;},{curType:"Создание/возникновение"});
-
-        });
-
-
-        $scope.var.url = DOMAIN + "/nka_net3/catalog/operationBase";
-
-        $http.get($scope.var.url).then(function (res) {
-
-            $scope.dict.operBases = res.data;
-
-            //$scope.dict.curoprBase = $scope.dict.operBases.find(function(value){ return value.code_name == this.curType;},{curType:"Купля-продажа"});
-
-        });
-
 
 
     }
+
+    $scope.initOper = function(){
+
+
+        if ( $scope.dict.operTypes.length == 0) {
+
+            $scope.var.loading = true;
+
+            $scope.var.url = DOMAIN + "/nka_net3/catalog/operationType";
+
+            $http.get($scope.var.url).then(function (res) {
+
+                $scope.dict.operTypes = res.data;
+
+                $scope.var.loading = false;
+
+                //$scope.dict.curoprTyp = $scope.dict.operTypes.find(function(value){ return value.code_name == this.curType ;},{curType:"Государственная регистрация"});
+
+            });
+        }
+
+        if ($scope.dict.operSubTypes.length == 0) {
+
+            $scope.var.loading = true;
+
+            $scope.var.url = DOMAIN + "/nka_net3/catalog/operationSubType";
+
+            $http.get($scope.var.url).then(function (res) {
+
+                $scope.dict.operSubTypes = res.data;
+
+                $scope.var.loading = false;
+
+                //$scope.dict.curoprSubTyp = $scope.dict.operSubTypes.find(function(value){ return value.code_name == this.curType;},{curType:"Создание/возникновение"});
+
+            });
+        }
+
+        if ($scope.dict.operBases.length == 0) {
+
+            $scope.var.loading = true;
+
+            $scope.var.url = DOMAIN + "/nka_net3/catalog/operationBase";
+
+            $http.get($scope.var.url).then(function (res) {
+
+                $scope.dict.operBases = res.data;
+
+                $scope.var.loading = false;
+
+                //$scope.dict.curoprBase = $scope.dict.operBases.find(function(value){ return value.code_name == this.curType;},{curType:"Купля-продажа"});
+
+            });
+        }
+
+
+    }
+
+
+    /////////////////////////////// Search block ///////////////////////////////////////////////////////////////////////
 
     $scope.rightSearch = function(){
 

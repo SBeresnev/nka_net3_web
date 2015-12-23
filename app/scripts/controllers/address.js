@@ -322,7 +322,6 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
 
         $scope.cleanStreetForm();
 
-
         if ( !$scope.validAte($scope.var.curAte.ate_id)) {swal("Error", 'Не указан АТЕ' , "error"); return; }
 
         if ( !$scope.validHoseNum($scope.var.parcelForm.house_num)) { swal("Error", 'Не указан номер дома' , "error"); return ; }
