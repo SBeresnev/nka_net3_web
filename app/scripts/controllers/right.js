@@ -7,15 +7,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     kendo.culture("ru-RU");
 
-
-    $scope.oneAtATime = true;
-
-    $scope.status = {
-        isFirstOpen: true,
-        isFirstDisabled: false
-    };
-
-
     $scope.urlmodSbj = WEBDOM + '//#/subject/true';
 
     $scope.urlmodObj = WEBDOM + '//#/object';
@@ -48,7 +39,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         rightsDataTrnsform: {}
 
-    }
+    };
 
     $scope.dict = {
 
@@ -66,7 +57,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         operBases : []
 
 
-    }
+    };
 
 
     /////////////////////////////// Init block ///////////////////////////////////////////////////////////////////////
@@ -76,6 +67,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         $scope.var.loading = true;
 
         $scope.rightsDataSearchTabHide = true;
+
+
 
 
         $scope.var.url = DOMAIN + "/nka_net3/catalog/rightCountType";
@@ -109,7 +102,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
 
 
-    }
+    };
 
     $scope.initOper = function(){
 
@@ -166,7 +159,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         }
 
 
-    }
+    };
 
 
     /////////////////////////////// Search block ///////////////////////////////////////////////////////////////////////
@@ -204,7 +197,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         });
 
 
-    }
+    };
 
     $scope.getAddress = function (obj, callback){
 
@@ -223,7 +216,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
             $scope.var.loading = false;
         });
 
-    }
+    };
 
     /////////////////////////////// Filter operation block /////////////////////////////////////////////////////////////
 
@@ -265,7 +258,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         return myMap.getValues();
 
-    }
+    };
 
 
     /////////////////////////////// Filter operation block /////////////////////////////////////////////////////////////
@@ -284,7 +277,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         });
 
-    }
+    };
 
     $scope.setCountType = function(){
 
@@ -301,7 +294,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         });
 
 
-    }
+    };
 
     $scope.setOperFiletr = function() {
 
@@ -329,7 +322,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
             $scope.dict.filterBases = $scope.dict.operBases.filter($scope.filterType,{curType:baseType} );
 
         });
-    }
+    };
 
     $scope.setSubFiletr = function(){
 
@@ -346,7 +339,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         });
 
 
-    }
+    };
 
     //////////////////////////// Modal for Objects and Subjects/////////////////////////////////////////////////////////
 
@@ -360,7 +353,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         /*************************************************************************************************************************/
 
-    }
+    };
 
     $scope.objOpen = function () {
 
@@ -376,7 +369,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         var modInst =  $scope.objwindow.open();
 
-    }
+    };
 
     $scope.sbjOpen = function () {
 
@@ -392,7 +385,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         var modInst =  $scope.sbjwindow.open();
 
-    }
+    };
 
 
     $scope.cobjSearch = function () {
@@ -401,7 +394,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
          $scope.sel_object[$scope.tabNum] = sel_object_test;
 
-    }
+    };
 
     $scope.csubSearch = function () {
 
@@ -416,7 +409,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         $scope.sel_subject[$scope.tabNum] = sel_subject_test;
 
 
-    }
+    };
 
     ///////////////////////////// Service part //////////////////////////////////////////////////////////////
 
@@ -444,7 +437,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         return obj === undefined ? '' : obj;
 
-    }
+    };
 
     $scope.BufferChange = function(rec,index){
 
@@ -494,19 +487,35 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         myElement.modal("show");
 
-    }
+    };
 
     $scope.filterType = function(value){
 
         return this.curType.some(function(parValue){ return parValue.parentAnalyticCode == this.curType;} , {curType:value.code_id});
 
-    }
+    };
 
     $scope.initType = function(value){
 
         return value.code_id == this.curType;
 
-    }
+    };
+
+    $scope.OpenPanel = function($event){
+
+         var obj = $event.target.nodeName == "I"? $event.target : $event.target.nextElementSibling;
+
+        if(obj.attributes["class"].value.contains("glyphicon-chevron-down"))
+        {
+            obj.attributes["class"].value = obj.attributes["class"].value.replace("glyphicon-chevron-down","glyphicon-chevron-right");
+
+        } else {
+
+            obj.attributes["class"].value =  obj.attributes["class"].value.replace("glyphicon-chevron-right","glyphicon-chevron-down");
+        }
+
+
+    };
 
     $scope.setActiveTab(1);
 

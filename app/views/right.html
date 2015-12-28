@@ -12,7 +12,7 @@
 
         <li ng-class="getTabClass(2)" ng-click="setActiveTab(2)" > <a ui-sref="main" href="" data-toggle="tab" ng-click="initOper()">Редактор</a> </li>
 
-        <li ng-class="getTabClass(3)" ng-click="setActiveTab(3)"> <a ui-sref="collateral" href=""  data-toggle="tab">Переход</a></li>
+        <li ng-class="getTabClass(3)" ng-click="setActiveTab(3)"> <a ui-sref="collateral" href="" data-toggle="tab">Переход</a></li>
 
         <li ng-class="getTabClass(4)" ng-click="setActiveTab(4)"> <a ui-sref="rating" href="" data-toggle="tab">Сделки</a></li>
 
@@ -273,18 +273,23 @@
 
         <div id="detail" ng-class="getTabPaneClass(3)">
 
-            <uib-accordion class="vert-offset-top-4" close-others="oneAtATime">
+            <div ng-repeat="x in ['Jani','Hege','Kai']">
 
-                <uib-accordion-group is-open="status.open">
+             <uib-accordion class="vert-offset-top-1">
+
+                <uib-accordion-group ng-click="OpenPanel($event)">
 
                     <uib-accordion-heading>
-                        I can have markup, too! <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                        Hi {{x}}! <i class="pull-right glyphicon glyphicon-chevron-right"></i>
                     </uib-accordion-heading>
-                        This is just some content to illustrate fancy headings.
+
+                        You are {{$index}} in list.
 
                 </uib-accordion-group>
 
-            </uib-accordion>
+             </uib-accordion>
+
+            </div>
 
         </div>
 
