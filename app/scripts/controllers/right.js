@@ -69,8 +69,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         $scope.rightsDataSearchTabHide = true;
 
 
-
-
         $scope.var.url = DOMAIN + "/nka_net3/catalog/rightCountType";
 
         $http.get($scope.var.url).then(function (res) {
@@ -161,7 +159,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
-
     /////////////////////////////// Search block ///////////////////////////////////////////////////////////////////////
 
     $scope.rightSearch = function(){
@@ -186,7 +183,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             $scope.rightsDataSearchTabHide=false;
 
-            $scope.rightsDataTrnsform = $scope.transformRight();
+            $scope.var.rightsDataTrnsform = $scope.transformRight();
 
             $scope.sel_subject[$scope.tabNum] = $scope.var.rightsDataSearch[0].owner; // потом удалить
 
@@ -233,11 +230,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
                 var right_map = myMap.get(item.right.right_id);
 
+                  var right = item.right;
+
+                  delete item['right'];
+
                 if (typeof right_map === 'undefined') {
-
-                    var right = item.right;
-
-                    delete item['right'];
 
                     right["rightowner"] = new Array(item);  //item.omit('right');
 
@@ -246,17 +243,16 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
                 } else {
 
 
-                    delete item['right'];
-
                     right_map["rightowner"].push(item);
 
-                    myMap.set(item.right.right_id, right_map);
+                    myMap.set(right.right_id, right_map);
 
                 }
 
             } )
 
-        return myMap.getValues();
+
+        return Array.from(myMap.values()) ;
 
     };
 
@@ -386,7 +382,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         var modInst =  $scope.sbjwindow.open();
 
     };
-
 
     $scope.cobjSearch = function () {
 

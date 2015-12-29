@@ -291,6 +291,65 @@
 
             </div>
 
+            <table class="table table-bordered vert-offset-top-2"  ng-hide="false">
+
+                <tr>
+
+                    <th>Номер</th>
+
+                    <th>ID</th>
+
+                    <th>Объект (кадастровый/<br>инвентарный номер)</br></th>
+
+                    <th>Объект <br>(тип)</br></th>
+
+                    <th>Объект <br>(название)</br></th>
+
+                    <th>Правообладатель</th>
+
+                    <th><nobr>Доля в праве</nobr></th>
+
+                    <th><nobr>Дата возникновения доли</nobr></th>
+
+                    <th><span class="btn" style="background-color:beige" disabled><b style="color:black">Буфер</b></span></th>
+
+                </tr>
+
+
+                <tr id="{{$index}}" ng-style="checked[$index]&&{'background-color': 'beige'}" ng-click="detailModal(right_owner,$event)" ng-repeat-start="Tright in var.rightsDataTrnsform" >
+
+                    <td rowspan="{{Tright.rightowner.length}}" >{{$index +1}}</td>
+
+                    <td rowspan="{{Tright.rightowner.length}}" width="fit-content">{{Tright.right_id}}</td>
+
+                    <td rowspan="{{Tright.rightowner.length}}" width="fit-content">{{Tright.bindedObj.object_name}}</td>
+
+                    <td rowspan="{{Tright.rightowner.length}}" width="fit-content">{{Tright.bindedObj.cadastre_number}}{{Tright.bindedObj.inventory_number}}</td>
+
+                    <td rowspan="{{Tright.rightowner.length}}" width="fit-content">{{Tright.bindedObj.objectType.code_name}}</td>
+
+
+                    <td width="fit-content">{{Tright.rightowner[0].owner.surname}}{{" "+Tright.rightowner[0].owner.firstname}}{{" "+Tright.rightowner[0].owner.fathername }}{{Tright.rightowner[0].owner.fullname}}</td>
+
+                    <td width="fit-content">{{Tright.rightowner[0].numerator_part}}{{Tright.rightowner[0].denominator_part == 1 ?'':'/'+Tright.rightowner[0].denominator_part}}</td>
+
+
+                    <td rowspan="{{Tright.rightowner.length}}" width="fit-content"><span>{{Tright.date_in | date:'yyyy-MM-dd'}}</span></td>
+
+                    <td rowspan="{{Tright.rightowner.length}}" width="fit-content" > <input type="checkbox" class="inputtd" ng-click="BufferChange(Tright,$index)" ng-model="checked[$index]"></td>
+
+                </tr>
+
+                <tr id="app-{{$index}}" ng-style="checked[$index]&&{'background-color': 'beige'}"  ng-repeat-end ng-repeat="right_owner in Tright.rightowner.slice(1)">
+
+                    <td width="fit-content">{{right_owner.owner.surname}}{{" "+right_owner.owner.firstname}}{{" "+right_owner.owner.fathername }}{{right_owner.owner.fullname}}</td>
+
+                    <td width="fit-content">{{right_owner.numerator_part}}{{right_owner.denominator_part == 1 ?'':'/'+right_owner.denominator_part}}</td>
+
+                </tr>
+
+            </table>
+
         </div>
 
         <!------------------------ Bargain block ---------------------------------------->
