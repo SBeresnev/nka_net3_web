@@ -167,6 +167,10 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.var.rightsDataSearch = [];
 
+        $scope.sel_buffer = [];
+
+        $scope.checked=[];
+
 
         var pos =  $scope.sbj_class.indexOf("active");
 
@@ -236,14 +240,14 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
                 if (typeof right_map === 'undefined') {
 
-                    right["rightowner"] = new Array(item);  //item.omit('right');
+                    right["rightOwners"] = new Array(item);  //item.omit('right');
 
                     myMap.set(right.right_id, right);
 
                 } else {
 
 
-                    right_map["rightowner"].push(item);
+                    right_map["rightOwners"].push(item);
 
                     myMap.set(right.right_id, right_map);
 
@@ -434,9 +438,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
-    $scope.BufferChange = function(rec,index){
+    $scope.BufferChange = function(rec){
 
-        if($scope.checked[index]){
+        if($scope.checked[rec.right_id]){
 
             $scope.sel_buffer.push(rec);
 
@@ -451,21 +455,23 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
-    $scope.detailModal = function(rec,$event){
+    $scope.detailModal = function(right, index_arg){
 
-        if($event.target.cellIndex < 8  ) {
+            var trans_value = {};
 
-            rec.right.right_type_name = $scope.dict.rightTypes.find(this.initType,{curType:rec.right.right_type}).code_name;
+            right.right_type_name = $scope.dict.rightTypes.find(this.initType,{curType:right.right_type}).code_name;
 
-            rec.right.right_entity_type_name = $scope.dict.rightEntityTypes.find(this.initType,{curType:rec.right.right_entity_type}).code_name;
+            right.right_entity_type_name = $scope.dict.rightEntityTypes.find(this.initType,{curType:right.right_entity_type}).code_name;
 
-            rec.right.right_count_type_name = $scope.dict.rightCountTypes.find(this.initType,{curType:rec.right.right_count_type}).code_name;
+            right.right_count_type_name = $scope.dict.rightCountTypes.find(this.initType,{curType:right.right_count_type}).code_name;
 
-            $scope.var.rightDetail = rec;
+            right["curownidx"]=index_arg;
 
-            if (rec.right.bindedObj.address === undefined)
+            $scope.var.rightDetail = right;
+
+            if (right.bindedObj.address === undefined)
             {
-                $scope.getAddress(rec.right.bindedObj, $scope.dispalyModal('#rgtModal'));
+                $scope.getAddress(right.bindedObj, $scope.dispalyModal('#rgtModal'));
 
             } else
             {
@@ -473,7 +479,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
             }
 
 
-        }
+
     };
 
     $scope.dispalyModal = function(modid) {

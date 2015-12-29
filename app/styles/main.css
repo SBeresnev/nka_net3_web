@@ -101,4 +101,9 @@ button.btn.active.btn-danger {
   border: 1px solid #ffffff;
 }
 
+.table > tbody > tr > td {
+  vertical-align: middle;
+  text-align:center ;
+}
+
 
