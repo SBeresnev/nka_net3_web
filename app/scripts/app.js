@@ -136,6 +136,27 @@ var app = angular
             }
         };
     })
+    .directive('blink', function($timeout) {
+        return {
+            restrict: 'E',
+            transclude: true,
+            scope: {},
+            controller: function($scope, $element) {
+                function showElement() {
+                    $element.css("display", "inline");
+                    $timeout(hideElement, 1500);
+                }
+
+                function hideElement() {
+                    $element.css("display", "none");
+                    $timeout(showElement, 1500);
+                }
+                showElement();
+            },
+            template: '<span ng-transclude></span>',
+            replace: true
+        };
+    })
     .filter('filterSubjectType', function () {
         return function (items) {
             var filtered = [];
@@ -185,18 +206,4 @@ var app = angular
             return filtered;
         };
     })
-    .directive('clickAnywhereButHere', function($document){
-        return {
-            restrict: 'A',
-            link: function(scope, elem, attr, ctrl) {
-                elem.bind('click', function(e) {
-                    // this part keeps it from firing the click on the document.
-                    e.stopPropagation();
-                });
-                $document.bind('click', function() {
-                    // magic here.
-                    scope.$apply(attr.clickAnywhereButHere);
-                })
-            }
-        }
-    });
+;

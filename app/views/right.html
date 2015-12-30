@@ -55,11 +55,11 @@
 
                     <th>ID</th>
 
+                    <th>Объект <br>(название)</br></th>
+
                     <th>Объект (кадастровый/<br>инвентарный номер)</br></th>
 
                     <th>Объект <br>(тип)</br></th>
-
-                    <th>Объект <br>(название)</br></th>
 
                     <th>Правообладатель</th>
 
@@ -70,7 +70,6 @@
                     <th><span class="btn" style="background-color:beige" disabled><b style="color:black">Буфер</b></span></th>
 
                 </tr>
-
 
                 <tr ng-style="checked[Tright.right_id]&&{'background-color': 'beige'}" ng-repeat-start="Tright in var.rightsDataTrnsform" >
 
@@ -84,7 +83,7 @@
 
                     <td rowspan="{{Tright.rightOwners.length}}" width="fit-content">{{Tright.bindedObj.objectType.code_name}}</td>
 
-                    <td width="fit-content"><span style="background-color:inherit" class="btn btn-default" ng-click="detailModal(Tright,0)">{{Tright.rightOwners[0].owner.surname}}{{" "+Tright.rightOwners[0].owner.firstname}}{{" "+Tright.rightOwners[0].owner.fathername }}{{Tright.rightOwners[0].owner.fullname}}</span></td>
+                    <td width="fit-content"><button style="background-color:inherit" class="astext" ng-click="detailModal(Tright,0)">{{Tright.rightOwners[0].owner.surname}}{{" "+Tright.rightOwners[0].owner.firstname}}{{" "+Tright.rightOwners[0].owner.fathername }}{{Tright.rightOwners[0].owner.fullname}}</button></td>
 
                     <td width="fit-content">{{Tright.rightOwners[0].numerator_part}}{{Tright.rightOwners[0].denominator_part == 1 ?'':'/'+Tright.rightOwners[0].denominator_part}}</td>
 
@@ -96,7 +95,7 @@
 
                 <tr ng-style="checked[Tright.right_id]&&{'background-color': 'beige'}"  ng-repeat-end ng-repeat="right_owner in Tright.rightOwners.slice(1)">
 
-                    <td  width="fit-content"><span style="background-color:inherit" class="btn btn-default" ng-click="detailModal(Tright,$index+1)">{{right_owner.owner.surname}}{{" "+right_owner.owner.firstname}}{{" "+right_owner.owner.fathername }}{{right_owner.owner.fullname}}</span></td>
+                    <td  width="fit-content"><button style="background-color:inherit" class="astext" ng-click="detailModal(Tright,$index+1)">{{right_owner.owner.surname}}{{" "+right_owner.owner.firstname}}{{" "+right_owner.owner.fathername }}{{right_owner.owner.fullname}}</button></td>
 
                     <td  width="fit-content">{{right_owner.numerator_part}}{{right_owner.denominator_part == 1 ?'':'/'+right_owner.denominator_part}}</td>
 
@@ -142,7 +141,7 @@
 
                         </div>
 
-                        <div class = "form-group">
+                        <div class="form-group">
 
                             <label>Дата действия права:</label>
 
@@ -166,9 +165,15 @@
 
                         </div>
 
-                        <div class = "form-group">
+                        <div class="form-group vert-offset-top-2" ng-if="true" >
 
-                            <label class="control-label vert-offset-top-2">Ссылка на объект:</label>
+                            <button class="astext" style="color: maroon"><b>Есть ограничения/обременение прав.</b></button> <blink> <span class="glyphicon glyphicon-exclamation-sign"></span> </blink>
+
+                        </div>
+
+                        <div class = "form-group vert-offset-top-2">
+
+                            <label class="control-label">Ссылка на объект:</label>
 
                             <div class="input-group">
 
@@ -220,7 +225,7 @@
 
                             <div class="form-group vert-offset-bottom-2">
 
-                                <a style="color:black" href=""><b>Идентификатор права-родителя</b><span class="badge">{{5}}</span></a><br>
+                                <button class="astext" style="color:maroon"><b>Идентификатор права-родителя</b><span class="badge">{{5}}</span></button><br>
 
                             </div>
 
