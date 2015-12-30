@@ -502,21 +502,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
-    $scope.OpenPanel = function($event){
-
-         var obj = $event.target.nodeName == "I"? $event.target : $event.target.nextElementSibling;
-
-        if(obj.attributes["class"].value.contains("glyphicon-chevron-down"))
-        {
-            obj.attributes["class"].value = obj.attributes["class"].value.replace("glyphicon-chevron-down","glyphicon-chevron-right");
-
-        } else {
-
-            obj.attributes["class"].value =  obj.attributes["class"].value.replace("glyphicon-chevron-right","glyphicon-chevron-down");
-        }
-
-
-    };
 
     $scope.setActiveTab(1);
 

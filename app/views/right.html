@@ -4,7 +4,7 @@
 
 </div>
 
-<div class="container tabbable " ng-init>
+<div class="container tabbable " >
 
     <ul class="nav nav-tabs">
 
@@ -105,11 +105,46 @@
 
         </div>
 
-        <!------------------------ Main block ---------------------------------------->
+        <!-------------- Main block -------------------------------------------------->
 
         <div id="main" ng-class="getTabPaneClass(2)" >
 
-            <!-------- Bufer  -------------------------------------------------------->
+        <!------------- Bufer  -------------------------------------------------------->
+
+           <div class = "col-lg-12 vert-offset-top-2">
+
+             <uib-accordion ng-init="pnl_opn=true">
+
+                <uib-accordion-group is-open="pnl_opn" panel-class="panel panel-dafault">
+
+                    <uib-accordion-heading>
+
+                        <button class="astext" ng-click="pnl_opn=!pnl_opn"><b>Панель редактирования</b></button> <i ng-click="pnl_opn=!pnl_opn" class="pull-right glyphicon" ng-class="{true:'glyphicon-chevron-down', false: 'glyphicon-chevron-right'}[pnl_opn]"></i>
+
+                    </uib-accordion-heading>
+
+                    <div class="row">
+
+                        <div class="col-lg-3"></div>
+
+                        <div class="well col-lg-7">
+
+                            <a href="" class="btn btn-success" role="button"><span class="glyphicon glyphicon-flash"></span> <br/>Создать</a>
+                            <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-plus-sign"></span> <br/>Добавить долю</a>
+                            <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-circle-arrow-down"></span> <br/>Загрузить из буфера</a>
+                            <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-signal"></span> <br/>Изменить</a>
+                            <a href="" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-remove-sign"></span> <br/>Очистить</a>
+
+                        </div>
+
+                      </div>
+
+                </uib-accordion-group>
+
+             </uib-accordion>
+
+           </div>
+
 
             <!-------- Right  -------------------------------------------------------->
 
@@ -121,7 +156,7 @@
 
                     <div class="panel-body ">
 
-                        <div class = "form-group">
+                        <div class="form-group">
 
                             <div class="well">
 
@@ -171,7 +206,7 @@
 
                         </div>
 
-                        <div class = "form-group vert-offset-top-2">
+                        <div class="form-group vert-offset-top-2">
 
                             <label class="control-label">Ссылка на объект:</label>
 
@@ -285,20 +320,6 @@
         <div id="detail" ng-class="getTabPaneClass(3)">
 
             <div ng-repeat="x in ['Jani','Hege','Kai']">
-
-                <uib-accordion class="vert-offset-top-1">
-
-                    <uib-accordion-group ng-click="OpenPanel($event)">
-
-                        <uib-accordion-heading>
-                            Hi {{x}}! <i class="pull-right glyphicon glyphicon-chevron-right"></i>
-                        </uib-accordion-heading>
-
-                        You are {{$index}} in list.
-
-                    </uib-accordion-group>
-
-                </uib-accordion>
 
             </div>
 

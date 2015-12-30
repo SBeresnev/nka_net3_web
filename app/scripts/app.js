@@ -144,12 +144,12 @@ var app = angular
             controller: function($scope, $element) {
                 function showElement() {
                     $element.css("display", "inline");
-                    $timeout(hideElement, 1500);
+                    $timeout(hideElement, 1000);
                 }
 
                 function hideElement() {
                     $element.css("display", "none");
-                    $timeout(showElement, 1500);
+                    $timeout(showElement, 1000);
                 }
                 showElement();
             },
