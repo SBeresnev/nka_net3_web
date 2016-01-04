@@ -7,6 +7,60 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     kendo.culture("ru-RU");
 
+   ///////////////////////////////kendo window property/////////////////////////////////////////////////////////////////
+
+    $scope.mainGridOptions = {
+
+        dataSource: { data : null},
+
+        dataBound: function() {  this.expandRow(this.tbody.find("tr.k-master-row").first()); },
+
+        scrollable: false,
+        sortable: true,
+        resizable: true,
+
+        columns: [
+
+        {field: "right_id", title: "ID", width:'60px'},
+
+        {field: "right_type_name", title: "Вид права:"},
+
+        {field: "right_entity_type_name", title: "<center>Объект операции  <br> (сущность)</center>"},
+
+        {field: "right_count_type_name", title: "<center>Тип права по числу <br> правообладателей</center>"},
+
+        {field: "begin_date", title: "<center> Дата <br> возникновения права</center>", template:"#= kendo.toString(kendo.parseDate(new Date(begin_date)), 'dd-MM-yyyy') #"},
+
+        {field: "end_date", title: "<center> Дата <br>прекращения права</center>", template:"#= kendo.toString(kendo.parseDate(new Date(end_date)), 'dd-MM-yyyy') #"},
+
+        {field: "bindedObj.object_name", title: "Имя объекта"} ,
+
+        {title: "Тип объекта:", template: "#= bindedObj.objectType.code_name #" }
+
+        ]
+    };
+
+    $scope.detailOwnersOptions = function(dataItem) {
+        return {
+            dataSource: {
+                data: dataItem.rightOwners
+            },
+
+            scrollable: false,
+            sortable: true,
+            columns: [
+                {title:"Имя/название правообладателя:", template: "#= data.owner.fullname === undefined?data.owner.surname+' '+data.owner.firstname+' '+data.owner.fathername:data.owner.fullname#" },
+                {field:"owner.address", title:"Адресс правообладателя:" },
+                {title:"Тип субъекта:", template: "#= data.owner.dtype=='private'?'физ. лицо':'юр. лицо'#" },
+                {title:"Доля в праве:", template: "#= data.numerator_part+''+(data.denominator_part == 1 ?'':'/'+data.denominator_part) #" },
+                {field: "date_in", title: "Дата прекращения доли:", template:"#= kendo.toString(kendo.parseDate(new Date(data.date_in)), 'dd-MM-yyyy') #"},
+                {field: "date_out", title: "Дата прекращения доли:", template:"#= kendo.toString(kendo.parseDate(new Date(data.date_out)), 'dd-MM-yyyy') #"}
+            ]
+        };
+    };
+
+    ////////////////////////////common window///////////////////////////////////////////////////////////////////////////
+
     $scope.urlmodSbj = WEBDOM + '//#/subject/true';
 
     $scope.urlmodObj = WEBDOM + '//#/object';
@@ -58,7 +112,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
 
     };
-
 
     /////////////////////////////// Init block ///////////////////////////////////////////////////////////////////////
 
@@ -171,7 +224,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.checked=[];
 
-
         var pos =  $scope.sbj_class.indexOf("active");
 
         pos == -1 ? $scope.sel_subject[$scope.tabNum] = {} : $scope.sel_oject[$scope.tabNum] = {};
@@ -187,7 +239,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             $scope.rightsDataSearchTabHide=false;
 
+
             $scope.var.rightsDataTrnsform = $scope.transformRight();
+
+            $scope.mainGridOptions.dataSource.data = $scope.var.rightsDataTrnsform;
+
+            $scope.mainGridOptions.dataSource.data.forEach(function(value) {$scope.fillDictName(value); $scope.getAddress(value.bindedObj);});
 
             $scope.sel_subject[$scope.tabNum] = $scope.var.rightsDataSearch[0].owner; // потом удалить
 
@@ -419,8 +476,10 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
     };
 
     $scope.getTabPaneClass = function (tabN) {
+
         return "tab-pane " + tabClasses[tabN];
-    }
+
+    };
 
     $scope.setActiveTab = function (tabN) {
 
@@ -455,15 +514,21 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
+    $scope.fillDictName = function(right){
+
+        right.right_type_name = $scope.dict.rightTypes.find(this.initType,{curType:right.right_type}).code_name;
+
+        right.right_entity_type_name = $scope.dict.rightEntityTypes.find(this.initType,{curType:right.right_entity_type}).code_name;
+
+        right.right_count_type_name = $scope.dict.rightCountTypes.find(this.initType,{curType:right.right_count_type}).code_name;
+
+    }
+
     $scope.detailModal = function(right, index_arg){
 
             var trans_value = {};
 
-            right.right_type_name = $scope.dict.rightTypes.find(this.initType,{curType:right.right_type}).code_name;
-
-            right.right_entity_type_name = $scope.dict.rightEntityTypes.find(this.initType,{curType:right.right_entity_type}).code_name;
-
-            right.right_count_type_name = $scope.dict.rightCountTypes.find(this.initType,{curType:right.right_count_type}).code_name;
+            $scope.fillDictName(right);
 
             right["curownidx"]=index_arg;
 

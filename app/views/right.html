@@ -10,7 +10,7 @@
 
         <li ng-class="getTabClass(1)" ng-click="setActiveTab(1)"> <a ui-sref="search" href="" data-toggle="tab">Поиск</a></li>
 
-        <li ng-class="getTabClass(2)" ng-click="setActiveTab(2)" > <a ui-sref="main" href="" data-toggle="tab" ng-click="initOper()">Редактор</a> </li>
+        <li ng-class="getTabClass(2)" ng-click="setActiveTab(2)"> <a ui-sref="main" href="" data-toggle="tab" ng-click="initOper()">Редактор</a> </li>
 
         <li ng-class="getTabClass(3)" ng-click="setActiveTab(3)"> <a ui-sref="collateral" href="" data-toggle="tab">Переход</a></li>
 
@@ -319,10 +319,41 @@
 
         <div id="detail" ng-class="getTabPaneClass(3)">
 
-            <div ng-repeat="x in ['Jani','Hege','Kai']">
 
-            </div>
+            <kendo-grid options="mainGridOptions" k-rebind="mainGridOptions.dataSource.data">
 
+                <div k-detail-template>
+
+                    <kendo-tabstrip>
+
+                        <ul>
+                            <li class="k-state-active">Owners details</li>
+
+                            <li>Object details</li>
+                        </ul>
+
+
+                        <div>
+                            <div kendo-grid k-options="detailOwnersOptions(dataItem)"></div>
+                        </div>
+
+                        <div>
+
+                            <table class="table table-bordered" >
+                                <tr><td style="color:navy">Имя объекта:</td><td><b>{{dataItem.bindedObj.object_name}}</b></td></tr>
+                                <tr><td style="color:navy">Адрес объекта:</td><td><b>{{dataItem.bindedObj.address}}</b></td>
+                                <tr><td style="color:navy">Тип объекта:</td><td><b>{{dataItem.bindedObj.objectType.code_name}}</b></td></tr>
+                                <tr><td style="color:navy">Инвентарный номер:</td><td><b>{{dataItem.bindedObj.inventory_number}}</b></td></tr>
+                                <tr><td style="color:navy">Кадастровый номер:</td><td><b>{{dataItem.bindedObj.cadastre_number}}</b></td></tr>
+                            </table>
+
+                        </div>
+
+                    </kendo-tabstrip>
+
+                </div>
+
+            </kendo-grid>
 
         </div>
 
