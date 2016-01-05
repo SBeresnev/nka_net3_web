@@ -1,3 +1,45 @@
-<modal id="bufModal" title="Буфер">
 
-</modal>
+<div kendo-grid="kg" class="table table-bordered vert-offset-top-2" options="mainGridOptions" k-rebind="mainGridOptions.dataSource.data">
+
+    <div k-detail-template>
+
+        <kendo-tabstrip>
+
+            <ul>
+
+                <li class="k-state-active">Правообладатели</li>
+
+                <li>Объект (детализация)</li>
+
+            </ul>
+
+
+            <div>
+
+                <div kendo-grid k-options="detailOwnersOptions(dataItem)" k-rebind="mainGridOptions.dataSource.data"></div>
+
+            </div>
+
+            <div>
+
+                <table class="table table-bordered" >
+
+                    <tr><td style="color:navy">Имя объекта:</td><td><b>{{dataItem.bindedObj.object_name}}</b></td></tr>
+
+                    <tr><td style="color:navy">Адрес объекта:</td><td><b>{{dataItem.bindedObj.address}}</b></td></tr>
+
+                    <tr><td style="color:navy">Тип объекта:</td><td><b>{{dataItem.bindedObj.objectType.code_name}}</b></td></tr>
+
+                    <tr><td style="color:navy">Инвентарный номер:</td><td><b>{{dataItem.bindedObj.inventory_number}}</b></td></tr>
+
+                    <tr><td style="color:navy">Кадастровый номер:</td><td><b>{{dataItem.bindedObj.cadastre_number}}</b></td></tr>
+
+                </table>
+
+            </div>
+
+        </kendo-tabstrip>
+
+    </div>
+
+</div>

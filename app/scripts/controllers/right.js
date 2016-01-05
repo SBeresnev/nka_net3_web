@@ -7,19 +7,21 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     kendo.culture("ru-RU");
 
-   ///////////////////////////////kendo window property/////////////////////////////////////////////////////////////////
+   ///////////////////////////////kendo grid property/////////////////////////////////////////////////////////////////
 
     $scope.mainGridOptions = {
 
         dataSource: { data : null},
 
-        dataBound: function() {  this.expandRow(this.tbody.find("tr.k-master-row").first()); },
-
         scrollable: false,
+
         sortable: true,
+
         resizable: true,
 
         columns: [
+
+        {field: "bufer", title: "Буфер/<br>Редактор", template: '<input type="checkbox" class="inputtd" ng-click="BufferChange(dataItem, $event)" ng-model="checked[mainGridOptions.curTabNum][dataItem.right_id]">'},
 
         {field: "right_id", title: "ID", width:'60px'},
 
@@ -29,9 +31,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         {field: "right_count_type_name", title: "<center>Тип права по числу <br> правообладателей</center>"},
 
-        {field: "begin_date", title: "<center> Дата <br> возникновения права</center>", template:"#= kendo.toString(kendo.parseDate(new Date(begin_date)), 'dd-MM-yyyy') #"},
+        {field: "begin_date", title: "<center> Дата <br> возникновения права</center>", template:"#= begin_date!=null?kendo.toString(kendo.parseDate(new Date(begin_date)), 'dd-MM-yyyy'):'' #"},
 
-        {field: "end_date", title: "<center> Дата <br>прекращения права</center>", template:"#= kendo.toString(kendo.parseDate(new Date(end_date)), 'dd-MM-yyyy') #"},
+        {field: "end_date", title: "<center> Дата <br>прекращения права</center>", template:"#=  end_date!=null?kendo.toString(kendo.parseDate(new Date(end_date)), 'dd-MM-yyyy'):'' #"},
 
         {field: "bindedObj.object_name", title: "Имя объекта"} ,
 
@@ -42,20 +44,33 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.detailOwnersOptions = function(dataItem) {
         return {
+
             dataSource: {
-                data: dataItem.rightOwners
+                data: dataItem === undefined ? null : dataItem.rightOwners
             },
 
             scrollable: false,
+
             sortable: true,
+
+            resizable: true,
+
             columns: [
+
                 {title:"Имя/название правообладателя:", template: "#= data.owner.fullname === undefined?data.owner.surname+' '+data.owner.firstname+' '+data.owner.fathername:data.owner.fullname#" },
+
                 {field:"owner.address", title:"Адресс правообладателя:" },
+
                 {title:"Тип субъекта:", template: "#= data.owner.dtype=='private'?'физ. лицо':'юр. лицо'#" },
+
                 {title:"Доля в праве:", template: "#= data.numerator_part+''+(data.denominator_part == 1 ?'':'/'+data.denominator_part) #" },
-                {field: "date_in", title: "Дата прекращения доли:", template:"#= kendo.toString(kendo.parseDate(new Date(data.date_in)), 'dd-MM-yyyy') #"},
-                {field: "date_out", title: "Дата прекращения доли:", template:"#= kendo.toString(kendo.parseDate(new Date(data.date_out)), 'dd-MM-yyyy') #"}
+
+                {field: "date_in", title: "Дата прекращения доли:", template:"#= data.date_in!=null?kendo.toString(kendo.parseDate(new Date(data.date_in)), 'dd-MM-yyyy'):'' #"},
+
+                {field: "date_out", title: "Дата прекращения доли:", template:"#= data.date_out!=null?kendo.toString(kendo.parseDate(new Date(data.date_out)), 'dd-MM-yyyy'):'' #"}
+
             ]
+
         };
     };
 
@@ -71,7 +86,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.end_date = '';
 
-    $scope.tabNum = 1 ;
+    $scope.tabNum = 1;
 
     $scope.tabClasses = ["","","","",""];
 
@@ -81,7 +96,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.sel_buffer = [];   ///// данные буфера
 
-    $scope.checked=[];
+    $scope.edit_right = {};
+
+    $scope.checked=Create2DArray(5);
 
     $scope.var = {
 
@@ -220,9 +237,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.var.rightsDataSearch = [];
 
-        $scope.sel_buffer = [];
+        //$scope.sel_buffer = [];
 
-        $scope.checked=[];
+        $scope.checked[$scope.tabNum]=[];
 
         var pos =  $scope.sbj_class.indexOf("active");
 
@@ -278,7 +295,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     /////////////////////////////// Filter operation block /////////////////////////////////////////////////////////////
 
-
     $scope.transformRight = function(){
 
         var myMap = new Map();
@@ -316,7 +332,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         return Array.from(myMap.values()) ;
 
     };
-
 
     /////////////////////////////// Filter operation block /////////////////////////////////////////////////////////////
 
@@ -467,7 +482,118 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
-    ///////////////////////////// Service part //////////////////////////////////////////////////////////////
+    ///////////////////////////// Bufer operation //////////////////////////////////////////////////////////////
+
+    $scope.BufferChange = function(rec, e){
+
+        var element = $(e.currentTarget);
+
+        row = element.closest("tr");
+
+        if ($scope.tabNum == 1) {
+
+            if ($scope.checked[$scope.tabNum][rec.right_id]) {
+
+                $scope.sel_buffer.push($scope.var.rightsDataTrnsform.find(function (value) {
+                    return value.right_id == this.curType;
+                }, {curType: rec.right_id}));
+
+                row.addClass("k-state-selected");
+
+            } else {
+
+                var item = $scope.var.rightsDataTrnsform.find(function (value) {
+                    return value.right_id == this.curType;
+                }, {curType: rec.right_id});
+
+                var idx = $scope.sel_buffer.indexOf(item);
+
+                $scope.sel_buffer.splice(idx, 1);
+
+                row.removeClass("k-state-selected");
+
+            }
+        }
+
+        if ($scope.tabNum == 2) {
+
+            if ($scope.checked[$scope.tabNum][rec.right_id]) {
+
+                $scope.edit_right = $scope.sel_buffer.find(function (value) { return value.right_id == this.curType;}, {curType: rec.right_id});
+            }
+
+                    for (var i = 0; i < $scope.bufwindow.kg.dataSource.data().length; i++) {
+
+                        var ditem = $scope.bufwindow.kg.dataSource.at(i);
+
+                        if (ditem !== rec) {
+
+                            ditem.set('bufer', false);
+                          }
+                     }
+
+
+             }
+
+
+
+    };
+
+    $scope.LoadBufer = function(){
+
+        $scope.mainGridOptions.columns[0].title = "Редактировать";
+
+        $scope.mainGridOptions.dataSource.data = $scope.sel_buffer;
+
+        $scope.DlgOptions.title = "Buffer Obj";
+
+        $scope.bufwindow.setOptions($scope.DlgOptions);
+
+        $scope.bufwindow.center();
+
+        var modInst =  $scope.bufwindow.open();
+
+
+
+
+    };
+
+    $scope.bufClose = function(){
+
+        $scope.mainGridOptions.columns[0].title = "Буфер";
+    }
+    ///////////////////////////// Modal Window part ///////////////////////////////////////////////////////////
+
+    $scope.detailModal = function(right, index_arg){
+
+        var trans_value = {};
+
+        $scope.fillDictName(right);
+
+        right["curownidx"]=index_arg;
+
+        $scope.var.rightDetail = right;
+
+        if (right.bindedObj.address === undefined)
+        {
+            $scope.getAddress(right.bindedObj, $scope.dispalyModal('#rgtModal'));
+
+        } else
+        {
+            $scope.dispalyModal('#rgtModal');
+        }
+
+    };
+
+    $scope.dispalyModal = function(modid) {
+
+        var myElement = angular.element(document.querySelector(modid));
+
+        myElement.modal("show");
+
+    };
+
+    ///////////////////////////// Service part /////////////////////////////////////////////////////////////////
 
     $scope.getTabClass = function (tabN) {
 
@@ -487,30 +613,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.tabNum = tabN;
 
+        $scope.mainGridOptions.curTabNum=tabN;
+
         tabClasses[tabN] = "active";
-
-    };
-
-    $scope.nullIfundefine = function(obj){
-
-        return obj === undefined ? '' : obj;
-
-    };
-
-    $scope.BufferChange = function(rec){
-
-        if($scope.checked[rec.right_id]){
-
-            $scope.sel_buffer.push(rec);
-
-
-        } else {
-
-            var idx = $scope.sel_buffer.indexOf(rec);
-
-            $scope.sel_buffer.splice(idx,1);
-
-        }
 
     };
 
@@ -524,37 +629,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     }
 
-    $scope.detailModal = function(right, index_arg){
-
-            var trans_value = {};
-
-            $scope.fillDictName(right);
-
-            right["curownidx"]=index_arg;
-
-            $scope.var.rightDetail = right;
-
-            if (right.bindedObj.address === undefined)
-            {
-                $scope.getAddress(right.bindedObj, $scope.dispalyModal('#rgtModal'));
-
-            } else
-            {
-                $scope.dispalyModal('#rgtModal');
-            }
-
-
-
-    };
-
-    $scope.dispalyModal = function(modid) {
-
-        var myElement = angular.element(document.querySelector(modid));
-
-        myElement.modal("show");
-
-    };
-
     $scope.filterType = function(value){
 
         return this.curType.some(function(parValue){ return parValue.parentAnalyticCode == this.curType;} , {curType:value.code_id});
@@ -567,8 +641,23 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
+    $scope.nullIfundefine = function(obj){
 
-    $scope.setActiveTab(1);
+        return obj === undefined ? '' : obj;
+
+    };
+
+
+
+    function Create2DArray(rows) {
+        var arr = [];
+
+        for (var i=0;i<rows;i++) {
+            arr[i] = [];
+        }
+
+        return arr;
+    }
 
     function initTabs() {
 
@@ -576,6 +665,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     }
 
+    $scope.setActiveTab(1);
 
 });
 

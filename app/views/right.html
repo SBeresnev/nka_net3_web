@@ -26,6 +26,8 @@
 
         <div id="search" ng-class="getTabPaneClass(1)" >
 
+            <!--***************************************************************************************************************************************************-->
+
             <div class = "page-header " >
 
                 <div class="btn-group" ng-init="obj_class='btn  btn-default '; sbj_class='btn active btn-danger '">
@@ -45,69 +47,52 @@
 
             </div>
 
+            <kendo-grid class="table table-bordered vert-offset-top-2" ng-hide="rightsDataSearchTabHide" options="mainGridOptions" k-rebind="mainGridOptions.dataSource.data">
+
+                <div k-detail-template>
+
+                    <kendo-tabstrip>
+
+                        <ul>
+                            <li class="k-state-active">Правообладатели</li>
+
+                            <li>Объект (детализация)</li>
+                        </ul>
+
+
+                        <div>
+                            <div kendo-grid k-options="detailOwnersOptions(dataItem)"></div>
+                        </div>
+
+                        <div>
+
+                            <table class="table table-bordered" >
+
+                                <tr><td style="color:navy">Имя объекта:</td><td><b>{{dataItem.bindedObj.object_name}}</b></td></tr>
+                                <tr><td style="color:navy">Адрес объекта:</td><td><b>{{dataItem.bindedObj.address}}</b></td></tr>
+                                <tr><td style="color:navy">Тип объекта:</td><td><b>{{dataItem.bindedObj.objectType.code_name}}</b></td></tr>
+                                <tr><td style="color:navy">Инвентарный номер:</td><td><b>{{dataItem.bindedObj.inventory_number}}</b></td></tr>
+                                <tr><td style="color:navy">Кадастровый номер:</td><td><b>{{dataItem.bindedObj.cadastre_number}}</b></td></tr>
+
+                            </table>
+
+                        </div>
+
+                    </kendo-tabstrip>
+
+                </div>
+
+            </kendo-grid>
+
             <!--***************************************************************************************************************************************************-->
 
-            <table class="table table-bordered vert-offset-top-2" ng-hide="rightsDataSearchTabHide">
-
-                <tr>
-
-                    <th>Номер</th>
-
-                    <th>ID</th>
-
-                    <th>Объект <br>(название)</br></th>
-
-                    <th>Объект (кадастровый/<br>инвентарный номер)</br></th>
-
-                    <th>Объект <br>(тип)</br></th>
-
-                    <th>Правообладатель</th>
-
-                    <th><nobr>Доля в праве</nobr></th>
-
-                    <th><nobr>Дата возникновения права</nobr></th>
-
-                    <th><span class="btn" style="background-color:beige" disabled><b style="color:black">Буфер</b></span></th>
-
-                </tr>
-
-                <tr ng-style="checked[Tright.right_id]&&{'background-color': 'beige'}" ng-repeat-start="Tright in var.rightsDataTrnsform" >
-
-                    <td rowspan="{{Tright.rightOwners.length}}" >{{$index +1}}</td>
-
-                    <td rowspan="{{Tright.rightOwners.length}}" width="fit-content">{{Tright.right_id}}</td>
-
-                    <td rowspan="{{Tright.rightOwners.length}}" width="fit-content">{{Tright.bindedObj.object_name}}</td>
-
-                    <td rowspan="{{Tright.rightOwners.length}}" width="fit-content">{{Tright.bindedObj.cadastre_number}}{{Tright.bindedObj.inventory_number}}</td>
-
-                    <td rowspan="{{Tright.rightOwners.length}}" width="fit-content">{{Tright.bindedObj.objectType.code_name}}</td>
-
-                    <td width="fit-content"><button style="background-color:inherit" class="astext" ng-click="detailModal(Tright,0)">{{Tright.rightOwners[0].owner.surname}}{{" "+Tright.rightOwners[0].owner.firstname}}{{" "+Tright.rightOwners[0].owner.fathername }}{{Tright.rightOwners[0].owner.fullname}}</button></td>
-
-                    <td width="fit-content">{{Tright.rightOwners[0].numerator_part}}{{Tright.rightOwners[0].denominator_part == 1 ?'':'/'+Tright.rightOwners[0].denominator_part}}</td>
-
-                    <td rowspan="{{Tright.rightOwners.length}}" width="fit-content"><span>{{Tright.begin_date | date:'yyyy-MM-dd'}}</span></td>
-
-                    <td rowspan="{{Tright.rightOwners.length}}" width="fit-content" > <input type="checkbox" class="inputtd" ng-click="BufferChange(Tright)" ng-model="checked[Tright.right_id]"></td>
-
-                </tr>
-
-                <tr ng-style="checked[Tright.right_id]&&{'background-color': 'beige'}"  ng-repeat-end ng-repeat="right_owner in Tright.rightOwners.slice(1)">
-
-                    <td  width="fit-content"><button style="background-color:inherit" class="astext" ng-click="detailModal(Tright,$index+1)">{{right_owner.owner.surname}}{{" "+right_owner.owner.firstname}}{{" "+right_owner.owner.fathername }}{{right_owner.owner.fullname}}</button></td>
-
-                    <td  width="fit-content">{{right_owner.numerator_part}}{{right_owner.denominator_part == 1 ?'':'/'+right_owner.denominator_part}}</td>
-
-                </tr>
-
-            </table>
 
         </div>
 
         <!-------------- Main block -------------------------------------------------->
 
-        <div id="main" ng-class="getTabPaneClass(2)" >
+        <div id="main" ng-class="getTabPaneClass(2)"  >
+
 
         <!------------- Bufer  -------------------------------------------------------->
 
@@ -131,7 +116,7 @@
 
                             <a href="" class="btn btn-success" role="button"><span class="glyphicon glyphicon-flash"></span> <br/>Создать</a>
                             <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-plus-sign"></span> <br/>Добавить долю</a>
-                            <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-circle-arrow-down"></span> <br/>Загрузить из буфера</a>
+                            <a href="" class="btn btn-warning" role="button" ng-click="LoadBufer()"><span class="glyphicon glyphicon-circle-arrow-down"></span> <br/>Загрузить из буфера</a>
                             <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-signal"></span> <br/>Изменить</a>
                             <a href="" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-remove-sign"></span> <br/>Очистить</a>
 
@@ -144,7 +129,6 @@
              </uib-accordion>
 
            </div>
-
 
             <!-------- Right  -------------------------------------------------------->
 
@@ -318,43 +302,6 @@
         <!------------------------ Details block ---------------------------------------->
 
         <div id="detail" ng-class="getTabPaneClass(3)">
-
-
-            <kendo-grid options="mainGridOptions" k-rebind="mainGridOptions.dataSource.data">
-
-                <div k-detail-template>
-
-                    <kendo-tabstrip>
-
-                        <ul>
-                            <li class="k-state-active">Owners details</li>
-
-                            <li>Object details</li>
-                        </ul>
-
-
-                        <div>
-                            <div kendo-grid k-options="detailOwnersOptions(dataItem)"></div>
-                        </div>
-
-                        <div>
-
-                            <table class="table table-bordered" >
-                                <tr><td style="color:navy">Имя объекта:</td><td><b>{{dataItem.bindedObj.object_name}}</b></td></tr>
-                                <tr><td style="color:navy">Адрес объекта:</td><td><b>{{dataItem.bindedObj.address}}</b></td>
-                                <tr><td style="color:navy">Тип объекта:</td><td><b>{{dataItem.bindedObj.objectType.code_name}}</b></td></tr>
-                                <tr><td style="color:navy">Инвентарный номер:</td><td><b>{{dataItem.bindedObj.inventory_number}}</b></td></tr>
-                                <tr><td style="color:navy">Кадастровый номер:</td><td><b>{{dataItem.bindedObj.cadastre_number}}</b></td></tr>
-                            </table>
-
-                        </div>
-
-                    </kendo-tabstrip>
-
-                </div>
-
-            </kendo-grid>
-
         </div>
 
         <!------------------------ Bargain block ---------------------------------------->
@@ -370,9 +317,14 @@
 
 <!--***********************************************modal block****************************************************************************************************-->
 
+
+
+
 <div ng-include="'views/modright.html'"></div>
 
 <div ng-include="'views/modrightoper.html'"></div>
+
+<div kendo-window="bufwindow" k-visible="false" k-modal="true" k-on-close="bufClose()" k-content="'views/rightbuffer.html'"> </div>
 
 <div kendo-window="sbjwindow" k-visible="false" k-modal="true" k-on-close="csubSearch()" k-content="{url: '{{urlmodSbj}}'}"> </div>
 
