@@ -89,18 +89,17 @@
 
         </div>
 
-        <!-------------- Main block -------------------------------------------------->
+           <!-------------- Main block -------------------------------------------------->
 
-        <div id="main" ng-class="getTabPaneClass(2)"  >
+           <div id="main" ng-class="getTabPaneClass(2)"  >
 
+              <!------------- Bufer  ------------->
 
-        <!------------- Bufer  -------------------------------------------------------->
+               <div class = "col-lg-12 vert-offset-top-2">
 
-           <div class = "col-lg-12 vert-offset-top-2">
+                 <uib-accordion ng-init="pnl_opn=true">
 
-             <uib-accordion ng-init="pnl_opn=true">
-
-                <uib-accordion-group is-open="pnl_opn" panel-class="panel panel-dafault">
+                  <uib-accordion-group is-open="pnl_opn" panel-class="panel panel-dafault">
 
                     <uib-accordion-heading>
 
@@ -112,17 +111,62 @@
 
                         <div class="col-lg-3"></div>
 
-                        <div class="well col-lg-7">
+                        <div class="well col-lg-6">
 
                             <a href="" class="btn btn-success" role="button"><span class="glyphicon glyphicon-flash"></span> <br/>Создать</a>
                             <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-plus-sign"></span> <br/>Добавить долю</a>
-                            <a href="" class="btn btn-warning" role="button" ng-click="LoadBufer()"><span class="glyphicon glyphicon-circle-arrow-down"></span> <br/>Загрузить из буфера</a>
                             <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-signal"></span> <br/>Изменить</a>
+                            <a href="" class="btn btn-warning" role="button" ng-click="LoadBufer()"><span class="glyphicon glyphicon-circle-arrow-down"></span> <br/>Буфер</a>
                             <a href="" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-remove-sign"></span> <br/>Очистить</a>
 
                         </div>
 
-                      </div>
+
+                      <table class="table table-bordered table-hover vert-offset-top-2" >
+
+                        <thead>
+
+                          <tr style="background-color:#f9f9f9">
+
+                             <th>ID</th>
+
+                             <th>Вид права</th>
+
+                             <th>Имя объекта</th>
+
+                             <th>Тип объекта</th>
+
+                             <th>Имя/название правообладателя</th>
+
+                             <th>Доля в праве</th>
+
+                          </tr>
+
+                        <thead>
+
+                        <tbody>
+
+                          <tr  ng-repeat="item in edit_right.rightOwners" >
+
+                              <td  width="fit-content">{{edit_right.right_id}}</td>
+
+                              <td  width="fit-content">{{edit_right.right_type_name}}</td>
+
+                              <td  width="fit-content">{{edit_right.bindedObj.object_name}}</td>
+
+                              <td  width="fit-content">{{edit_right.bindedObj.objectType.code_name}}</td>
+
+                              <td  width="fit-content">{{item.owner.surname}}{{" "+item.owner.firstname}}{{" "+item.owner.fathername }}{{item.owner.fullname}}</td>
+
+                              <td  width="fit-content">{{item.numerator_part}}{{item.denominator_part == 1 ?'':'/'+item.denominator_part}}</td>
+
+                          </tr>
+
+                         </tbody>
+
+                       </table>
+
+                    </div>
 
                 </uib-accordion-group>
 
@@ -130,9 +174,9 @@
 
            </div>
 
-            <!-------- Right  -------------------------------------------------------->
+              <!------------ Right  -------------->
 
-            <div class = "col-lg-6">
+               <div class = "col-lg-6">
 
                 <div class="panel panel-info vert-offset-top-2">
 
@@ -216,9 +260,9 @@
 
             </div>
 
-            <!--------- RightOwner ---------------------------------------------------->
+              <!--------- RightOwner -------------->
 
-            <div class = "col-lg-6">
+               <div class = "col-lg-6">
 
                 <div class="panel panel-warning vert-offset-top-2">
 
@@ -301,8 +345,7 @@
 
         <!------------------------ Details block ---------------------------------------->
 
-        <div id="detail" ng-class="getTabPaneClass(3)">
-        </div>
+        <div id="detail" ng-class="getTabPaneClass(3)"> </div>
 
         <!------------------------ Bargain block ---------------------------------------->
 
@@ -324,7 +367,7 @@
 
 <div ng-include="'views/modrightoper.html'"></div>
 
-<div kendo-window="bufwindow" k-visible="false" k-modal="true" k-on-close="bufClose()" k-content="'views/rightbuffer.html'"> </div>
+<div kendo-window="bufwindow" k-visible="false" k-modal="true" k-on-close="CloseBuffer()" k-content="'views/rightbuffer.html'"> </div>
 
 <div kendo-window="sbjwindow" k-visible="false" k-modal="true" k-on-close="csubSearch()" k-content="{url: '{{urlmodSbj}}'}"> </div>
 

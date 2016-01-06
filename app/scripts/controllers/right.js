@@ -37,17 +37,16 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         {field: "bindedObj.object_name", title: "Имя объекта"} ,
 
-        {title: "Тип объекта:", template: "#= bindedObj.objectType.code_name #" }
+        {title: "Тип объекта:", template: "#= bindedObj.objectType.code_name #" },
+
+        {title: "&nbsp", template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="OnDeleteClick(dataItem)">Delete</span>'}
 
         ]
     };
 
-    $scope.detailOwnersOptions = function(dataItem) {
-        return {
+    $scope.detailOwnersOptions = function(dataItem) { return {
 
-            dataSource: {
-                data: dataItem === undefined ? null : dataItem.rightOwners
-            },
+            dataSource: { data: dataItem === undefined ? null : dataItem.rightOwners },
 
             scrollable: false,
 
@@ -57,24 +56,23 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             columns: [
 
-                {title:"Имя/название правообладателя:", template: "#= data.owner.fullname === undefined?data.owner.surname+' '+data.owner.firstname+' '+data.owner.fathername:data.owner.fullname#" },
+                {title:"Имя/название правообладателя", template: "#= data.owner.fullname === undefined?data.owner.surname+' '+data.owner.firstname+' '+data.owner.fathername:data.owner.fullname#" },
 
-                {field:"owner.address", title:"Адресс правообладателя:" },
+                {field:"owner.address", title:"Адресс правообладателя" },
 
-                {title:"Тип субъекта:", template: "#= data.owner.dtype=='private'?'физ. лицо':'юр. лицо'#" },
+                {title:"Тип субъекта", template: "#= data.owner.dtype=='private'?'физ. лицо':'юр. лицо'#" },
 
-                {title:"Доля в праве:", template: "#= data.numerator_part+''+(data.denominator_part == 1 ?'':'/'+data.denominator_part) #" },
+                {title:"Доля в праве", template: "#= data.numerator_part+''+(data.denominator_part == 1 ?'':'/'+data.denominator_part) #" },
 
-                {field: "date_in", title: "Дата прекращения доли:", template:"#= data.date_in!=null?kendo.toString(kendo.parseDate(new Date(data.date_in)), 'dd-MM-yyyy'):'' #"},
+                {field: "date_in", title: "Дата прекращения доли", template:"#= data.date_in!=null?kendo.toString(kendo.parseDate(new Date(data.date_in)), 'dd-MM-yyyy'):'' #"},
 
-                {field: "date_out", title: "Дата прекращения доли:", template:"#= data.date_out!=null?kendo.toString(kendo.parseDate(new Date(data.date_out)), 'dd-MM-yyyy'):'' #"}
+                {field: "date_out", title: "Дата прекращения доли", template:"#= data.date_out!=null?kendo.toString(kendo.parseDate(new Date(data.date_out)), 'dd-MM-yyyy'):'' #"}
 
             ]
 
-        };
-    };
+        }; };
 
-    ////////////////////////////common window///////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////common window///////////////////////////////////////////////////////////////////////////
 
     $scope.urlmodSbj = WEBDOM + '//#/subject/true';
 
@@ -138,7 +136,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.rightsDataSearchTabHide = true;
 
-
         $scope.var.url = DOMAIN + "/nka_net3/catalog/rightCountType";
 
         $http.get($scope.var.url).then(function (res) {
@@ -166,9 +163,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
             $scope.var.loading = false;
 
         });
-
-
-
 
     };
 
@@ -259,9 +253,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             $scope.var.rightsDataTrnsform = $scope.transformRight();
 
+            $scope.var.rightsDataTrnsform.forEach(function(value) {$scope.fillDictName(value); $scope.getAddress(value.bindedObj);});
+
             $scope.mainGridOptions.dataSource.data = $scope.var.rightsDataTrnsform;
 
-            $scope.mainGridOptions.dataSource.data.forEach(function(value) {$scope.fillDictName(value); $scope.getAddress(value.bindedObj);});
+            //$scope.mainGridOptions.dataSource.data.forEach(function(value) {$scope.fillDictName(value); $scope.getAddress(value.bindedObj);});
 
             $scope.sel_subject[$scope.tabNum] = $scope.var.rightsDataSearch[0].owner; // потом удалить
 
@@ -484,6 +480,17 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     ///////////////////////////// Bufer operation //////////////////////////////////////////////////////////////
 
+    $scope.OnDeleteClick = function(rec){
+
+        $scope.checked[$scope.tabNum][rec.right_id] = false;
+        $scope.checked[$scope.tabNum-1][rec.right_id] = false;
+
+        var idx = $scope.sel_buffer.indexOf(rec);
+
+        $scope.sel_buffer.splice(idx, 1);
+
+    }
+
     $scope.BufferChange = function(rec, e){
 
         var element = $(e.currentTarget);
@@ -491,6 +498,16 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         row = element.closest("tr");
 
         if ($scope.tabNum == 1) {
+
+            $scope.checked[$scope.tabNum+1][rec.right_id] = false;
+
+            var item = $scope.var.rightsDataTrnsform.find(function (value) {
+                return value.right_id == this.curType;
+            }, {curType: rec.right_id});
+
+            var idx = $scope.sel_buffer.indexOf(item);
+
+            $scope.sel_buffer.splice(idx, 1);
 
             if ($scope.checked[$scope.tabNum][rec.right_id]) {
 
@@ -501,14 +518,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
                 row.addClass("k-state-selected");
 
             } else {
-
-                var item = $scope.var.rightsDataTrnsform.find(function (value) {
-                    return value.right_id == this.curType;
-                }, {curType: rec.right_id});
-
-                var idx = $scope.sel_buffer.indexOf(item);
-
-                $scope.sel_buffer.splice(idx, 1);
 
                 row.removeClass("k-state-selected");
 
@@ -522,26 +531,17 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
                 $scope.edit_right = $scope.sel_buffer.find(function (value) { return value.right_id == this.curType;}, {curType: rec.right_id});
             }
 
-                    for (var i = 0; i < $scope.bufwindow.kg.dataSource.data().length; i++) {
+            for (var item in $scope.checked[$scope.tabNum]  ) {
 
-                        var ditem = $scope.bufwindow.kg.dataSource.at(i);
+               if (item != rec.right_id) { $scope.checked[$scope.tabNum][item] = false;}
 
-                        if (ditem !== rec) {
+                }
 
-                            ditem.set('bufer', false);
-                          }
-                     }
-
-
-             }
-
-
+        }
 
     };
 
     $scope.LoadBufer = function(){
-
-        $scope.mainGridOptions.columns[0].title = "Редактировать";
 
         $scope.mainGridOptions.dataSource.data = $scope.sel_buffer;
 
@@ -553,15 +553,16 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         var modInst =  $scope.bufwindow.open();
 
+    };
 
+    $scope.CloseBuffer = function(){
 
+        $scope.mainGridOptions.dataSource.data = $scope.var.rightsDataTrnsform;
+
+        $scope.edit_right
 
     };
 
-    $scope.bufClose = function(){
-
-        $scope.mainGridOptions.columns[0].title = "Буфер";
-    }
     ///////////////////////////// Modal Window part ///////////////////////////////////////////////////////////
 
     $scope.detailModal = function(right, index_arg){

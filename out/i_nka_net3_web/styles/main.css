@@ -1,0 +1,104 @@
+.wait *
+{
+  cursor:wait
+}
+
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+}
+
+.footer {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.header {
+  border-bottom: 1px solid #e5e5e5;
+}
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 40px;
+  padding-bottom: 19px;
+}
+
+/* Custom page footer */
+.footer {
+  margin-top: 70px;
+  padding-top: 19px;
+  color: #777;
+  border-top: 1px solid #e5e5e5;
+  background-color: lightslategrey;
+}
+
+/* Customize container */
+.jumbotron {
+  text-align: center;
+  border-bottom: 1px solid #e5e5e5;
+}
+.jumbotron .btn {
+  font-size: 21px;
+  padding: 14px 24px;
+}
+
+.distance-top{
+  margin-top: 40px;
+  height: 50px;
+}
+
+.width310{
+  width: 310px !important;
+}
+
+.mySelect{
+  margin-left: 15px !important;
+  border-radius: 4px !important;
+}
+
+.margin-top{
+  margin-top: 10px;
+}
+
+.white-background{
+  background-color: #ffffff;
+}
+
+.center_b {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+}
+
+.cursor-pointer{
+  cursor: pointer;
+}
+
+button.btn.active.btn-danger {
+  background-color: #d9534f;
+}
+
+.right-span-addon{
+  background-color: rgba(0, 0, 0, 0.36);
+}
+
+.window{
+  z-index: 1000;
+  position: absolute;
+  margin: 40px;
+}
+
+.inputtd
+{
+  width: 100%;
+  padding: 10px;
+  margin: 0px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  border: 1px solid #ffffff;
+}
+
+

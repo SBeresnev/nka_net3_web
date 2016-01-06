@@ -1,0 +1,30 @@
+.k-treeview .k-in {
+    color: #000000;
+    background-color: #ffffff;
+}
+
+.k-treeview .k-in .k-selected {
+    color: #000000;
+    background-color: #ff4324;
+}
+
+#k-my-spn {
+    width:555px;
+    margin-left: 15px;
+}
+
+#k-my-spn  * {
+    height:34px;
+    color:#555;
+}
+
+
+.k-treeview .k-in {
+    padding: 5px;
+}
+
+.k-input-cust {
+    background-color: #ffffff;
+    color: #5f2200;
+}
+

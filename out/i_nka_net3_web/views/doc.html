@@ -1,0 +1,54 @@
+<div class="padding-top">
+    <div class="row">
+        <div class="col-lg-offset-1 col-lg-10">
+            <h1 class="col-lg-offset-5 col-lg-4">
+                Документ
+            </h1>
+        </div>
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="form-group">
+                <label>Номер документа</label>
+                <input class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Описание организации</label>
+                <input class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Дата</label>
+                <input class="form-control width150" type="date">
+            </div>
+            <div class="form-group">
+                 <span class="input-group-btn">
+                      <label>Тип документа</label>
+                      <select ng-model="typeDoc"
+                            ng-options="doctype as doctype.name for doctype in var.doctypes"
+                            class="form-control"
+                            required="required">
+                      </select>
+                 </span>
+            </div>
+            <div class="form-group panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        Операции заказа
+                    </h4>
+                </div>
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Заказ</th>
+                        <th>Дата</th>
+                        <th>Вид</th>
+                        <th>Основание</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

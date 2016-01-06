@@ -1,0 +1,182 @@
+<div class="page-header row" ng-init="init()">
+
+    <h2 class = "col-md-2 col-md-offset-5 text-muted"> ПРАВА </h2>
+
+</div>
+
+<div class="container tabbable " ng-init>
+
+    <ul class="nav nav-tabs">
+
+        <li ng-class="getTabClass(1)" ng-click="setActiveTab(1)"> <a ui-sref="main" href="" data-toggle="tab">Поиск</a></li>
+
+        <li ng-class="getTabClass(2)" ng-click="setActiveTab(2)" > <a ui-sref="search" href="" data-toggle="tab">Главная</a> </li>
+
+        <li ng-class="getTabClass(3)" ng-click="setActiveTab(3)"> <a ui-sref="collateral" href=""  data-toggle="tab">Детализация</a></li>
+
+        <li ng-class="getTabClass(4)" ng-click="setActiveTab(4)"> <a ui-sref="rating" href="" data-toggle="tab">Сделки</a></li>
+
+    </ul>
+
+    <div class="tab-content">
+
+        <!------------------------ Search block ------------------------------------->
+
+        <div ng-class="getTabPaneClass(1)" id="search">
+
+            <div class = "page-header " >
+
+                <div class="btn-group" ng-init="obj_class='btn  btn-default '; sbj_class='btn active btn-danger '">
+
+                    <button type="btn-lg" ng-class="obj_class" ng-click="pr_class = obj_class; obj_class = sbj_class; sbj_class = pr_class">По объекту</button>
+                    <button type="btn-lg" ng-class="sbj_class" ng-click="pr_class = obj_class; obj_class = sbj_class; sbj_class = pr_class">По субъекту</button>
+
+                </div>
+
+            </div>
+
+            <div class="input-group input-group-lg">
+
+                <input type="text" class="form-control"  placeholder="Поиск прав" ng-init="sel_subject = ''" ng-model="sel_subject.fullname" disabled />
+                <span class="input-group-addon right-span-addon" ><span class="glyphicon glyphicon-zoom-in" ng-click="oSearch()"></span></span>
+                <span class="input-group-addon btn" style="background-color:transparent" ng-click = "rightSearch()"> Поиск </span>
+
+            </div>
+
+            <!--***************************************************************************************************************************************************-->
+
+            <table class="table table-bordered vert-offset-top-2"  ng-hide="rightsDataSearchTabHide">
+
+                <tr>
+
+                    <th>Номер</th>
+
+                    <th>ID</th>
+
+                    <th>Правообладатель</th>
+
+                    <th>Объект (кадастровый/<br>инвентарный номер)</br></th>
+
+                    <th>Объект <br>(тип)</br></th>
+
+                    <th>Объект <br>(название)</br></th>
+
+                    <th><nobr>Доля в праве</nobr></th>
+
+                    <th><nobr>Дата возникновения доли</nobr></th>
+
+                    <th><span class="btn" style="background-color:beige" disabled><b style="color:black">Буфер</b></span></th>
+
+                </tr>
+
+
+                <tr ng-style="checked[$index]&&{'background-color': 'beige'}" ng-click="detailModal(right_owner,$event)" ng-repeat="right_owner in var.rightsDataSearch" class="btn-default">
+
+                    <td >{{$index +1}}</td>
+
+                    <td width="fit-content">{{right_owner.right_owner_id}}</td>
+
+                    <td width="fit-content">{{right_owner.owner.surname}}{{" "+right_owner.owner.firstname}}{{" "+right_owner.owner.fathername }}{{right_owner.owner.fullname}}</td>
+
+                    <td width="fit-content">{{right_owner.right.bindedObj.cadastre_number}}{{right_owner.right.bindedObj.inventory_number}}</td>
+
+                    <td width="fit-content">{{right_owner.right.bindedObj.objectType.code_name}}</td>
+
+                    <td width="fit-content">{{right_owner.right.bindedObj.object_name}}</td>
+
+                    <td width="fit-content">{{right_owner.numerator_part}}{{right_owner.denominator_part == 1 ?'':'/'+right_owner.denominator_part}}</td>
+
+                    <td width="fit-content"><span>{{right_owner.date_in | date:'yyyy-MM-dd'}}</span></td>
+
+                    <td width="fit-content" > <input type="checkbox" class="inputtd" ng-click="BufferChange(right_owner,$index)" ng-model="checked[$index]"></td>
+
+
+                </tr>
+
+            </table>
+
+
+        </div>
+
+        <!------------------------ Main block ---------------------------------------->
+
+        <div id="main" ng-class="getTabPaneClass(2)">
+
+            <div class="row">
+
+                <!-------- Right --------------->
+                <div class = "col-lg-5">
+
+                    <div class="panel panel-info vert-offset-top-2">
+
+                        <div class="panel-heading"> Право </div>
+
+                        <div class="panel-body">
+
+                            <div class="form-group">
+
+                                <label class="control-label">Объект операции (сущность)</label>
+
+                                <select class="form-control" data-live-search="true" ng-change="setEntityType()"  ng-model="dict.curentTyp" ng-options="type.code_name group by type.v_prm1 for type in dict.rightEntityTypes | pick:'v_prm1==\'Объект\'|| v_prm1==\'Право\''" required="required"></select>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label class="control-label">Тип права по числу правообладателей:</label>
+
+                                <select class="form-control" data-live-search="true"  ng-change="setCountType()"  ng-model="dict.currgtCountTyp" ng-options="subtype.code_short_name for subtype in dict.rightCountTypes | orderBy: ['code_short_name'] track by subtype.code_id" required="required"></select>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label class="control-label">Вид права:</label>
+
+                                <select class="form-control" data-live-search="true"   ng-model="dict.currgtTyp" ng-options="rgttype.code_short_name for rgttype in dict.filterRightTypes | orderBy: ['code_short_name'] track by rgttype.code_id" required="required"></select>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+        <!------------------------ Details block ---------------------------------------->
+
+        <div ng-class="getTabPaneClass(3)" id="detail">Детализация</div>
+
+        <!------------------------ Bargain block ---------------------------------------->
+
+        <div ng-class="getTabPaneClass(4)" id="bargain">Сделки</div>
+
+    </div>
+
+</div>
+
+
+<!--***********************************************modal block****************************************************************************************************-->
+
+<div ng-include="'views/modright.html'"></div>
+
+<div ng-include="'views/modrigtoper.html'"></div>
+
+<div kendo-window="sbjwindow" k-visible="false" k-modal="true" k-on-close="csubSearch()" k-content="{url: '{{urlmodSbj}}'}"> </div>
+
+<div kendo-window="objwindow" k-visible="false" k-modal="true" k-on-close="cobjSearch()" k-content="{url: '{{urlmodObj}}'}"> </div>
+
+<div class="modal fade in" ng-init="var.loading = true" ng-style="{true: {display: 'block'}, false: {display: 'none'}}[var.loading ]">
+    <div class="center_b">
+        <img src="./images/image_836733.gif" alt=""/>
+    </div>
+</div>
+
+<!--************************************************************************************************************************************************************-->
+
+
