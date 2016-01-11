@@ -519,6 +519,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             } else {
 
+                 if ($scope.edit_right.right_id == rec.right_id )  {$scope.edit_right = {};}
+
                 row.removeClass("k-state-selected");
 
             }
