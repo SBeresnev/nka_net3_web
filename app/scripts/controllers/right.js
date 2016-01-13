@@ -21,7 +21,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         columns: [
 
-        {field: "bufer", title: "Буфер/<br>Редактор", template: '<input type="checkbox" class="inputtd" ng-click="BufferChange(dataItem, $event)" ng-model="checked[mainGridOptions.curTabNum][dataItem.right_id]">'},
+        {field: "bufer", title: "Буфер/Редактировать", template: '<input type="checkbox"  class="inputtd" ng-click="BufferChange(dataItem, $event)" ng-model="checked[mainGridOptions.curTabNum][dataItem.right_id]">'},
 
         {field: "right_id", title: "ID", width:'60px'},
 
@@ -40,6 +40,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         {title: "Тип объекта:", template: "#= bindedObj.objectType.code_name #" },
 
         {title: "&nbsp", template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="OnDeleteClick(dataItem)">Delete</span>'}
+
 
         ]
     };
@@ -80,7 +81,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.DlgOptions = {width: "1300px", height: "500px", modal: true, actions: [ "Minimize", "Maximize", "Close"], iframe: true, visible: false };
 
-    $scope.start_date = new Date();
+    $scope.begin_date = new Date();
 
     $scope.end_date = '';
 
@@ -90,7 +91,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.sel_subject = [];  ///// субъект поиска
 
-    $scope.sel_oject = [];    ///// объект поиска
+    $scope.sel_object = [];    ///// объект поиска
 
     $scope.sel_buffer = [];   ///// данные буфера
 
@@ -237,9 +238,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         var pos =  $scope.sbj_class.indexOf("active");
 
-        pos == -1 ? $scope.sel_subject[$scope.tabNum] = {} : $scope.sel_oject[$scope.tabNum] = {};
+        pos == -1 ? $scope.sel_subject[$scope.tabNum] = {} : $scope.sel_object[$scope.tabNum] = {};
 
-        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.nullIfundefine($scope.sel_oject[$scope.tabNum].obj_id) + "&person_id=" +  $scope.nullIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
+        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.nullIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" +  $scope.nullIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
 
         $scope.urlSearch = "http://localhost:8080/nka_net3/right/getRightObjectPerson?obj_ids=&person_id=2942"; // потом удалить
 
@@ -249,7 +250,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
             $scope.var.rightsDataSearch = res;
 
             $scope.rightsDataSearchTabHide=false;
-
 
             $scope.var.rightsDataTrnsform = $scope.transformRight();
 
@@ -331,38 +331,38 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     /////////////////////////////// Filter operation block /////////////////////////////////////////////////////////////
 
-    $scope.setEntityType = function() {
+    $scope.setRightType =  function(){
 
-        var subType = {};
-
-        $scope.var.url = DOMAIN + "/nka_net3/catalog/childCodeAndType?id=" + this.nullIfundefine(this.dict.curentTyp.code_id)+ "&childType=" + this.nullIfundefine(this.dict.curentTyp.analytic_type) +"&parentType=" + this.nullIfundefine(this.dict.rightTypes[0].analytic_type);
+        $scope.var.url = DOMAIN + "/nka_net3/catalog/get_analytic_depended_item?id=" + this.nullIfundefine($scope.dict.currgtTyp.code_id)+ "&type=1" + "&parentType="+this.nullIfundefine($scope.dict.currgtTyp.analytic_type);
 
         $http.get($scope.var.url).then(function (res) {
 
+            var subType = {};
+
             subType = res.data;
 
-            $scope.dict.filterRightTypes = $scope.dict.rightTypes.filter($scope.filterType,{curType:subType});
+            $scope.dict.rightFilterEntityTypes = $scope.dict.rightEntityTypes.filter($scope.filterCodeType,{curType:subType});
+
+            $scope.dict.curentTyp = $scope.dict.rightFilterEntityTypes.find($scope.initType ,{curType:$scope.edit_right.right_entity_type});
 
         });
 
-    };
-
-    $scope.setCountType = function(){
-
-        var subType = {};
-
-        $scope.var.url = DOMAIN + "/nka_net3/catalog/childCodeAndType?id=" + this.nullIfundefine(this.dict.currgtCountTyp.code_id)+ "&childType=" + this.nullIfundefine(this.dict.currgtCountTyp.analytic_type) +"&parentType=" + this.nullIfundefine(this.dict.rightTypes[0].analytic_type);
+        $scope.var.url = DOMAIN + "/nka_net3/catalog/get_analytic_depended_item?id=" + this.nullIfundefine($scope.dict.currgtTyp.code_id)+ "&type=21" +"&parentType="+ this.nullIfundefine($scope.dict.currgtTyp.analytic_type);
 
         $http.get($scope.var.url).then(function (res) {
 
+            var subType = {};
+
             subType = res.data;
 
-            $scope.dict.filterRightTypes = $scope.dict.filterRightTypes.filter($scope.filterType,{curType:subType});
+            $scope.dict.rightFilterCountTypes = $scope.dict.rightCountTypes.filter($scope.filterCodeType,{curType:subType});
+
+            $scope.dict.currgtCountTyp = $scope.dict.rightFilterCountTypes.find($scope.initType ,{curType:$scope.edit_right.right_count_type});
 
         });
 
 
-    };
+    }
 
     $scope.setOperFiletr = function() {
 
@@ -459,7 +459,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         var sel_object_test = JSON.parse(sessionStorage.getItem("objObj"));
 
-         $scope.sel_object[$scope.tabNum] = sel_object_test;
+        if (this.nullIfundefine(sel_object_test) == null) { $scope.sel_object[$scope.tabNum] = sel_object_test; }
+
+        /////////////////// for first only ////////////////////////////////////////////////////////////////////////////
+
+        $scope.sel_param = $scope.sel_object[1].object_name + ';' + $scope.sel_object[1].address ;
 
     };
 
@@ -467,23 +471,57 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         var sel_subject_test = JSON.parse(sessionStorage.getItem("sbjObj"));
 
-        if (sel_subject_test.dtype == "private") {
-
-            sel_subject_test.fullname = sel_subject_test.surname + ' ' + sel_subject_test.firstname + ' ' + sel_subject_test.fathername
-
-        }
+        if (sel_subject_test.dtype == "private") { sel_subject_test.fullname = sel_subject_test.surname + ' ' + sel_subject_test.firstname + ' ' + sel_subject_test.fathername }
 
         $scope.sel_subject[$scope.tabNum] = sel_subject_test;
 
+        /////////////////// for first only////////////////////////////////////////////////////////////////////////////
+
+        $scope.sel_param = $scope.sel_subject[1].fullname ;
+
 
     };
+
+    $scope.OnEditPanelTable = function (index, item) {
+
+        $scope.selected = index;
+
+        $scope.dict.currgtTyp = $scope.dict.rightTypes.find(this.initType ,{curType:$scope.edit_right.right_type});
+
+        $scope.setRightType();
+
+        /////////////////////////////////////////////////////////////////////
+
+         $scope.edit_right.begin_date = new Date($scope.edit_right.begin_date);
+
+         $scope.edit_right.end_date =  this.nullIfundefine($scope.edit_right.end_date) == null? null: new Date($scope.edit_right.end_date);
+
+        //////////////////////////////////////////////////////////////////////
+
+        $scope.edit_right.rightOwners[index].date_in = new Date($scope.edit_right.rightOwners[index].date_in);
+
+        $scope.edit_right.rightOwners[index].date_out = this.nullIfundefine($scope.edit_right.rightOwners[index].date_out) == null? null: new Date($scope.edit_right.rightOwners[index].date_out);
+
+
+        $scope.sel_object[$scope.tabNum] = $scope.edit_right.bindedObj;
+
+        $scope.sel_object[$scope.tabNum].fullname = $scope.edit_right.bindedObj.object_name + '; '+$scope.edit_right.bindedObj.address;
+
+        $scope.sel_subject[$scope.tabNum] = $scope.edit_right.rightOwners[index].owner;
+
+        if ($scope.sel_subject[$scope.tabNum].dtype == "private") { $scope.sel_subject[$scope.tabNum].fullname = $scope.sel_subject[$scope.tabNum].surname + ' ' + $scope.sel_subject[$scope.tabNum].firstname + ' ' + $scope.sel_subject[$scope.tabNum].fathername }
+
+    }
 
     ///////////////////////////// Bufer operation //////////////////////////////////////////////////////////////
 
     $scope.OnDeleteClick = function(rec){
 
         $scope.checked[$scope.tabNum][rec.right_id] = false;
+
         $scope.checked[$scope.tabNum-1][rec.right_id] = false;
+
+        $scope.edit_right = {};
 
         var idx = $scope.sel_buffer.indexOf(rec);
 
@@ -493,17 +531,14 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.BufferChange = function(rec, e){
 
-        var element = $(e.currentTarget);
-
-        row = element.closest("tr");
+        //var element = $(e.currentTarget);
+        //row = element.closest("tr");
 
         if ($scope.tabNum == 1) {
 
             $scope.checked[$scope.tabNum+1][rec.right_id] = false;
 
-            var item = $scope.var.rightsDataTrnsform.find(function (value) {
-                return value.right_id == this.curType;
-            }, {curType: rec.right_id});
+            var item = $scope.var.rightsDataTrnsform.find(function (value) {return value.right_id == this.curType;}, {curType: rec.right_id});
 
             var idx = $scope.sel_buffer.indexOf(item);
 
@@ -515,13 +550,13 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
                     return value.right_id == this.curType;
                 }, {curType: rec.right_id}));
 
-                row.addClass("k-state-selected");
+              //row.addClass("k-state-selected");
 
             } else {
 
                  if ($scope.edit_right.right_id == rec.right_id )  {$scope.edit_right = {};}
 
-                row.removeClass("k-state-selected");
+              //row.removeClass("k-state-selected");
 
             }
         }
@@ -531,6 +566,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
             if ($scope.checked[$scope.tabNum][rec.right_id]) {
 
                 $scope.edit_right = $scope.sel_buffer.find(function (value) { return value.right_id == this.curType;}, {curType: rec.right_id});
+            } else
+            {
+                $scope.edit_right = {};
             }
 
             for (var item in $scope.checked[$scope.tabNum]  ) {
@@ -560,8 +598,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
     $scope.CloseBuffer = function(){
 
         $scope.mainGridOptions.dataSource.data = $scope.var.rightsDataTrnsform;
-
-        $scope.edit_right
 
     };
 
@@ -638,6 +674,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
+    $scope.filterCodeType = function(value){
+
+        return this.curType.some(function(parValue){ return parValue.code_id == this.curType;} , {curType:value.code_id});
+
+    };
+
     $scope.initType = function(value){
 
         return value.code_id == this.curType;
@@ -650,7 +692,14 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
+    $scope.timetoUTC = function(obj) {
 
+        var sub_date = new Date(subject.bothRegDate);
+
+        subject.bothRegDate = Date.UTC( sub_date.getFullYear(), sub_date.getMonth() , sub_date.getDate(), 0, 0, 0);
+
+
+    }
 
     function Create2DArray(rows) {
         var arr = [];

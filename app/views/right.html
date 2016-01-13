@@ -24,7 +24,7 @@
 
         <!------------------------ Search block ------------------------------------->
 
-        <div id="search" ng-class="getTabPaneClass(1)" >
+          <div id="search" ng-class="getTabPaneClass(1)" >
 
             <!--***************************************************************************************************************************************************-->
 
@@ -41,8 +41,10 @@
 
             <div class="input-group input-group-lg">
 
-                <input type="text" class="form-control"  placeholder="Поиск прав" ng-init="sel_subject[tabNum] = ''" ng-model="sel_subject[tabNum].fullname" disabled />
+                <input type="text" class="form-control"  placeholder="Поиск прав" ng-init="sel_subject[tabNum] = ''; sel_object[tabNum] = ''" ng-model="sel_param" disabled />
+
                 <span class="input-group-addon right-span-addon" ><span class="glyphicon glyphicon-zoom-in" ng-click="oSearch()"></span></span>
+
                 <span class="input-group-addon btn" style="background-color:transparent" ng-click = "rightSearch()"> Поиск </span>
 
             </div>
@@ -54,14 +56,18 @@
                     <kendo-tabstrip>
 
                         <ul>
+
                             <li class="k-state-active">Правообладатели</li>
 
                             <li>Объект (детализация)</li>
+
                         </ul>
 
 
                         <div>
+
                             <div kendo-grid k-options="detailOwnersOptions(dataItem)"></div>
+
                         </div>
 
                         <div>
@@ -89,9 +95,9 @@
 
         </div>
 
-           <!-------------- Main block -------------------------------------------------->
+        <!-------------- Main block -------------------------------------------------->
 
-           <div id="main" ng-class="getTabPaneClass(2)"  >
+          <div id="main" ng-class="getTabPaneClass(2)"  >
 
               <!------------- Bufer  ------------->
 
@@ -109,24 +115,11 @@
 
                     <div class="row">
 
-                        <div class="col-lg-3"></div>
-
-                        <div class="well col-lg-6">
-
-                            <a href="" class="btn btn-success" role="button"><span class="glyphicon glyphicon-flash"></span> <br/>Создать</a>
-                            <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-plus-sign"></span> <br/>Добавить долю</a>
-                            <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-signal"></span> <br/>Изменить</a>
-                            <a href="" class="btn btn-warning" role="button" ng-click="LoadBufer()"><span class="glyphicon glyphicon-circle-arrow-down"></span> <br/>Буфер</a>
-                            <a href="" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-remove-sign"></span> <br/>Очистить</a>
-
-                        </div>
-
-
                       <table class="table table-bordered table-hover vert-offset-top-2" ng-show="edit_right.right_id">
 
                         <thead>
 
-                          <tr style="background-color:#f9f9f9">
+                          <tr>
 
                              <th>ID</th>
 
@@ -146,9 +139,9 @@
 
                         <tbody>
 
-                          <tr  ng-repeat="item in edit_right.rightOwners" ng-click= "OnEditPanelTable()">
+                          <tr ng-repeat="item in edit_right.rightOwners" ng-class="{'right-edit-buffer-tab-select':$index==selected}" ng-click= "OnEditPanelTable($index, item)">
 
-                              <td  width="fit-content">{{edit_right.right_id}}</td>
+                              <td  width="fit-content">{{item.right_owner_id}}</td>
 
                               <td  width="fit-content">{{edit_right.right_type_name}}</td>
 
@@ -165,6 +158,22 @@
                          </tbody>
 
                        </table>
+
+                        <div class="col-lg-3"></div>
+
+                        <div class="well col-lg-6">
+
+                            <a href="" class="btn btn-success" role="button"><span class="glyphicon glyphicon-flash"></span> <br/>Создать</a>
+
+                            <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-plus-sign"></span> <br/>Добавить долю</a>
+
+                            <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-signal"></span> <br/>Изменить</a>
+
+                            <a href="" class="btn btn-warning" role="button" ng-click="LoadBufer()"><span class="glyphicon glyphicon-circle-arrow-down"></span> <br/>Буфер</a>
+
+                            <a href="" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-remove-sign"></span> <br/>Очистить</a>
+
+                        </div>
 
                     </div>
 
@@ -188,17 +197,18 @@
 
                             <div class="well">
 
-                                <label class="control-label">Объект операции (сущность)</label>
+                                <label class="control-label vert-offset-top-half">Вид права:</label>
 
-                                <select class="form-control" data-live-search="true" ng-change="setEntityType()"  ng-model="dict.curentTyp" ng-options="type.code_name group by type.v_prm1 for type in dict.rightEntityTypes | pick:'v_prm1==\'Объект\'|| v_prm1==\'Право\''" required="required"></select>
+                                <select class="form-control" data-live-search="true"  ng-change="setRightType()" ng-model="dict.currgtTyp" ng-options="rgttype.code_short_name for rgttype in dict.rightTypes | orderBy: ['code_short_name'] track by rgttype.code_id" required="required"></select>
 
                                 <label class="control-label vert-offset-top-half">Тип права по числу правообладателей:</label>
 
-                                <select class="form-control" data-live-search="true"  ng-change="setCountType()"  ng-model="dict.currgtCountTyp" ng-options="subtype.code_short_name for subtype in dict.rightCountTypes | orderBy: ['code_short_name'] track by subtype.code_id" required="required"></select>
+                                <select class="form-control" data-live-search="true"  ng-change="setCountType()"  ng-model="dict.currgtCountTyp" ng-options="subtype.code_short_name for subtype in dict.rightFilterCountTypes | orderBy: ['code_short_name'] track by subtype.code_id" required="required"></select>
 
-                                <label class="control-label vert-offset-top-half">Вид права:</label>
+                                <label class="control-label">Объект операции (сущность)</label>
 
-                                <select class="form-control" data-live-search="true"   ng-model="dict.currgtTyp" ng-options="rgttype.code_short_name for rgttype in dict.filterRightTypes | orderBy: ['code_short_name'] track by rgttype.code_id" required="required"></select>
+                                <select class="form-control" data-live-search="true" ng-change="setEntityType()"  ng-model="dict.curentTyp" ng-options="type.code_name group by type.v_prm1 for type in dict.rightFilterEntityTypes | pick:'v_prm1==\'Объект\'|| v_prm1==\'Право\''" required="required"></select>
+
 
                             </div>
 
@@ -213,14 +223,14 @@
                                 <div class="form-group">
 
                                     <label for="ex1">с</label>
-                                    <input id="ex1" class="form-control" kendo-date-picker k-format="'yyyy-MM-dd'" k-ng-model="start_date" style="margin-bottom: 0.1em; width:90%;background-color:white; height:30px; color:#555;" />
+                                    <input id="ex1" class="form-control right-edit-date" kendo-date-picker k-format="'yyyy-MM-dd'" k-ng-model="edit_right.begin_date"/>
 
                                 </div>
 
                                 <div class="form-group">
 
                                     <label for="ex2">по</label>
-                                    <input id="ex2" class="form-control" kendo-date-picker k-format="'yyyy-MM-dd'" k-ng-model="end_date" style="margin-bottom: 0.1em; width:90%;background-color:white; height:30px; color:#555;" />
+                                    <input id="ex2" class="form-control right-edit-date" kendo-date-picker k-format="'yyyy-MM-dd'"  k-ng-model="edit_right.end_date"/>
 
                                 </div>
 
@@ -228,7 +238,7 @@
 
                         </div>
 
-                        <div class="form-group vert-offset-top-2" ng-if="true" >
+                        <div class="form-group vert-offset-top-2" ng-if="false" >
 
                             <button class="astext" style="color: maroon"><b>Есть ограничения/обременение прав.</b></button> <blink> <span class="glyphicon glyphicon-exclamation-sign"></span> </blink>
 
@@ -250,7 +260,7 @@
 
                         <div class="form-group vert-offset-top-2">
                             <label for="comment">Комментарии:</label>
-                            <textarea id="comment" class="form-control" rows="4"></textarea>
+                            <textarea id="comment" class="form-control" rows="4" ng-model="edit_right.comments"></textarea>
                         </div>
 
 
@@ -264,7 +274,7 @@
 
                <div class = "col-lg-6">
 
-                <div class="panel panel-warning vert-offset-top-2">
+                <div class="panel panel-info vert-offset-top-2">
 
                     <div class="panel-heading fa fa-users">Правообладатели</div>
 
@@ -316,14 +326,14 @@
                             <div class="col-xs-6">
 
                                 <label for="ex3">Дата возникновения доли:</label>
-                                <input id="ex3" class="form-control" kendo-date-picker k-format="'yyyy-MM-dd'" k-ng-model="start_date" style="margin-bottom: 0.1em; width:100%;background-color:white; height:30px; color:#555;" />
+                                <input id="ex3" class="form-control right-edit-date" kendo-date-picker k-format="'yyyy-MM-dd'" k-ng-model="edit_right.rightOwners[selected].date_in" />
 
                             </div>
 
                             <div class="col-xs-6">
 
                                 <label for="ex4">Дата прекращения доли:</label>
-                                <input id="ex4" class="form-control" kendo-date-picker k-format="'yyyy-MM-dd'" k-ng-model="end_date" style="margin-bottom: 0.1em; width:100%;background-color:white; height:30px; color:#555;" />
+                                <input id="ex4" class="form-control right-edit-date" kendo-date-picker k-format="'yyyy-MM-dd'" k-ng-model="edit_right.rightOwners[selected].date_out" />
 
                             </div>
 
@@ -345,11 +355,11 @@
 
         <!------------------------ Details block ---------------------------------------->
 
-        <div id="detail" ng-class="getTabPaneClass(3)"> </div>
+         <div id="detail" ng-class="getTabPaneClass(3)"> </div>
 
         <!------------------------ Bargain block ---------------------------------------->
 
-        <div id="bargain" ng-class="getTabPaneClass(4)">Сделки</div>
+         <div id="bargain" ng-class="getTabPaneClass(4)">Сделки</div>
 
     </div>
 
