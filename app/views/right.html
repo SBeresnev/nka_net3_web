@@ -256,13 +256,15 @@
 
                         <div class="form-group vert-offset-top-2"  >
 
-                            <uib-accordion ng-init="pnl_opn=false">
+                            <uib-accordion ng-init="pnl_opn=true">
 
                                 <uib-accordion-group is-open="pnl_opn" panel-class="panel panel-dafault">
 
                                     <uib-accordion-heading>
 
-                                            <button class="astext" style="color: maroon"><b>ограничение/обременение прав</b></button> <blink ng-if="form_edit_right."> <span class="glyphicon glyphicon-exclamation-sign"></span> </blink>
+                                        <button class="astext" style="color: maroon"><b>ограничение/обременение прав</b></button>
+
+                                        <blink ng-if="true"> <span class="glyphicon glyphicon-exclamation-sign"></span> </blink>
 
                                      </uib-accordion-heading>
 
