@@ -16,16 +16,16 @@
   <!-- build:css(.tmp) styles/main.css -->
 
   <link rel="stylesheet" href="styles/main.css"/>
-  <link rel="stylesheet" href="styles/kendo-custom.css"/>
 
-  <link rel="stylesheet" href="bower_components/kendo.all.min/kendo.common-material.min.css"/>
-  <link rel="stylesheet" href="bower_components/kendo.all.min/kendo.material.min.css"/>
+
   <link rel="stylesheet" href="bower_components/kendo.all.min/kendo.common.min.css"/>
   <link rel="stylesheet" href="bower_components/kendo.all.min/kendo.rtl.min.css"/>
-  <link rel="stylesheet" href="bower_components/kendo.all.min/kendo.default.min.css"/>
+  <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2015.3.1111/styles/kendo.silver.min.css"/>
 
+  <!--link rel="stylesheet" href="http://kendo.cdn.telerik.com/2015.3.1111/styles/kendo.silver.min.css"/-->
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="styles/kendo-custom.css"/>
   <link rel="stylesheet" href="styles/bootstrap-3-vert-offset-shim.css"/>
-
 
 
   <!-- endbuild -->
@@ -35,7 +35,7 @@
 
 <!-- Add your site or application content here -->
 <div >
-  <div STYLE="min-height: 800px">
+  <div style="min-height:800px">
     <div class="header">
       <ul class="nav pull-left">
         <li class="btn btn-primary" onclick="javascript:window.location.href= '#/'">{{text.general}}</li>
@@ -82,14 +82,18 @@
 <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 <script src="bower_components/angular-filter/dist/angular-filter.min.js"></script>
 <script src="bower_components/kendo.all.min/index.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="bower_components/kendo.all.min/kendo.culture.ru-RU.min.js"></script>
+
 <script src="scripts/app.js"></script>
 <script src="scripts/controllers/address.js"></script>
 <script src="scripts/var/order.js"></script>
 <script src="scripts/var/subject.js"></script>
+<script src="scripts/var/right.js"></script>
 <script src="scripts/controllers/main.js"></script>
 <script src="scripts/controllers/right.js"></script>
 <script src="scripts/controllers/address.js"></script>
@@ -105,6 +109,8 @@
 <script src="scripts/controllers/dependency.js"></script>
 <script src="scripts/controllers/test.js"></script>
 <!-- endbuild -->
+
+
 
 </body>
 </html>

@@ -249,11 +249,11 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
 
         $scope.var.streetDataSearch = [];
 
-        if ( typeof $scope.var.curAte.ate_id === 'undefined' ) swal("Error", 'Не указан АТЕ' , "error");
+        if ( !$scope.validAte($scope.var.curAte.ate_id)) {swal("Error", 'Не указан АТЕ' , "error"); return; }
 
-        if ( $scope.var.streetForm.house_num == null )  $scope.var.streetForm.house_num = '' ;
+        if ( !$scope.validHoseNum($scope.var.streetForm.house_num)) { swal("Error", 'Не указан номер дома' , "error"); return ; }
 
-        if ( $scope.var.streetForm.street_name == null )  $scope.var.streetForm.street_name  = '' ;
+        if ( !$scope.validStrName($scope.var.streetForm.street_name)) { swal("Error", 'Не указано название улицы' , "error") ; return; }
 
         if ( $scope.var.streetForm.corp_num == null ) $scope.var.streetForm.corp_num = '';
 
@@ -322,12 +322,12 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
 
         $scope.cleanStreetForm();
 
+        if ( !$scope.validAte($scope.var.curAte.ate_id)) {swal("Error", 'Не указан АТЕ' , "error"); return; }
 
-        if ( typeof $scope.var.curAte.ate_id == 'undefined' ) alert('Не указан АТЕ');
+        if ( !$scope.validHoseNum($scope.var.parcelForm.house_num)) { swal("Error", 'Не указан номер дома' , "error"); return ; }
 
-        if ( $scope.var.parcelForm.house_num == null )  $scope.var.parcelForm.house_num = '' ;
+        if ( !$scope.validStrName($scope.var.parcelForm.street_name)) { swal("Error", 'Не указано название улицы' , "error") ; return; }
 
-        if ( $scope.var.parcelForm.street_name == null )  $scope.var.parcelForm.street_name  = '' ;
 
         $scope.var.url = DOMAIN + "/nka_net3/address/findParcelAddress?ate_id=" + $scope.var.curAte.ate_id + "&street_name=" +  $scope.var.parcelForm.street_name  + "&house_num=" + $scope.var.parcelForm.house_num + "&elem_type_dep=" + $scope.var.curObjPlace.code_id ;
 
@@ -438,6 +438,21 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
 
         return {ate_id: item.ate_id, ate_name: ret_str , soato: item.soato } ;
 
+    };
+
+    $scope.validAte = function (ateId) {
+        var exp = /^(\d){1,}$/;
+        return exp.test(ateId);
+    };
+
+    $scope.validStrName = function (street_name) {
+        var exp = /^.{2,}$/;
+        return exp.test(street_name);
+    };
+
+    $scope.validHoseNum = function (house_num) {
+        var exp = /^(\d){1,}$/;
+        return exp.test(house_num);
     };
 
     /*

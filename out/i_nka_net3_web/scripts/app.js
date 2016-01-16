@@ -12,6 +12,8 @@ var app = angular
     .module('assetsApp', [
         'ngResource',
         'ngRoute',
+        'ngAnimate',
+        'ui.bootstrap',
         'angular.filter',
         'kendo.directives'
     ])
@@ -90,12 +92,12 @@ var app = angular
             settings: "НАСТРОЙКИ",
             exit: "ВЫХОД",
             technicalSupport: "Тех поддержка"
-        }
+        };
 
     })
     .directive('modal', function () {
         return {
-            template: '<div id="custModal" class="modal fade" >' +
+            template: '<div class="modal fade" >' +
             '<div class="modal-dialog">' +
             '<div class="modal-content">' +
             '<div class="modal-header">' +
@@ -132,6 +134,27 @@ var app = angular
                     });
                 });
             }
+        };
+    })
+    .directive('blink', function($timeout) {
+        return {
+            restrict: 'E',
+            transclude: true,
+            scope: {},
+            controller: function($scope, $element) {
+                function showElement() {
+                    $element.css("display", "inline");
+                    $timeout(hideElement, 1000);
+                }
+
+                function hideElement() {
+                    $element.css("display", "none");
+                    $timeout(showElement, 1000);
+                }
+                showElement();
+            },
+            template: '<span ng-transclude></span>',
+            replace: true
         };
     })
     .filter('filterSubjectType', function () {
@@ -183,18 +206,4 @@ var app = angular
             return filtered;
         };
     })
-    .directive('clickAnywhereButHere', function($document){
-        return {
-            restrict: 'A',
-            link: function(scope, elem, attr, ctrl) {
-                elem.bind('click', function(e) {
-                    // this part keeps it from firing the click on the document.
-                    e.stopPropagation();
-                });
-                $document.bind('click', function() {
-                    // magic here.
-                    scope.$apply(attr.clickAnywhereButHere);
-                })
-            }
-        }
-    });
+;

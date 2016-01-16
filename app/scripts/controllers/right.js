@@ -7,7 +7,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     kendo.culture("ru-RU");
 
-   ///////////////////////////////kendo grid property/////////////////////////////////////////////////////////////////
+    ///////////////////////////////kendo grid property/////////////////////////////////////////////////////////////////
 
     $scope.mainGridOptions = {
 
@@ -21,56 +21,56 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         columns: [
 
-        {field: "bufer", title: "Действия <br> с правом", template: '<input type="checkbox"  class="inputtd" ng-click="BufferChange(dataItem, $event)" ng-model="checked[mainGridOptions.curTabNum][dataItem.right_id]">'},
+            {field: "bufer", title: "Действия <br> с правом", template: '<input type="checkbox"  class="inputtd" ng-click="BufferChange(dataItem, $event)" ng-model="checked[mainGridOptions.curTabNum][dataItem.right_id]">'},
 
-        {field: "right_id", title: "ID"},
+            {field: "right_id", title: "ID"},
 
-        {field: "right_type_name", title: "Вид права:"},
+            {field: "right_type_name", title: "Вид права:"},
 
-        {field: "right_entity_type_name", title: "<center>Объект операции  <br> (сущность)</center>"},
+            {field: "right_entity_type_name", title: "<center>Объект операции  <br> (сущность)</center>"},
 
-        {field: "right_count_type_name", title: "<center>Тип права по числу <br> правообладателей</center>"},
+            {field: "right_count_type_name", title: "<center>Тип права по числу <br> правообладателей</center>"},
 
-        {field: "begin_date", title: "<center> Дата <br> возникновения права</center>", template:"#= begin_date!=null?kendo.toString(kendo.parseDate(new Date(begin_date)), 'dd-MM-yyyy'):'' #"},
+            {field: "begin_date", title: "<center> Дата <br> возникновения права</center>", template:"#= begin_date!=null?kendo.toString(kendo.parseDate(new Date(begin_date)), 'dd-MM-yyyy'):'' #"},
 
-        {field: "end_date", title: "<center> Дата <br>прекращения права</center>", template:"#=  end_date!=null?kendo.toString(kendo.parseDate(new Date(end_date)), 'dd-MM-yyyy'):'' #"},
+            {field: "end_date", title: "<center> Дата <br>прекращения права</center>", template:"#=  end_date!=null?kendo.toString(kendo.parseDate(new Date(end_date)), 'dd-MM-yyyy'):'' #"},
 
-        {field: "bindedObj.object_name", title: "Имя объекта"} ,
+            {field: "bindedObj.object_name", title: "Имя объекта"} ,
 
-        {title: "Тип объекта:", template: "#= bindedObj.objectType.code_name #" },
+            {title: "Тип объекта:", template: "#= bindedObj.objectType.code_name #" },
 
-        {title: "&nbsp", template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="OnDeleteClick(dataItem)">Delete</span>'}
+            {title: "&nbsp", template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="OnDeleteClick(dataItem)">Delete</span>'}
 
         ]
     };
 
     $scope.detailOwnersOptions = function(dataItem) { return {
 
-            dataSource: { data: dataItem === undefined ? null : dataItem.rightOwners },
+        dataSource: { data: dataItem === undefined ? null : dataItem.rightOwners },
 
-            scrollable: false,
+        scrollable: false,
 
-            sortable: true,
+        sortable: true,
 
-            resizable: true,
+        resizable: true,
 
-            columns: [
+        columns: [
 
-                {title:"Имя/название правообладателя", template: "#= data.owner.fullname === undefined?data.owner.surname+' '+data.owner.firstname+' '+data.owner.fathername:data.owner.fullname#" },
+            {title:"Имя/название правообладателя", template: "#= data.owner.fullname === undefined?data.owner.surname+' '+data.owner.firstname+' '+data.owner.fathername:data.owner.fullname#" },
 
-                {field:"owner.address", title:"Адресс правообладателя" },
+            {field:"owner.address", title:"Адресс правообладателя" },
 
-                {title:"Тип субъекта", template: "#= data.owner.dtype=='private'?'физ. лицо':'юр. лицо'#" },
+            {title:"Тип субъекта", template: "#= data.owner.dtype=='private'?'физ. лицо':'юр. лицо'#" },
 
-                {title:"Доля в праве", template: "#= data.numerator_part+''+(data.denominator_part == 1 ?'':'/'+data.denominator_part) #" },
+            {title:"Доля в праве", template: "#= data.numerator_part+''+(data.denominator_part == 1 ?'':'/'+data.denominator_part) #" },
 
-                {field: "date_in", title: "Дата прекращения доли", template:"#= data.date_in!=null?kendo.toString(kendo.parseDate(new Date(data.date_in)), 'dd-MM-yyyy'):'' #"},
+            {field: "date_in", title: "Дата прекращения доли", template:"#= data.date_in!=null?kendo.toString(kendo.parseDate(new Date(data.date_in)), 'dd-MM-yyyy'):'' #"},
 
-                {field: "date_out", title: "Дата прекращения доли", template:"#= data.date_out!=null?kendo.toString(kendo.parseDate(new Date(data.date_out)), 'dd-MM-yyyy'):'' #"}
+            {field: "date_out", title: "Дата прекращения доли", template:"#= data.date_out!=null?kendo.toString(kendo.parseDate(new Date(data.date_out)), 'dd-MM-yyyy'):'' #"}
 
-            ]
+        ]
 
-        }; };
+    }; };
 
     //////////////////////////////////common window///////////////////////////////////////////////////////////////////////////
 
@@ -252,11 +252,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             $scope.rightsDataSearchTabHide=false;
 
-            $scope.var.rightsDataTrnsform = $scope.transformRight($scope.var.rightsDataSearch);
+            //$scope.var.rightsDataTrnsform = $scope.transformRight($scope.var.rightsDataSearch);
 
-            $scope.var.rightsDataTrnsform.forEach(function(value) {$scope.fillDictName(value); $scope.getAddress(value.bindedObj);});
+            $scope.var.rightsDataSearch.forEach(function(value) {$scope.fillDictName(value); $scope.getAddress(value.bindedObj);});
 
-            $scope.mainGridOptions.dataSource.data = $scope.var.rightsDataTrnsform;
+            $scope.mainGridOptions.dataSource.data = $scope.var.rightsDataSearch;
 
             //$scope.mainGridOptions.dataSource.data.forEach(function(value) {$scope.fillDictName(value); $scope.getAddress(value.bindedObj);});
 
@@ -298,32 +298,32 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         t_value.forEach(function(value){
 
-                var item = {};
+            var item = {};
 
-                angular.copy( value, item);
+            angular.copy( value, item);
 
-                var right_map = myMap.get(item.right.right_id);
+            var right_map = myMap.get(item.right.right_id);
 
-                  var right = item.right;
+            var right = item.right;
 
-                  delete item['right'];
+            delete item['right'];
 
-                if (typeof right_map === 'undefined') {
+            if (typeof right_map === 'undefined') {
 
-                    right["rightOwners"] = new Array(item);  //item.omit('right');
+                right["rightOwners"] = new Array(item);  //item.omit('right');
 
-                    myMap.set(right.right_id, right);
+                myMap.set(right.right_id, right);
 
-                } else {
+            } else {
 
 
-                    right_map["rightOwners"].push(item);
+                right_map["rightOwners"].push(item);
 
-                    myMap.set(right.right_id, right_map);
+                myMap.set(right.right_id, right_map);
 
-                }
+            }
 
-            } )
+        } )
 
         return Array.from(myMap.values()) ;
 
@@ -582,7 +582,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             $scope.checked[$scope.tabNum+1][rec.right_id] = false;
 
-            var item = $scope.var.rightsDataTrnsform.find(function (value) {return value.right_id == this.curType;}, {curType: rec.right_id});
+            var item = $scope.var.rightsDataSearch.find(function (value) {return value.right_id == this.curType;}, {curType: rec.right_id});
 
             var idx = $scope.sel_buffer.indexOf(item);
 
@@ -590,17 +590,17 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             if ($scope.checked[$scope.tabNum][rec.right_id]) {
 
-                $scope.sel_buffer.push($scope.var.rightsDataTrnsform.find(function (value) {
+                $scope.sel_buffer.push($scope.var.rightsDataSearch.find(function (value) {
                     return value.right_id == this.curType;
                 }, {curType: rec.right_id}));
 
-              //row.addClass("k-state-selected");
+                //row.addClass("k-state-selected");
 
             } else {
 
-                 if ($scope.edit_right.right_id == rec.right_id )  {$scope.edit_right = {};}
+                if ($scope.edit_right.right_id == rec.right_id )  {$scope.edit_right = {};}
 
-              //row.removeClass("k-state-selected");
+                //row.removeClass("k-state-selected");
 
             }
         }
@@ -618,9 +618,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             for (var item in $scope.checked[$scope.tabNum]  ) {
 
-               if (item != rec.right_id) { $scope.checked[$scope.tabNum][item] = false;}
+                if (item != rec.right_id) { $scope.checked[$scope.tabNum][item] = false;}
 
-                }
+            }
 
         }
 
@@ -651,12 +651,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.CloseBuffer = function(){
 
-        $scope.mainGridOptions.dataSource.data = $scope.var.rightsDataTrnsform;
+        $scope.mainGridOptions.dataSource.data = $scope.var.rightsDataSearch;
 
     };
 
     ///////////////////////////// Modal Window part ///////////////////////////////////////////////////////////
-   $scope.detailModal = function(){
+    $scope.detailModal = function(){
 
         if ($scope.nullIfundefine($scope.form_edit_right.rightOwner.parent_owner) == null) { swal("Error", 'Не указан идентификатор права родителя' , "error"); return;}
 
@@ -666,11 +666,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.var.loading = true;
 
-        $scope.var.url = DOMAIN + "/nka_net3/right/getRightOwn?right_own_id=" + $scope.form_edit_right.rightOwner.parent_owner;
+        $scope.var.url = DOMAIN + "/nka_net3/right/getRightbyRightOwner?right_own_ids=" + $scope.form_edit_right.rightOwner.parent_owner;
 
         $http.get($scope.var.url).then(function (res) {
 
-            $scope.var.rightDetail = $scope.transformRight([res.data])[0];
+            //$scope.var.rightDetail = $scope.transformRight([res.data])[0];
 
             $scope.fillDictName($scope.var.rightDetail);
 
