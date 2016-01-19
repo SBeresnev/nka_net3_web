@@ -3,7 +3,7 @@
  */
 
 
-angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOMAIN, WEBDOM, rightvar) {
+angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOMAIN, WEBDOM, rightvar, operationtvar) {
 
     kendo.culture("ru-RU");
 
@@ -97,6 +97,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
     $scope.edit_right = {};         ///// право объекта редактирования
 
     $scope.form_edit_right = angular.copy(rightvar);    ///// право редактирования формы
+
+    $scope.oper_right = angular.copy(operationtvar);    /////операции формы
+
 
     $scope.checked=Create2DArray(5);
 
@@ -471,6 +474,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.form_edit_right.bindedObj = angular.copy($scope.sel_object[2]);
 
+
     };
 
     $scope.csubSearch = function () {
@@ -483,13 +487,13 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.sel_subject[$scope.tabNum] = sel_subject_test;
 
-        /////////////////// for first only////////////////////////////////////////////////////////////////////////////
+        /////////////////// for first part only ////////////////////////////////////////////////////////////////////////////
 
-        $scope.sel_param = $scope.sel_subject[1].fullname ;
+        if($scope.tabNum == 1){$scope.sel_param = $scope.sel_subject[1].fullname} ;
 
         /////////////////// for second part only ////////////////////////////////////////////////////////////////////////////
 
-        $scope.form_edit_right.rightOwner.owner = angular.copy($scope.sel_subject[2]);
+        if($scope.tabNum == 2){$scope.form_edit_right.rightOwner.owner = angular.copy($scope.sel_subject[2]);}
 
 
     };
@@ -656,7 +660,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
     };
 
     ///////////////////////////// Modal Window part ///////////////////////////////////////////////////////////
-    $scope.detailModal = function(){
+    $scope.getParentOwner = function(){
 
         if ($scope.nullIfundefine($scope.form_edit_right.rightOwner.parent_owner) == null) { swal("Error", 'Не указан идентификатор права родителя' , "error"); return;}
 
@@ -670,7 +674,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $http.get($scope.var.url).then(function (res) {
 
-            //$scope.var.rightDetail = $scope.transformRight([res.data])[0];
+            $scope.var.rightDetail = res.data[0];
 
             $scope.fillDictName($scope.var.rightDetail);
 
@@ -688,6 +692,13 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
+    $scope.setParentOwner = function(){};
+
+    $scope.getLimitationRight = function(){};
+
+    $scope.setLimitationRight =function(){};
+
+
     $scope.dispalyModal = function(modid) {
 
         var myElement = angular.element(document.querySelector(modid));
@@ -695,6 +706,126 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         myElement.modal("show");
 
     };
+
+    ///////////////////////////// Operation part /////////////////////////////////////////////////////////////////
+
+    $scope.CleanForm = function() {
+
+        $scope.form_edit_right = {};
+
+
+        $scope.dict.currgtTyp = '';
+
+        $scope.dict.currgtCountTyp = '';
+
+        $scope.dict.curentTyp = '';
+
+
+        $scope.dict.curoprTyp = '';
+
+        $scope.dict.curoprSubTyp = '';
+
+        $scope.dict.curoprBase = '';
+
+    }
+
+    $scope.CreateRight = function() {
+
+        $scope.preCreateRight();
+
+        $http.put(DOMAIN + "/nka_net3/right/addRight?", $scope.edit_right ).success(function (data, status, headers) {
+
+            $scope.var.toSend = $scope.form_edit_right;
+
+
+        }).error(function (data, status, header, config) {
+
+            $scope.ServerResponse = 'Error message: '+data + "\n\n\n\nstatus: " + status + "\n\n\n\nheaders: " + header + "\n\n\n\nconfig: " + config;
+
+            swal("Error", $scope.ServerResponse , "error");
+
+        });
+
+
+    }
+
+    ///////////// создаем объект перед операциями ///////////////////////////////////////////////////////
+
+    $scope.createOperObject = function(){
+
+        $scope.oper_right = angular.copy(operationtvar);
+
+        $scope.oper_right.entytyType = $scope.dict.curentTyp;
+
+        $scope.oper_right.operType = $scope.dict.curoprTyp;
+
+        $scope.oper_right.operSubtype = $scope.dict.curoprSubTyp;
+
+        $scope.oper_right.reason = $scope.dict.curoprBase;
+
+        $scope.oper_right.regDate = new Date();
+
+        $scope.oper_right.operDate = new Date();
+
+        $scope.oper_right.status = 1;
+
+        return $scope.oper_right;
+
+    }
+
+
+    $scope.preCreateRight = function() {
+
+        if ($scope.nullIfundefine($scope.edit_right) == null) { $scope.edit_right = angular.copy(rightvar); }
+
+        $scope.form_edit_right.bindedObj = {"org_id":100,"inventory_number":1,"square":null,"roomscount":null,"readiness":null,"object_name":"Водопровод","objectType":{"code_id":2,"analytic_type":2,"code_name":"Строение","code_short_name":"Строение","parent_code":null,"n_prm1":null,"v_prm1":"C(U)","unitmeasure":null,"status":1,"catalogPk":{"code_id":2,"analytic_type":2}},"use_purpose":null,"land_category":null,"obj_id":255,"ooper":{"ooperId":410,"declId":1182,"entytyType":2,"operType":1,"operSubtype":1,"reason":3100,"executor":2920,"regDate":1449503140000,"operDate":1449503140000,"parent_id_order":null,"parent_id_hist":null,"status":1},"conserv":null,"reg_type":1,"status":1,"bound_id":null,"obj_dest_id":84,"address_id":54055,"adr_num":null,"address_dest":{"address_id":54055,"adr_num":1502253,"adr":"Гомельская обл.,Буда-Кошелевский р-н,г. Буда-Кошелево, Базарный 1-й 2","soato":"3205501000"},"obj_id_inv":84,"cadaster_number":"111111111111111111"};
+
+        $scope.form_edit_right.ooper = $scope.createOperObject();
+
+        $scope.edit_right.begin_date = $scope.form_edit_right.begin_date;
+
+        $scope.edit_right.end_date = $scope.form_edit_right.end_date;
+
+        $scope.edit_right.bindedObj = $scope.form_edit_right.bindedObj;
+
+        $scope.edit_right.comments = $scope.form_edit_right.comments;
+
+        $scope.edit_right.is_needed = $scope.form_edit_right.is_needed;
+
+        $scope.edit_right.ooper =  $scope.form_edit_right.ooper;
+
+
+        $scope.edit_right.right_count_type = $scope.form_edit_right.right_count_type = $scope.dict.currgtCountTyp;
+
+        $scope.edit_right.right_entity_type = $scope.form_edit_right.right_entity_type = $scope.dict.curentTyp;
+
+        $scope.edit_right.right_type = $scope.form_edit_right.right_type = $scope.dict.currgtCountTyp;
+
+        $scope.edit_right.status = $scope.form_edit_right.status;
+
+        if ($scope.nullIfundefine($scope.edit_right.rightOwners) == null)
+        {
+            $scope.edit_right.rightOwners = [];
+
+            $scope.edit_right.rightOwners.push($scope.form_edit_right.rightOwner);
+        }
+
+    }
+
+    ///////////////////////////// Checks part /////////////////////////////////////////////////////////////////
+
+    $scope.summCheckRightOwnersPart = function(rOwners){
+
+        for(rOwner in rOwners){
+
+           // rOwner.numerator_part;
+
+           // rOwner.denominator_part;
+
+        }
+
+    }
+
 
     ///////////////////////////// Service part /////////////////////////////////////////////////////////////////
 

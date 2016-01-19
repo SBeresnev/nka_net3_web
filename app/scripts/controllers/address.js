@@ -307,7 +307,6 @@ angular.module("assetsApp").controller("AddressCtrl", function($scope, $http, $l
 
         $scope.var.curStreet.fullStr =   $scope.var.curStreet.street_name + ' ' + $scope.var.curStreet.cord_num;
 
-
         $scope.var.fullStr = $scope.var.curStreet.fullStr;
 
         $scope.var.toSend.adr_num = item.adr_num;

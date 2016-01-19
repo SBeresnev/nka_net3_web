@@ -4,8 +4,7 @@
 
 'use strict';
 
-angular.module('assetsApp').factory('httpServices', function ( $controller, $rootScope, DOMAIN) {
-
+angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
   var httpServices = {};
 
   var XMLHttpFactories = [
@@ -37,6 +36,7 @@ angular.module('assetsApp').factory('httpServices', function ( $controller, $roo
     return xmlhttp;
   };
 
+
   httpServices.updateSubject = function (subject) {
     var url = DOMAIN+'/nka_net3/subject/update';
     var params = "?";
@@ -58,6 +58,75 @@ angular.module('assetsApp').factory('httpServices', function ( $controller, $roo
   httpServices.searchSubjects = function (id, number, fio, scope) {
     var url = DOMAIN+'/nka_net3/subject/search';
     var params = "?" + "type=" + id + "&" + "number=" + number + "&" + "name=" + fio;
+    var method = "GET";
+    var http = createXMLHTTPObject();
+    console.log(url + params)
+    http.open(method, url + params, true);
+    http.send();
+    return http.onreadystatechange = function () {
+      if (http.readyState == 4) {
+        scope.var.loading = false;
+        if (http.status == 200) {
+          scope.var.subjects = JSON.parse(http.responseText);
+          alert(http.responseText);
+          if(scope.var.subjects.length != 0) {
+            scope.var.showSubjectsTable = true;
+          }
+          scope.$apply();
+        }
+      }
+    }
+  };
+
+  httpServices.searchObjectsByCadastr = function (cadastr, scope) {
+
+    var url = DOMAIN+'/nka_net3/object/find_by_cadastr';
+    var params = "?" + "cadastre_number=" + cadastr;
+    var method = "GET";
+    var http = createXMLHTTPObject();
+    console.log(url + params)
+    http.open(method, url + params, true);
+    http.send();
+    return http.onreadystatechange = function () {
+      if (http.readyState == 4) {
+        scope.var.loading = false;
+        if (http.status == 200) {
+          scope.var.subjects = JSON.parse(http.responseText);
+          if(scope.var.subjects.length != 0) {
+            scope.var.showSubjectsTable = true;
+          }
+          scope.$apply();
+        }
+      }
+    }
+  };
+
+  httpServices.searchObjectsByInv = function (inv, ob_type, org_id, scope) {
+
+    var url = DOMAIN+'/nka_net3/object/find_by_inv';
+    var params = "?" + "inventory_number=" + inv + "&" + "object_type=" + ob_type + "&" + "org_id=" + org_id;
+    var method = "GET";
+    var http = createXMLHTTPObject();
+    console.log(url + params)
+    http.open(method, url + params, true);
+    http.send();
+    return http.onreadystatechange = function () {
+      if (http.readyState == 4) {
+        scope.var.loading = false;
+        if (http.status == 200) {
+          scope.var.subjects = JSON.parse(http.responseText);
+          if(scope.var.subjects.length != 0) {
+            scope.var.showSubjectsTable = true;
+          }
+          scope.$apply();
+        }
+      }
+    }
+  };
+
+  httpServices.searchObjectsByAdress = function (id, scope) {
+    var url = DOMAIN+'/nka_net3/object/find_by_address';
+    var params = "?" + "address_id=" + id;
     var method = "GET";
     var http = createXMLHTTPObject();
     console.log(url + params)
@@ -94,11 +163,6 @@ angular.module('assetsApp').factory('httpServices', function ( $controller, $roo
           }
           scope.$apply();
         }
-       else {
-          swal("Error", JSON.parse(http.responseText).message , "error"); // вызвать обработчик ошибки с текстом ответа
-
-          scope.$apply();
-      }
       }
     }
   };
@@ -130,6 +194,13 @@ angular.module('assetsApp').factory('httpServices', function ( $controller, $roo
     }
   };
 
+/*  httpServices.parseCadastr = function (subject, scope) {
+    scope.pars_COATO= subject.cadaster_number.substring(0,10);
+    scope.pars_nblock=subject.cadaster_number.substring(10,12);
+    scope.pars_narea=subject.cadaster_number.substring(12,18);
+    scope.$apply();
+  };*/
+
   httpServices.addSubject = function (subject) {
     var url = DOMAIN+'/nka_net3/subject/add';
     var params = "?";
@@ -138,17 +209,5 @@ angular.module('assetsApp').factory('httpServices', function ( $controller, $roo
     http.open(method, url + params, true);
     http.send(JSON.stringify(subject));
   };
-
-  httpServices.getInstance = function (objName)
-  {
-    var scope = $rootScope.$new(true);
-
-    var ctrl = $controller(objName, {$scope:scope});
-
-    return scope;
-
-  }
-
   return httpServices;
-
 });

@@ -2,13 +2,22 @@
  * Created by belonovich on 17.02.2015.
  */
 angular.module('assetsApp')
-    .controller('ObjectCtrl', function ($scope) {
+    .controller('ObjectCtrl', function ($scope, $http, $location, $filter, httpServices, subjectvar, DOMAIN, WEBDOM) {
+
+        $scope.address = "";
+        $scope.address.adr="";
+        $scope.type = 2;
+
+        $scope.pars_COATO= "";
+        $scope.pars_nblock="";
+        $scope.pars_narea="";
+
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
             'Karma'
         ];
-        $scope.var = {
+        /*$scope.var = {
             objecttypes: [
                 {id: 1, name: 'Объект'},
                 {id: 2, name: 'Право'},
@@ -51,6 +60,29 @@ angular.module('assetsApp')
                 title : '',
                 html: ''
             }
+        };*/
+
+        $scope.var = {
+            loading: false,
+            states: '',
+            items: '',
+            subjecttypes: '',
+            subjects: [{label: 'loading'}]
+        };
+
+        $('ul.nav li').click(function(e) {
+
+            var $this = $(this);
+
+            $('ul.nav').find('a.active').last().removeClass('active')
+
+            $this.find('a').addClass('active');
+        });
+
+        $scope.getSubStrCadastr = function(subject, from, to){
+            if(subject != null)
+                return subject.cadaster_number.substring(from,to);
+            return "";
         };
 
         $scope.showModalDoc = false;
@@ -60,7 +92,113 @@ angular.module('assetsApp')
             $scope.showModalDoc = !$scope.showModalDoc;
         };
 
-        $scope.modalObject = function () {
-            $scope.showModalObject = !$scope.showModalObject;
+        $scope.modalObject = function (modid) {
+           /* $scope.showModalObject = !$scope.showModalObject;*/
+
+            var myElement = angular.element(document.querySelector(modid));
+
+            myElement.modal("show");
+        };
+
+        $scope.urlAddress = WEBDOM + '//#/address';
+        //window.location.protocol + '//'+ window.location.hostname+":9000" + '/#/address';
+
+        $scope.openAddress = function () {
+            sessionStorage.setItem("addObj",JSON.stringify([]));
+            $scope.DlgOptions = {
+                width: "1300px", height: "500px", modal: true,
+                actions: ["Custom", "Minimize", "Maximize", "Close"],
+                title: "Addresses", iframe: true, visible: false
+            };
+
+            $scope.window.element.children(".k-content-frame").contents().find(".header")[0].style.display="none";
+
+            $scope.window.setOptions($scope.DlgOptions);
+
+            $scope.window.center();  // open dailog in center of screen
+
+            $scope.window.open();
+
+        }
+
+        $scope.closeAddress = function() {
+
+            //$scope.address = JSON.parse(sessionStorage.getItem("addressObj"));
+           // $scope.address.adr = $scope.address == null ? $scope.address : $scope.address.adr;
+
+            if(($scope.address = JSON.parse(sessionStorage.getItem("addressObj"))) == null){
+                $scope.address=[adr=""];
+            }
+
+        }
+
+        $scope.printObject = function(el) {
+            var innerContents = document.getElementById(el).innerHTML;
+            var doc = '<html><head><link rel="stylesheet" type="text/css" /></head><body onload="window.print()">' + innerContents + '</html>';
+            var win = window.open();
+            win.document.write(doc);
+            win.document.close();
+            win.close();
+        }
+
+        $scope.searchAdress = function () {
+
+            $scope.var.loading = true;
+            $scope.var.subjects = [];
+            delete $http.defaults.headers.common['X-Requested-With'];
+            httpServices.searchObjectsByAdress($scope.address.address_id, $scope);
+        };
+
+        $scope.findByCadastr = function(coato, block, area) {
+            return !(coato*block*area);
+        };
+
+        $scope.searchCadastr = function(coato, block, area) {
+            $scope.var.loading = true;
+            $scope.var.subjects = [];
+            delete $http.defaults.headers.common['X-Requested-With'];
+            var cadastr = coato+block+area;
+            httpServices.searchObjectsByCadastr(cadastr, $scope);
+        };
+
+
+        $scope.searchInv = function(inv, code) {
+            $scope.var.loading = true;
+            $scope.var.subjects = [];
+            delete $http.defaults.headers.common['X-Requested-With'];
+            httpServices.searchObjectsByInv(inv, $scope.type, code, $scope);
+        };
+
+        $scope.settype = function(type) {
+           $scope.type = type;
+        };
+
+        $scope.updateObjectForm = function (subject) {
+
+            if(subject.address_dest==null)
+                subject.address_dest = angular.copy($scope.address);
+
+            $scope.formShow=true;
+            $scope.strTabShow = false;
+
+            $scope.subjectForm=angular.copy(subject);
+
+                $scope.var.subj = [];
+
+             //   subject = $scope.createJSON(subject);
+
+            var cad = subject.cadaster_number;
+            if(cad!=null && cad !="")
+            {
+                $scope.pars_COATO= cad.substring(0,10);
+                $scope.pars_nblock= cad.substring(10, 12);
+                $scope.pars_narea=cad.substring(12, 18);
+
+            }
+
+                $scope.var.subjtype = subject.subjectType;
+
+                $scope.var.subj = angular.copy(subject);
+
         };
     });
