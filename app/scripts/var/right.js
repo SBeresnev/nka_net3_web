@@ -12,7 +12,7 @@ angular.module('assetsApp').value('rightvar',
         is_needed: 0,
         limit_righ: null,
         ooper: {},
-        rightOwners: {},
+        rightOwners: [],
         rightOwner: {owner:{}, parent_owner_obj:{} },
         right_count_type: null,
         right_count_type_name: "",
@@ -23,5 +23,4 @@ angular.module('assetsApp').value('rightvar',
         right_type_name: "",
         status: null
   }
-
 );

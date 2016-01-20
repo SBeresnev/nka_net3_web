@@ -1,4 +1,4 @@
-<div class="container" ng-init="init()">
+<div class="container" ng-init="init()" id="ObjectID">
 
 <div class="padding-top">
 
@@ -6,10 +6,17 @@
 
             <div class="row form-group page-header" >
 
+                <div class = "col-sm-offset-2">
 
+                    <label class="control-label col-sm-1"> Объект: </label>
+
+                    <div class="col-sm-7"> <input type="text " class="form-control"  ng-value="var.obj" disabled/> </div>
+
+                    <div class="col-sm-2"> <span class="input-group-btn"> <button class="btn btn-default form-control"  ng-click="bind()"> Привязать </button> </span> </div>
+
+                </div>
 
             </div>
-
 
             <div class="row">
 
@@ -44,7 +51,7 @@
 
 
                     <span id = "k-my-spn" class=" k-textbox k-space-right" >
-                        <input type="text" id="icon-right" ng-model="address.adr" />
+                        <input type="text" id="icon-right" ng-model="address.adr" ng-disabled="true"/>
                         <a href="" class="k-icon k-i-search" ng-click = "openAddress()" >&nbsp;</a>
                     </span>
 
@@ -147,7 +154,7 @@
                                         </ul>
                                     </div>
 
-                                    <input type="text" class="form-control " placeholder="Код организации"  ng-model="code_org" ng-pattern="/^[0-9]{3}$/" maxlength="3" style="width: 130px;"/>
+                                    <input type="text" class="form-control " placeholder="Код организации"  ng-model="code_org" ng-pattern="/^[0-9]{1,}$/" maxlength="3" style="width: 130px;"/>
                                     <span ng-hide="!code_org" style="color:limegreen; margin-left: 5px;" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                                 </div>
 
@@ -170,7 +177,7 @@
                                         </ul>
                                     </div>
 
-                                    <input type="text" class="form-control " placeholder="Инвентарный номер"  ng-model="inv" ng-pattern="/^[0-9]{3}$/" maxlength="3" style="width: 160px;"/>
+                                    <input type="text" class="form-control " placeholder="Инвентарный номер"  ng-model="inv" ng-pattern="/^[0-9]{1,}$/" maxlength="3" style="width: 160px;"/>
                                     <span ng-hide="!inv" style="color:limegreen; margin-left: 5px;" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                                 </div>
 
@@ -216,7 +223,7 @@
             <td width="5%">{{subject.objectType.code_name}}</td>
             <td width="20%">{{subject.object_name}} </td>
             <td width="10%">{{subject.address_dest!=null?subject.address_dest.adr:address.adr}}</td>
-            <td  width="10%">{{subject.cadaster_number}}</td>
+            <td  width="10%">{{subject.cadastre_number}}</td>
             <td width="10%">{{subject.org_id}}{{subject.objectType.v_prm1}}{{subject.inventory_number}}</td>
         </tr>
 

@@ -66,8 +66,9 @@ angular.module('assetsApp')
             loading: false,
             states: '',
             items: '',
-            subjecttypes: '',
-            subjects: [{label: 'loading'}]
+            obj: '',
+            subjects: [{label: 'loading'}],
+            subj: []
         };
 
         $('ul.nav li').click(function(e) {
@@ -81,7 +82,7 @@ angular.module('assetsApp')
 
         $scope.getSubStrCadastr = function(subject, from, to){
             if(subject != null)
-                return subject.cadaster_number.substring(from,to);
+                return subject.cadastre_number.substring(from,to);
             return "";
         };
 
@@ -183,11 +184,9 @@ angular.module('assetsApp')
 
             $scope.subjectForm=angular.copy(subject);
 
-                $scope.var.subj = [];
-
              //   subject = $scope.createJSON(subject);
 
-            var cad = subject.cadaster_number;
+            var cad = subject.cadastre_number;
             if(cad!=null && cad !="")
             {
                 $scope.pars_COATO= cad.substring(0,10);
@@ -199,6 +198,48 @@ angular.module('assetsApp')
                 $scope.var.subjtype = subject.subjectType;
 
                 $scope.var.subj = angular.copy(subject);
+
+            $scope.var.obj = $scope.isNull($scope.var.subj.cadastre_number) + $scope.isNull($scope.var.subj.org_id,$scope.var.subj.objectType.v_prm1,$scope.var.subj.inventory_number) + $scope.isNull($scope.var.subj.objectType.code_name);
+        };
+
+        $scope.isNull = function() {
+            var str="";
+            var i = 0, count = arguments.length;
+            if(count>0)
+                for(i=0;i<count;i++){
+                    if(arguments[i]==null)
+                        return "";
+                    str += arguments[i];
+                }
+            return str+"; ";
+        };
+
+        $scope.bind = function() {
+            var myElement = angular.element(document.querySelector('#ObjectID'));
+
+            console.log(JSON.stringify($scope.var.subj));
+
+            myElement.addClass("wait");
+            $scope.var.subj.status = 1;
+
+            $http.post(DOMAIN + "/nka_net3/object/bindObject?", $scope.var.subj ).success(function (data, status, headers) {
+
+                $scope.var.subj = data;
+
+                sessionStorage.setItem("addObj",JSON.stringify($scope.var.toSend));
+
+                swal("Good job!", "Object ID = " + $scope.var.subj.obj_id , "success");
+
+                myElement.removeClass("wait");
+
+            }).error(function (data, status, header, config) {
+
+                $scope.ServerResponse = 'Error message: '+data + "\n\n\n\nstatus: " + status + "\n\n\n\nheaders: " + header + "\n\n\n\nconfig: " + config;
+
+                swal("Error", $scope.ServerResponse , "error");
+
+
+            });
 
         };
     });

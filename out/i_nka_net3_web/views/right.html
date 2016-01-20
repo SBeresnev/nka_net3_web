@@ -163,7 +163,7 @@
 
                         <div class="well col-lg-6">
 
-                            <a href="" class="btn btn-success" role="button"><span class="glyphicon glyphicon-flash"></span> <br/>Создать</a>
+                            <a href="" class="btn btn-success" role="button" ng-click="CreateRight()"><span class="glyphicon glyphicon-flash"></span> <br/>Создать</a>
 
                             <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-plus-sign"></span> <br/>Добавить долю</a>
 
@@ -171,7 +171,7 @@
 
                             <a href="" class="btn btn-warning" role="button" ng-click="LoadBufer()"><span class="glyphicon glyphicon-circle-arrow-down"></span> <br/>Буфер</a>
 
-                            <a href="" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-remove-sign"></span> <br/>Очистить</a>
+                            <a href="" class="btn btn-danger" role="button" ng-click="CleanForm()"><span class="glyphicon glyphicon-remove-sign"></span> <br/>Очистить</a>
 
                         </div>
 
@@ -270,15 +270,21 @@
 
                                     <div class="row">
 
-                                        <button type="button" class="btn btn-default" ng-click = "detailModal()">Посмотреть</button>
+                                        <button type="button" class="btn btn-default" ng-click = "getLimitationRight()">Посмотреть</button>
 
-                                        <button type="button" class="btn btn-default" ng-click = "SetParentOwner()">Установить</button>
+                                        <button type="button" class="btn btn-default" ng-click = "setLimitationRight()">Установить</button>
 
                                     </div>
 
                                 </uib-accordion-group>
 
                              </uib-accordion>
+
+                        </div>
+
+                        <div class="checkbox">
+
+                            <label><input type="checkbox" ng-init="form_edit_right.is_needed=0" ng-model="form_edit_right.is_needed"> Признак льготного приобретения </label>
 
                         </div>
 
@@ -333,9 +339,9 @@
 
                                         <div class="row">
 
-                                            <button type="button" class="btn btn-default" ng-click = "detailModal()">Посмотреть</button>
+                                            <button type="button" class="btn btn-default" ng-click = "getParentOwner()">Посмотреть</button>
 
-                                            <button type="button" class="btn btn-default" ng-click = "SetParentOwner()">Установить</button>
+                                            <button type="button" class="btn btn-default" ng-click = "setParentOwner()">Установить</button>
 
                                         </div>
 

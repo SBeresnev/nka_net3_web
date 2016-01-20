@@ -698,7 +698,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.setLimitationRight =function(){};
 
-
     $scope.dispalyModal = function(modid) {
 
         var myElement = angular.element(document.querySelector(modid));
@@ -731,18 +730,31 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.CreateRight = function() {
 
+        var crete_right_obj = {};
+
+        /////////////////////// блок подготовки edit_right -> crete_right_obj ///////////////////////
+
         $scope.preCreateRight();
 
-        $http.put(DOMAIN + "/nka_net3/right/addRight?", $scope.edit_right ).success(function (data, status, headers) {
+        $scope.bringtoRight($scope.edit_right);
+
+        crete_right_obj = angular.copy($scope.edit_right);
+
+        crete_right_obj["rightOwners"] = $scope.normRightOwner($scope.edit_right);
+
+        sessionStorage.setItem('right', JSON.stringify($scope.edit_right));
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        $http.post(DOMAIN + "/nka_net3/right/addRight?", crete_right_obj).success(function (data, status, headers) {
 
             $scope.var.toSend = $scope.form_edit_right;
-
 
         }).error(function (data, status, header, config) {
 
             $scope.ServerResponse = 'Error message: '+data + "\n\n\n\nstatus: " + status + "\n\n\n\nheaders: " + header + "\n\n\n\nconfig: " + config;
 
-            swal("Error", $scope.ServerResponse , "error");
+           // swal("Error", $scope.ServerResponse , "error");
 
         });
 
@@ -755,13 +767,13 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.oper_right = angular.copy(operationtvar);
 
-        $scope.oper_right.entytyType = $scope.dict.curentTyp;
+        $scope.oper_right.entytyType = $scope.dict.curentTyp.code_id;
 
-        $scope.oper_right.operType = $scope.dict.curoprTyp;
+        $scope.oper_right.operType = $scope.dict.curoprTyp.code_id;
 
-        $scope.oper_right.operSubtype = $scope.dict.curoprSubTyp;
+        $scope.oper_right.operSubtype = $scope.dict.curoprSubTyp.code_id;
 
-        $scope.oper_right.reason = $scope.dict.curoprBase;
+        $scope.oper_right.reason = $scope.dict.curoprBase.code_id;
 
         $scope.oper_right.regDate = new Date();
 
@@ -773,12 +785,14 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     }
 
-
     $scope.preCreateRight = function() {
 
-        if ($scope.nullIfundefine($scope.edit_right) == null) { $scope.edit_right = angular.copy(rightvar); }
+        if ($scope.nullIfundefine($scope.edit_right.rightOwners) == null)
+        {
+            $scope.edit_right = angular.copy(rightvar);
+        }
 
-        $scope.form_edit_right.bindedObj = {"org_id":100,"inventory_number":1,"square":null,"roomscount":null,"readiness":null,"object_name":"Водопровод","objectType":{"code_id":2,"analytic_type":2,"code_name":"Строение","code_short_name":"Строение","parent_code":null,"n_prm1":null,"v_prm1":"C(U)","unitmeasure":null,"status":1,"catalogPk":{"code_id":2,"analytic_type":2}},"use_purpose":null,"land_category":null,"obj_id":255,"ooper":{"ooperId":410,"declId":1182,"entytyType":2,"operType":1,"operSubtype":1,"reason":3100,"executor":2920,"regDate":1449503140000,"operDate":1449503140000,"parent_id_order":null,"parent_id_hist":null,"status":1},"conserv":null,"reg_type":1,"status":1,"bound_id":null,"obj_dest_id":84,"address_id":54055,"adr_num":null,"address_dest":{"address_id":54055,"adr_num":1502253,"adr":"Гомельская обл.,Буда-Кошелевский р-н,г. Буда-Кошелево, Базарный 1-й 2","soato":"3205501000"},"obj_id_inv":84,"cadaster_number":"111111111111111111"};
+        $scope.form_edit_right.bindedObj = {"org_id":100,"inventory_number":1,"square":null,"roomscount":null,"readiness":null,"object_name":"Водопровод","objectType":{"code_id":2,"analytic_type":2,"code_name":"Строение","code_short_name":"Строение","parent_code":null,"n_prm1":null,"v_prm1":"C(U)","unitmeasure":null,"status":1,"catalogPk":{"code_id":2,"analytic_type":2}},"use_purpose":null,"land_category":null,"obj_id":255,"ooper":{"ooperId":410,"declId":1182,"entytyType":2,"operType":1,"operSubtype":1,"reason":3100,"executor":2920,"regDate":1449503140000,"operDate":1449503140000,"parent_id_order":null,"parent_id_hist":null,"status":1},"conserv":null,"reg_type":1,"status":1,"bound_id":null,"obj_dest_id":84,"address_id":54055,"adr_num":null,"address_dest":{"address_id":54055,"adr_num":1502253,"adr":"Гомельская обл.,Буда-Кошелевский р-н,г. Буда-Кошелево, Базарный 1-й 2","soato":"3205501000"},"obj_id_inv":84,"cadastre_number":"111111111111111111"};
 
         $scope.form_edit_right.ooper = $scope.createOperObject();
 
@@ -794,22 +808,42 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.edit_right.ooper =  $scope.form_edit_right.ooper;
 
+        $scope.edit_right.right_count_type = $scope.form_edit_right.right_count_type = $scope.dict.currgtCountTyp.code_id;
 
-        $scope.edit_right.right_count_type = $scope.form_edit_right.right_count_type = $scope.dict.currgtCountTyp;
+        $scope.edit_right.right_entity_type = $scope.form_edit_right.right_entity_type = $scope.dict.curentTyp.code_id;
 
-        $scope.edit_right.right_entity_type = $scope.form_edit_right.right_entity_type = $scope.dict.curentTyp;
-
-        $scope.edit_right.right_type = $scope.form_edit_right.right_type = $scope.dict.currgtCountTyp;
+        $scope.edit_right.right_type = $scope.form_edit_right.right_type = $scope.dict.currgtCountTyp.code_id;
 
         $scope.edit_right.status = $scope.form_edit_right.status;
 
-        if ($scope.nullIfundefine($scope.edit_right.rightOwners) == null)
-        {
-            $scope.edit_right.rightOwners = [];
 
+        $scope.edit_right.is_needed = $scope.edit_right.is_needed ? 1 : 0;
+
+        if ($scope.nullIfundefine($scope.edit_right.rightOwners.length) == 0)
+        {
             $scope.edit_right.rightOwners.push($scope.form_edit_right.rightOwner);
         }
 
+        return $scope.edit_right;
+    }
+
+    $scope.normRightOwner = function(edit_right_val) {
+
+        var norm_right_own = angular.copy(edit_right_val.rightOwners);
+
+        for ( var item in norm_right_own) {
+
+            var right_owner = angular.copy(norm_right_own[item]);
+
+            delete norm_right_own[item]['parent_owner_obj'];
+
+            delete norm_right_own[item]['owner'];
+
+            norm_right_own[item]['owner'] = {subjectId:right_owner.owner.subjectId};
+
+        }
+
+        return norm_right_own;
     }
 
     ///////////////////////////// Checks part /////////////////////////////////////////////////////////////////
@@ -895,6 +929,21 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
 
     }
+
+    $scope.bringtoRight = function(item){
+
+        delete item['rightOwner'];
+
+        delete item['right_count_type_name'];
+
+        delete item['right_entity_type_name'];
+
+        delete item['right_type_name'];
+
+        delete item['parent_owner_obj'];
+
+    }
+
 
     function Create2DArray(rows) {
         var arr = [];
