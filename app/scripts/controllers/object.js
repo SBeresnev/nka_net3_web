@@ -105,7 +105,7 @@ angular.module('assetsApp')
         //window.location.protocol + '//'+ window.location.hostname+":9000" + '/#/address';
 
         $scope.openAddress = function () {
-            sessionStorage.setItem("addObj",JSON.stringify([]));
+            sessionStorage.setItem("objObj",JSON.stringify([]));
             $scope.DlgOptions = {
                 width: "1300px", height: "500px", modal: true,
                 actions: ["Custom", "Minimize", "Maximize", "Close"],
@@ -217,27 +217,27 @@ angular.module('assetsApp')
         $scope.bind = function() {
             var myElement = angular.element(document.querySelector('#ObjectID'));
 
-            console.log(JSON.stringify($scope.var.subj));
+            //console.log(JSON.stringify($scope.var.subj));
 
-            myElement.addClass("wait");
+            $scope.var.loading = true;
             $scope.var.subj.status = 1;
 
             $http.post(DOMAIN + "/nka_net3/object/bindObject?", $scope.var.subj ).success(function (data, status, headers) {
 
                 $scope.var.subj = data;
 
-                sessionStorage.setItem("addObj",JSON.stringify($scope.var.toSend));
+                sessionStorage.setItem("objObj",JSON.stringify($scope.var.subj));
 
                 swal("Good job!", "Object ID = " + $scope.var.subj.obj_id , "success");
 
-                myElement.removeClass("wait");
+                $scope.var.loading = false;
 
             }).error(function (data, status, header, config) {
 
                 $scope.ServerResponse = 'Error message: '+data + "\n\n\n\nstatus: " + status + "\n\n\n\nheaders: " + header + "\n\n\n\nconfig: " + config;
 
                 swal("Error", $scope.ServerResponse , "error");
-
+                $scope.var.loading = false;
 
             });
 

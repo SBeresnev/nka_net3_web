@@ -244,12 +244,14 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         pos == -1 ? $scope.sel_subject[$scope.tabNum] = {} : $scope.sel_object[$scope.tabNum] = {};
 
-        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.nullIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" +  $scope.nullIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
+        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
 
-        $scope.urlSearch = "http://localhost:8080/nka_net3/right/getRightObjectPerson?obj_ids=&person_id=2942"; // потом удалить
+       // $scope.urlSearch = "http://localhost:8080/nka_net3/right/getRightObjectPerson?obj_ids=&person_id=2942"; // потом удалить
 
 
         $http.get($scope.urlSearch).success(function (res) {
+
+            if (res.length == 0) return;
 
             $scope.var.rightsDataSearch = res;
 
@@ -464,16 +466,23 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         var sel_object_test = JSON.parse(sessionStorage.getItem("objObj"));
 
-        if (this.nullIfundefine(sel_object_test) == null) { $scope.sel_object[$scope.tabNum] = sel_object_test; }
+        $scope.sel_object[$scope.tabNum] = sel_object_test;
 
         /////////////////// for first part only ////////////////////////////////////////////////////////////////////////////
 
-        $scope.sel_param = $scope.sel_object[1].object_name + ';' + $scope.sel_object[1].address ;
+        if( this.nullIfundefine($scope.sel_object[1]) ) {
+
+            $scope.sel_param = $scope.sel_object[1].object_name + ';' + $scope.sel_object[1].address_dest.adr ;
+        }
 
         /////////////////// for second part only ////////////////////////////////////////////////////////////////////////////
 
-        $scope.form_edit_right.bindedObj = angular.copy($scope.sel_object[2]);
+        if( this.nullIfundefine($scope.sel_object[2]) ) {
 
+            $scope.form_edit_right.bindedObj = angular.copy($scope.sel_object[2]);
+
+            $scope.form_edit_right.bindedObj.fullname =  $scope.sel_object[2].object_name + ';' + $scope.sel_object[2].address_dest.adr ;
+        }
 
     };
 
@@ -582,21 +591,21 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         //var element = $(e.currentTarget);
         //row = element.closest("tr");
 
+       // var objectFound = array[elementPos];
+
         if ($scope.tabNum == 1) {
 
             $scope.checked[$scope.tabNum+1][rec.right_id] = false;
 
             var item = $scope.var.rightsDataSearch.find(function (value) {return value.right_id == this.curType;}, {curType: rec.right_id});
 
-            var idx = $scope.sel_buffer.indexOf(item);
+            var idx = $scope.sel_buffer.findIndex(function (value) {return value.right_id == this.curType;}, {curType: rec.right_id});
 
-            $scope.sel_buffer.splice(idx, 1);
+            idx != -1 ? $scope.sel_buffer.splice(idx, 1) : null;
 
             if ($scope.checked[$scope.tabNum][rec.right_id]) {
 
-                $scope.sel_buffer.push($scope.var.rightsDataSearch.find(function (value) {
-                    return value.right_id == this.curType;
-                }, {curType: rec.right_id}));
+                $scope.sel_buffer.push(item);
 
                 //row.addClass("k-state-selected");
 
@@ -736,13 +745,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.preCreateRight();
 
-        $scope.bringtoRight($scope.edit_right);
-
         crete_right_obj = angular.copy($scope.edit_right);
 
-        crete_right_obj["rightOwners"] = $scope.normRightOwner($scope.edit_right);
+        crete_right_obj = $scope.bringtoRight(crete_right_obj);
 
-        sessionStorage.setItem('right', JSON.stringify($scope.edit_right));
+        //sessionStorage.setItem('right', JSON.stringify($scope.crete_right_obj));
 
         /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -827,24 +834,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         return $scope.edit_right;
     }
 
-    $scope.normRightOwner = function(edit_right_val) {
 
-        var norm_right_own = angular.copy(edit_right_val.rightOwners);
-
-        for ( var item in norm_right_own) {
-
-            var right_owner = angular.copy(norm_right_own[item]);
-
-            delete norm_right_own[item]['parent_owner_obj'];
-
-            delete norm_right_own[item]['owner'];
-
-            norm_right_own[item]['owner'] = {subjectId:right_owner.owner.subjectId};
-
-        }
-
-        return norm_right_own;
-    }
 
     ///////////////////////////// Checks part /////////////////////////////////////////////////////////////////
 
@@ -921,6 +911,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
+    $scope.emptyIfundefine = function(obj){
+
+        return obj === undefined ? '' : obj;
+
+    }
+
     $scope.timetoUTC = function(obj) {
 
         var sub_date = new Date(subject.bothRegDate);
@@ -929,6 +925,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
 
     }
+
+    ////////////////////////  для приведения в хороший json формат ////////////////////////////////////////////////
 
     $scope.bringtoRight = function(item){
 
@@ -942,8 +940,32 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         delete item['parent_owner_obj'];
 
+        item["rightOwners"] = $scope.normRightOwner($scope.edit_right);
+
+        return item ;
+
     }
 
+    $scope.normRightOwner = function(edit_right_val) {
+
+        var norm_right_own = angular.copy(edit_right_val.rightOwners);
+
+        for ( var item in norm_right_own) {
+
+            var right_owner = angular.copy(norm_right_own[item]);
+
+            delete norm_right_own[item]['parent_owner_obj'];
+
+            delete norm_right_own[item]['owner'];
+
+            norm_right_own[item]['owner'] = {subjectId:right_owner.owner.subjectId};
+
+        }
+
+        return norm_right_own;
+    }
+
+    ////////////////////////////////////////////////................////////////////////////////////////////////////
 
     function Create2DArray(rows) {
         var arr = [];
