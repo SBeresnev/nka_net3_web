@@ -246,7 +246,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
 
-        $scope.urlSearch = "http://localhost:8080/nka_net3/right/getRightObjectPerson?obj_ids=255&person_id=";
+        // $scope.urlSearch = "http://localhost:8080/nka_net3/right/getRightObjectPerson?obj_ids=255&person_id=";
         // "http://localhost:8080/nka_net3/right/getRightObjectPerson?obj_ids=&person_id=2942"; // потом удалить
 
         $http.get($scope.urlSearch).success(function (res) {
@@ -606,6 +606,14 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             idx != -1 ? $scope.sel_buffer.splice(idx, 1) : null;
 
+            /// очистка если выбираем тот же в случае редактирования
+            if(item.right_id == $scope.form_edit_right.right_id ) {
+
+                $scope.CleanForm();
+
+                $scope.edit_right = {} ;
+            }
+
             if ($scope.checked[$scope.tabNum][rec.right_id]) {
 
                 $scope.sel_buffer.push(item);
@@ -650,7 +658,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
-    $scope.LoadBufer = function(){
+    $scope.LoadBuffer = function(){
 
         $scope.mainGridOptions.dataSource.data = $scope.sel_buffer;
 
