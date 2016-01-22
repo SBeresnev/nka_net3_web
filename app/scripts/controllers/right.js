@@ -246,8 +246,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
 
-       // $scope.urlSearch = "http://localhost:8080/nka_net3/right/getRightObjectPerson?obj_ids=&person_id=2942"; // потом удалить
-
+        $scope.urlSearch = "http://localhost:8080/nka_net3/right/getRightObjectPerson?obj_ids=255&person_id=";
+        // "http://localhost:8080/nka_net3/right/getRightObjectPerson?obj_ids=&person_id=2942"; // потом удалить
 
         $http.get($scope.urlSearch).success(function (res) {
 
@@ -590,7 +590,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         //var element = $(e.currentTarget);
         //row = element.closest("tr");
-
        // var objectFound = array[elementPos];
 
         if ($scope.tabNum == 1) {
@@ -611,7 +610,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             } else {
 
-                if ($scope.edit_right.right_id == rec.right_id )  {$scope.edit_right = {};}
+                if ($scope.edit_right.right_id == rec.right_id )
+                 {
+                     $scope.edit_right = {};
+
+                     $scope.CleanForm();
+                 }
 
                 //row.removeClass("k-state-selected");
 
@@ -623,9 +627,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
             if ($scope.checked[$scope.tabNum][rec.right_id]) {
 
                 $scope.edit_right = $scope.sel_buffer.find(function (value) { return value.right_id == this.curType;}, {curType: rec.right_id});
+
             } else
             {
                 $scope.edit_right = {};
+
+                $scope.CleanForm();
             }
 
 
@@ -682,6 +689,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         $scope.var.url = DOMAIN + "/nka_net3/right/getRightbyRightOwner?right_own_ids=" + $scope.form_edit_right.rightOwner.parent_owner;
 
         $http.get($scope.var.url).then(function (res) {
+
+            if (res.data.length == 0) { $scope.var.loading = false; swal("Error", "Запись не существует или не активна" , "error"); return;}
 
             $scope.var.rightDetail = res.data[0];
 
