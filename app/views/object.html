@@ -10,9 +10,9 @@
 
                     <label class="control-label col-sm-1"> Объект: </label>
 
-                    <div class="col-sm-7"> <input type="text " class="form-control"  ng-value="var.obj" disabled/> </div>
+                    <div class="col-sm-7"> <input type="text " class="form-control"  ng-model="var.obj" disabled/> </div>
 
-                    <div class="col-sm-2"> <span class="input-group-btn"> <button class="btn btn-default form-control"  ng-click="bind()"> Привязать </button> </span> </div>
+                    <div class="col-sm-2"> <span class="input-group-btn"> <button class="btn btn-default form-control"  ng-click="bind()" ng-disabled="!var.obj"> Привязать </button> </span> </div>
 
                 </div>
 
@@ -82,11 +82,9 @@
                                     <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="glyphicon glyphicon-info-sign"></span>
                                     </button>
-
                                     <ul class="dropdown-menu" style="text-align: center;">
                                         Код СОАТО состоит из <i>10ти <b>цифр</b></i>
                                     </ul>
-
                                 </div>
 
                                 <div>

@@ -68,7 +68,7 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
         scope.var.loading = false;
         if (http.status == 200) {
           scope.var.subjects = JSON.parse(http.responseText);
-          alert(http.responseText);
+          //alert(http.responseText);
           if(scope.var.subjects.length != 0) {
             scope.var.showSubjectsTable = true;
           }

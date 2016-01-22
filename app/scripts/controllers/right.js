@@ -64,7 +64,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             {title:"Доля в праве", template: "#= data.numerator_part+''+(data.denominator_part == 1 ?'':'/'+data.denominator_part) #" },
 
-            {field: "date_in", title: "Дата прекращения доли", template:"#= data.date_in!=null?kendo.toString(kendo.parseDate(new Date(data.date_in)), 'dd-MM-yyyy'):'' #"},
+            {field: "date_in", title: "Дата возникновения доли", template:"#= data.date_in!=null?kendo.toString(kendo.parseDate(new Date(data.date_in)), 'dd-MM-yyyy'):'' #"},
 
             {field: "date_out", title: "Дата прекращения доли", template:"#= data.date_out!=null?kendo.toString(kendo.parseDate(new Date(data.date_out)), 'dd-MM-yyyy'):'' #"}
 
@@ -549,6 +549,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         //////////////////////////////комментарии ////////////////////////////////////////
 
+        $scope.form_edit_right.ooper =  $scope.edit_right.ooper;
+
         $scope.form_edit_right.comments = $scope.edit_right.comments;
 
         //////////////////////////////другие поля ////////////////////////////////////////
@@ -566,6 +568,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         $scope.form_edit_right.right_entity_type_name = $scope.edit_right.right_entity_type_name;
 
         $scope.form_edit_right.right_id = $scope.edit_right.right_id;
+
+        $scope.fillOper($scope.form_edit_right);
 
 
     }
@@ -678,7 +682,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
     ///////////////////////////// Modal Window part ///////////////////////////////////////////////////////////
     $scope.getParentOwner = function(){
 
-        if ($scope.nullIfundefine($scope.form_edit_right.rightOwner.parent_owner) == null) { swal("Error", 'Не указан идентификатор права родителя' , "error"); return;}
+        if ($scope.nullIfundefine($scope.form_edit_right.rightOwner.parent_owner) == null) { swal("Info", 'Не указан идентификатор права родителя' , "warning"); return;}
 
         if ($scope.nullIfundefine($scope.form_edit_right.rightOwner.parent_owner_obj) != null) { $scope.dispalyModal('#rgtModal'); return;}
 
@@ -690,7 +694,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $http.get($scope.var.url).then(function (res) {
 
-            if (res.data.length == 0) { $scope.var.loading = false; swal("Error", "Запись не существует или не активна" , "error"); return;}
+            if (res.data.length == 0) { $scope.var.loading = false; swal("Info", "Запись не существует или не активна" , "warning"); return;}
 
             $scope.var.rightDetail = res.data[0];
 
@@ -714,7 +718,13 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.getLimitationRight = function(){};
 
-    $scope.setLimitationRight =function(){};
+    $scope.setLimitationRight = function(){};
+
+    $scope.dispalyOperations = function(modid){
+
+        $scope.dispalyModal(modid);
+
+    }
 
     $scope.dispalyModal = function(modid) {
 
@@ -843,8 +853,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         return $scope.edit_right;
     }
 
-
-
     ///////////////////////////// Checks part /////////////////////////////////////////////////////////////////
 
     $scope.summCheckRightOwnersPart = function(rOwners){
@@ -893,6 +901,20 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         right.right_entity_type_name = $scope.dict.rightEntityTypes.find(this.initType,{curType:right.right_entity_type}).code_name;
 
         right.right_count_type_name = $scope.dict.rightCountTypes.find(this.initType,{curType:right.right_count_type}).code_name;
+
+    }
+
+    $scope.fillOper = function(right_own){
+
+        $scope.dict.curoprTyp = $scope.dict.operTypes.find(this.initType,{curType:right_own.ooper.operType});
+
+        $scope.dict.curoprSubTyp = $scope.dict.operSubTypes.find(this.initType,{curType:right_own.ooper.operSubtype});
+
+        $scope.dict.curoprBase = $scope.dict.operBases.find(this.initType,{curType:right_own.ooper.reason});
+
+        $scope.dict.filterSubTypes = [$scope.dict.curoprSubTyp];
+
+        $scope.dict.filterBases = [$scope.dict.curoprBase];
 
     }
 
