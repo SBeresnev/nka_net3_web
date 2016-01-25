@@ -582,7 +582,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.checked[$scope.tabNum-1][rec.right_id] = false;
 
-        $scope.edit_right = {};
+        if ( rec.right_id == $scope.edit_right.right_id ) { $scope.edit_right = {}; }
+
+        if ( rec.right_id == $scope.form_edit_right.right_id ) { $scope.CleanForm(); }
 
         var idx = $scope.sel_buffer.indexOf(rec);
 
