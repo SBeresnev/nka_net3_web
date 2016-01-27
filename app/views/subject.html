@@ -143,7 +143,7 @@
                             ng-style="{false:{'background-color': 'lightcoral'}}[unReg(subject)]">
                             <td width="2%">{{$index + 1}}</td>
                             <td width="5%">{{var.typeSearch.code_short_name}}{{subject.opf}}</td>
-                            <td width="20%">{{subject.surname}}{{" "+subject.firstname}}{{" "+subject.fathername }}{{subject.fullname}}{{subject.vnaim}}
+                            <td width="20%">{{subject.surname?subject.surname:''+" "+subject.firstname?subject.firstname:''+" "+subject.fathername?subject.fathername:'' }}{{subject.fullname}}{{subject.vnaim}}
                             </td>
                             <td width="10%">{{subject.personalNumber}} {{subject.unp}}</td>
                             <td  width="10%">{{subject.address}}{{subject.fullAddress}}</td>

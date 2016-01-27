@@ -10,17 +10,19 @@ angular.module('assetsApp').value('rightvar',
         comments: "",
         end_date: null,
         is_needed: 0,
-        limit_righ: null,
+        limit_right: null,
         ooper: {},
         rightOwners: [],
-        rightOwner: {owner:{}, parent_owner_obj:{} },
         right_count_type: null,
-        right_count_type_name: "",
         right_entity_type: null,
-        right_entity_type_name: "",
         right_id: null,
         right_type: null,
-        right_type_name: "",
-        status: null
+        status: 1,
+
+        limit_rights:[],
+        rightOwner: {owner:{}, parent_owner_obj:{}, limit_rights:[], status:1 },
+        right_count_type_name: "",
+        right_entity_type_name: "",
+        right_type_name: ""
   }
 );
