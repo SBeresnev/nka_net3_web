@@ -103,15 +103,15 @@
 
                <div class = "col-lg-12 vert-offset-top-2">
 
-                   <button class="astext" ng-click="LoadBuffer()"><b>Выбрать</b></button>
+                   <button class="astext" ng-click="LoadBuffer()"><h4><b>Выбрать</b></h4></button>
 
                  <uib-accordion ng-init="pnl_opn=true">
 
-                  <uib-accordion-group is-open="pnl_opn" panel-class="panel panel-dafault">
+                  <uib-accordion-group is-open="true" panel-class="panel panel-dafault">
 
                       <uib-accordion-heading>
 
-                        <i ng-click="pnl_opn=!pnl_opn" class="pull-left glyphicon" ng-class="{true:'glyphicon-chevron-down', false: 'glyphicon-chevron-right'}[pnl_opn]"></i>
+                          <i ng-click="pnl_opn=!pnl_opn" class="pull-left glyphicon" ng-class="{true:'glyphicon-chevron-down', false: 'glyphicon-chevron-right'}[pnl_opn]"></i>
 
                       </uib-accordion-heading>
 
@@ -161,19 +161,6 @@
 
                        </table>
 
-                        <div class="col-lg-3"></div>
-
-                        <div class="well col-lg-6">
-
-                            <a href="" class="btn btn-success" role="button" ng-click="CreateRight()"><span class="glyphicon glyphicon-flash"></span> <br/>Создать</a>
-
-                            <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-plus-sign"></span> <br/>Добавить долю</a>
-
-                            <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-signal"></span> <br/>Изменить</a>
-
-                            <a href="" class="btn btn-danger" role="button" ng-click="CleanEditForm()"><span class="glyphicon glyphicon-remove-sign"></span> <br/>Очистить</a>
-
-                        </div>
 
                     </div>
 
@@ -256,7 +243,7 @@
 
                         <div class="checkbox vert-offset-top-3">
 
-                            <label><input type="checkbox" ng-init="form_edit_right.is_needed=0" ng-model="form_edit_right.is_needed"> Признак льготного приобретения </label>
+                            <label><input type="checkbox" ng-init="form_edit_right.is_needed = 0" ng-model="form_edit_right.is_needed"> Признак льготного приобретения </label>
 
                         </div>
 
@@ -268,7 +255,7 @@
 
                                     <uib-accordion-heading>
 
-                                        <button class="astext" style="color: maroon"><b>ограничение/обременение прав</b></button>
+                                        <button class="astext" style="color: maroon"><b>ограничение/обременение права</b></button>
 
                                         <blink ng-if="true"> <span class="glyphicon glyphicon-exclamation-sign"></span> </blink>
 
@@ -329,27 +316,6 @@
 
                             </div>
 
-                            <div class="form-group vert-offset-bottom-2">
-
-                                <uib-accordion>
-
-                                    <uib-accordion-group  panel-class="panel panel-dafault">
-
-                                           <uib-accordion-heading>  <button class="astext" style="color:maroon" ng-click="parent"><b>Идентификатор права-родителя</b><span class="badge">{{form_edit_right.rightOwner.parent_owner}}</span></button> </uib-accordion-heading>
-
-                                        <div class="row">
-
-                                            <button type="button" class="btn btn-default" ng-click = "getParentOwner()">Посмотреть</button>
-
-                                            <button type="button" class="btn btn-default" ng-click = "setParentOwner()">Установить</button>
-
-                                        </div>
-
-                                    </uib-accordion-group>
-
-                                 </uib-accordion>
-
-                            </div>
 
                         </div>
 
@@ -391,14 +357,59 @@
 
                         </div>
 
-                        <button class="btn btn-danger col-xs-6 vert-offset-top-4" ng-click="dispalyOperations('#operModal')">Операции</button>
+
+                        <div class="vert-offset-top-8">
+
+                         <uib-accordion>
+
+                              <uib-accordion-group  panel-class="panel panel-dafault">
+
+                                <uib-accordion-heading>
+
+                                    <button class="astext" style="color: maroon"><b>ограничение/обременение доли правообладателя</b></button>
+
+                                    <blink ng-if="true"> <span class="glyphicon glyphicon-exclamation-sign"></span> </blink>
+
+                                </uib-accordion-heading>
+
+                                <div class="row">
+
+                                    <button type="button" class="btn btn-default" ng-click = "getLimitationRight()">Посмотреть</button>
+
+                                    <button type="button" class="btn btn-default" ng-click = "setLimitationRight()">Установить</button>
+
+                                </div>
+
+                              </uib-accordion-group>
+
+                          </uib-accordion>
+
+                        </div>
+
+
+                        <button class="btn btn-danger col-xs-6 vert-offset-top-3" ng-click="dispalyOperations('#operModal')">Операции</button>
 
 
                     </div>
 
                 </div>
 
-            </div>
+                <div class="col-lg-3"></div>
+
+                   <div class="well col-lg-10">
+
+                       <a href="" class="btn btn-success" role="button" ng-click="CreateRight()"><span class="glyphicon glyphicon-flash"></span> <br/>Создать</a>
+
+                       <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-plus-sign"></span> <br/>Добавить долю</a>
+
+                       <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-signal"></span> <br/>Изменить</a>
+
+                       <a href="" class="btn btn-danger" role="button" ng-click="CleanEditForm()"><span class="glyphicon glyphicon-remove-sign"></span> <br/>Очистить</a>
+
+                   </div>
+
+
+               </div>
 
         </div>
 
