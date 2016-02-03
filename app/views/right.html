@@ -174,7 +174,7 @@
 
                <div class = "col-lg-6">
 
-                <div class="panel panel-info vert-offset-top-2">
+               <div class="panel panel-default vert-offset-top-2">
 
                     <div class="panel-heading fa fa-balance-scale">Право</div>
 
@@ -241,12 +241,6 @@
 
                         </div>
 
-                        <div class="checkbox vert-offset-top-3">
-
-                            <label><input type="checkbox" ng-init="form_edit_right.is_needed = 0" ng-model="form_edit_right.is_needed"> Признак льготного приобретения </label>
-
-                        </div>
-
                         <div class="form-group vert-offset-top-2" >
 
                             <uib-accordion >
@@ -255,9 +249,9 @@
 
                                     <uib-accordion-heading>
 
-                                        <button class="astext" style="color: maroon"><b>ограничение/обременение права</b></button>
+                                        <button class="astext" style="color:black"><b>ограничение/обременение права</b></button>
 
-                                        <blink ng-if="true"> <span class="glyphicon glyphicon-exclamation-sign"></span> </blink>
+                                        <!--blink ng-if="true"> <span class="glyphicon glyphicon-exclamation-sign"></span> </blink-->
 
                                     </uib-accordion-heading>
 
@@ -272,6 +266,12 @@
                                 </uib-accordion-group>
 
                             </uib-accordion>
+
+                        </div>
+
+                        <div class="checkbox vert-offset-top-3">
+
+                            <label><input type="checkbox" ng-init="form_edit_right.is_needed = 0" ng-model="form_edit_right.is_needed"> Признак льготного приобретения </label>
 
                         </div>
 
@@ -294,13 +294,11 @@
 
                <div class = "col-lg-6">
 
-                <div class="panel panel-info vert-offset-top-2">
+                <div class="panel panel-default vert-offset-top-2">
 
                     <div class="panel-heading fa fa-users">Правообладатели</div>
 
                     <div class="panel-body">
-
-                        <div class="panel panel-default">
 
                             <div class="form-group vert-offset-top-2 vert-offset-bottom-2">
 
@@ -315,9 +313,6 @@
                                 </div>
 
                             </div>
-
-
-                        </div>
 
                         <div class="form-group vert-offset-top-3">
 
@@ -357,8 +352,7 @@
 
                         </div>
 
-
-                        <div class="vert-offset-top-8">
+                        <div>
 
                          <uib-accordion>
 
@@ -366,9 +360,9 @@
 
                                 <uib-accordion-heading>
 
-                                    <button class="astext" style="color: maroon"><b>ограничение/обременение доли правообладателя</b></button>
+                                    <button class="astext vert-offset-top-3" style="color:black"><b>ограничение/обременение доли правообладателя</b></button>
 
-                                    <blink ng-if="true"> <span class="glyphicon glyphicon-exclamation-sign"></span> </blink>
+                                    <!--blink ng-if="true"> <span class="glyphicon glyphicon-exclamation-sign"></span> </blink-->
 
                                 </uib-accordion-heading>
 
@@ -387,22 +381,22 @@
                         </div>
 
 
-                        <button class="btn btn-danger col-xs-6 vert-offset-top-3" ng-click="dispalyOperations('#operModal')">Операции</button>
+                        <span class="btn btn-default vert-offset-top-2" ng-click="dispalyOperations('#operModal')">Операции   <blink ng-if="true"> <span class="glyphicon glyphicon-exclamation-sign"></span></blink></span>
 
 
                     </div>
 
                 </div>
 
-                <div class="col-lg-3"></div>
+                <div class="col-lg-4"></div>
 
-                   <div class="well col-lg-10">
+                <div class="well col-lg-10">
 
                        <a href="" class="btn btn-success" role="button" ng-click="CreateRight()"><span class="glyphicon glyphicon-flash"></span> <br/>Создать</a>
 
-                       <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-plus-sign"></span> <br/>Добавить долю</a>
+                       <a href="" class="btn btn-warning" role="button" ng-click="CreateOwnerPart()"><span class="glyphicon glyphicon-plus-sign"></span> <br/>Добавить долю</a>
 
-                       <a href="" class="btn btn-warning" role="button"><span class="glyphicon glyphicon-signal"></span> <br/>Изменить</a>
+                       <a href="" class="btn btn-warning" role="button" ng-click="UpdateRight()"><span class="glyphicon glyphicon-signal"></span> <br/>Изменить</a>
 
                        <a href="" class="btn btn-danger" role="button" ng-click="CleanEditForm()"><span class="glyphicon glyphicon-remove-sign"></span> <br/>Очистить</a>
 
