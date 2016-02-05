@@ -74,7 +74,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     }; };
 
-    //////////////////////////////////common window///////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////common window////////////////////////////////////////////////////////////////////
 
     $scope.urlmodSbj = WEBDOM + '//#/subject/true';
 
@@ -288,7 +288,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             $scope.mainGridOptions.dataSource.data = $scope.var.rightsDataSearch;
 
-          //$scope.sel_subject[$scope.tabNum] = $scope.var.rightsDataSearch[0].owner; // потом удалить
+            ////////////////////////////////////////////////////////////////////////////////
+
 
         }).error(function (data, status, header, config) {
 
@@ -685,6 +686,10 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
             if ($scope.checked[$scope.tabNum][rec.right_id]) {
 
                 $scope.edit_right = $scope.sel_buffer.find(function (value) { return value.right_id == this.curType;}, {curType: rec.right_id});
+
+
+
+                $scope.editGrdOption.dataSource.data = $scope.edit_right.rightOwners;
 
                 /////////// заполняем только левую панель права ///////////
 
@@ -1739,6 +1744,61 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
     $scope.setActiveTab(1);
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////new part/////////////////////////////////////////////////////////////
+    $scope.editGrdOption = {
+
+        dataSource: {
+
+            type: "odata",
+
+            data: [],
+
+            group: {
+                //field: "owner.subjectId", aggregates: [{field: "owner.subjectId", aggregate: "count"}]
+
+                field: "owner.subjectId", aggregates: [{field: "owner.subjectId", aggregate: "min"}]
+            }
+
+        },
+
+        scrollable: false,
+
+        sortable: true,
+
+        resizable: true,
+
+        columns: [
+
+            { field: "owner.subjectId",  hidden: true, groupHeaderTemplate:"{{groupName()}}", title: "id_owner"},
+
+            { field: "right_owner_id", title: "ID" },
+
+            { title: "Вид права:", template:"{{edit_right.right_type_name}}"},
+
+            { title: "Имя объекта:", template:"{{edit_right.bindedObj.object_name + '; '+edit_right.bindedObj.address}}"},
+
+            { title: "Тип объекта:", template:"{{edit_right.bindedObj.objectType.code_name}}"},
+
+            { field:"FIO", title: "Имя/название правообладателя:", template:"{{dataItem.owner.fullname === undefined?BeautyCast(dataItem.owner.surname,dataItem.owner.firstname,dataItem.owner.fathername):dataItem.owner.fullname}}"},
+
+            { field:"Teils", title:"Доля в праве", template: "#= numerator_part+''+(denominator_part == 1 ?'':'/'+denominator_part) #" }
+
+        ],
+
+    };
+
+    $scope.groupName = function(e)
+    {
+        var rt = 1;
+
+        alert(e);
+
+        return "serega";
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 });
 
