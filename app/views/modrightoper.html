@@ -12,7 +12,7 @@
 
                 <label class="control-label">Тип операции:</label>
 
-                <select class="form-control" data-live-search="true" ng-change="setOperFiletr()" ng-model="dict.curoprTyp" ng-options="type.code_short_name for type in dict.operTypes | orderBy: ['code_short_name']  track by type.code_id " required="required"></select>
+                <select class="form-control" data-live-search="true" ng-change="setOperFilter()" ng-model="dict.curoprTyp" ng-options="type.code_short_name for type in dict.operTypes | orderBy: ['code_short_name']  track by type.code_id " required="required"></select>
 
             </div>
 

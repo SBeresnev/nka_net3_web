@@ -124,6 +124,7 @@
 
                             <div kendo-grid="editGrd" class="vert-offset-top-2" options="editGrdOption" k-rebind="editGrdOption.dataSource.data" ></div>
 
+
                         </div>
 
 
@@ -136,7 +137,7 @@
 
            </div>
 
-              <div class="col-lg-12 vert-offset-top-2">
+               <div class="col-lg-12 vert-offset-top-2">
 
                   <nav class="navbar navbar-default" style="background-color:white">
 
@@ -175,7 +176,7 @@
 
                     <div class="panel-body ">
 
-                        <div class="form-group vert-offset-top-2">
+                        <div class="form-group vert-offset-top-1">
 
                             <label class="control-label">Объект:</label>
 
@@ -266,7 +267,7 @@
 
                         <div class="checkbox vert-offset-top-2">
 
-                            <label><input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="form_edit_right.is_needed"> Признак льготного приобретения </label>
+                            <label><input type="checkbox" ng-init="form_edit_right.is_needed = 0" ng-true-value="1" ng-false-value="0" ng-model="form_edit_right.is_needed"> Признак льготного приобретения </label>
 
                         </div>
 
@@ -295,7 +296,7 @@
 
                     <div class="panel-body">
 
-                            <div class="form-group vert-offset-top-1 vert-offset-bottom-2">
+                            <div class="form-group vert-offset-top-2 vert-offset-bottom-2">
 
                                 <label class="control-label">Правообладатель:</label>
 
@@ -393,11 +394,7 @@
 
          <div id="detail" ng-class="getTabPaneClass(3)">
 
-             <div id="example container" ng-show="edit_right.right_id" >
 
-                 <div kendo-grid="editGrd" class="vert-offset-top-2" options="editGrdOption"></div>
-
-             </div>
 
          </div>
 

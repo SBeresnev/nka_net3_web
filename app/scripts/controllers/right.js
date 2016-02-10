@@ -9,71 +9,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     ///////////////////////////////kendo grid property/////////////////////////////////////////////////////////////////
 
-    $scope.mainGridOptions = {
-
-        dataSource: { data:[]},
-
-        scrollable: false,
-
-        sortable: true,
-
-        resizable: true,
-
-        columns: [
-
-            {field: "bufer", title: "Действия <br> с правом", template: '<input type="checkbox"  class="inputtd" ng-click="BufferChange(dataItem, $event)" ng-model="checked[mainGridOptions.curTabNum][dataItem.right_id]">'},
-
-            {field: "right_id", title: "ID"},
-
-            {field: "right_type_name", title: "Вид права:"},
-
-            {field: "right_entity_type_name", title: "<center>Объект операции  <br> (сущность)</center>"},
-
-            {field: "right_count_type_name", title: "<center>Тип права по числу <br> правообладателей</center>"},
-
-            {field: "begin_date", title: "<center> Дата <br> возникновения права</center>", template:"#= begin_date!=null?kendo.toString(kendo.parseDate(new Date(begin_date)), 'dd-MM-yyyy'):'' #"},
-
-            {field: "end_date", title: "<center> Дата <br>прекращения права</center>", template:"#= end_date!=null?kendo.toString(kendo.parseDate(new Date(end_date)), 'dd-MM-yyyy'):'' #"},
-
-            {field: "bindedObj.object_name", title: "Имя объекта"} ,
-
-            {title: "Тип объекта:", template: "#= bindedObj.objectType.code_name #" },
-
-            {title: "", template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="OnDeleteClick(dataItem)">Удалить</span>'},
-
-            {title: "Добавить", hidden: true ,template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="AppenLimClick(dataItem)">Добавить</span>'}
-
-        ]
-    };
-
-    $scope.detailOwnersOptions = function(dataItem) { return {
-
-        dataSource: { data: dataItem === undefined ? null : dataItem.rightOwners },
-
-        scrollable: false,
-
-        sortable: true,
-
-        resizable: true,
-
-        columns: [
-
-            {title:"Имя/название правообладателя", template: "{{dataItem.owner.fullname === undefined? BeautyCast(dataItem.owner.surname,dataItem.owner.firstname,dataItem.owner.fathername):dataItem.owner.fullname}}" },
-
-            {field:"owner.address", title:"Адресс правообладателя" },
-
-            {title:"Тип субъекта", template: "#= data.owner.dtype=='private'?'физ. лицо':'юр. лицо'#" },
-
-            {title:"Доля в праве", template: "#= data.numerator_part+''+(data.denominator_part == 1 ?'':'/'+data.denominator_part) #" },
-
-            {field: "date_in", title: "Дата возникновения доли", template:"#= data.date_in!=null?kendo.toString(kendo.parseDate(new Date(data.date_in)), 'dd-MM-yyyy'):'' #"},
-
-            {field: "date_out", title: "Дата прекращения доли", template:"#= data.date_out!=null?kendo.toString(kendo.parseDate(new Date(data.date_out)), 'dd-MM-yyyy'):'' #"}
-
-        ]
-
-    }; };
-
     $scope.editGrdOption = {
 
         dataSource: {
@@ -89,7 +24,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         },
 
-        change: $scope.onEditPanelChange,
+        change: onEditPanelChange,
 
         scrollable: false,
 
@@ -105,9 +40,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             { field: "owner.subjectId",  hidden: true, groupHeaderTemplate:"{{groupName(#=value#)}}", title: "id_owner"},
 
-            { field: "right_owner_id", title: "ID" },
+            { field: "right_owner_id" ,title: "ID" },
 
-            { title: "Вид права:", template:"{{edit_right.right_type_name}}"},
+            { title: "Вид права:" ,template:"{{edit_right.right_type_name}}"},
 
             { title: "Имя объекта:", template:"{{edit_right.bindedObj.object_name + '; '+edit_right.bindedObj.address}}"},
 
@@ -121,13 +56,97 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
+    $scope.mainGridOptions = {
+
+        dataSource: { data:[]},
+
+        scrollable: false,
+
+        sortable: true,
+
+        resizable: true,
+
+        navigatable: true,
+
+        filterable: {
+            extra: false,
+
+            operators: {
+
+                string: {
+
+                    startswith: "Starts with",
+                    eq: "Is equal to",
+                    neq: "Is not equal to"
+
+                }
+
+            }
+        },
+
+        columns: [
+
+            {field: "bufer",  filterable: false, title: "Действия <br> с правом", template: '<input type="checkbox"  class="inputtd" ng-click="BufferChange(dataItem, $event)" ng-model="checked[mainGridOptions.curTabNum][dataItem.right_id]">'},
+
+            {field: "right_id",  filterable: false, title: "ID"},
+
+            {field: "right_type_name",  filterable: false, title: "Вид права:"},
+
+            {field: "right_entity_type_name",  filterable: false, title: "<center>Объект операции  <br> (сущность)</center>"},
+
+            {field: "right_count_type_name", filterable: false, title: "<center>Тип права по числу <br> правообладателей</center>"},
+
+            {field: "begin_date",  filterable: false, title: "<center> Дата <br> возникновения права</center>", template:"#= begin_date!=null?kendo.toString(kendo.parseDate(new Date(begin_date)), 'dd-MM-yyyy'):'' #"},
+
+            {field: "end_date",  filterable: false, title: "<center> Дата <br>прекращения права</center>", template:"#= end_date!=null?kendo.toString(kendo.parseDate(new Date(end_date)), 'dd-MM-yyyy'):'' #"},
+
+            {field: "bindedObj.object_name",  title: "Имя объекта"} ,
+
+            {title: "Тип объекта:", template: "#= bindedObj.objectType.code_name #" },
+
+            {title: "", template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="OnDeleteClick(dataItem)">Удалить</span>'},
+
+            {title: "Добавить", hidden: true ,template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="AppenLimClick(dataItem)">Добавить</span>'}
+
+        ]
+
+    };
+
+    $scope.detailOwnersOptions = function(dataItem) { return {
+
+        dataSource: { data: dataItem === undefined ? null : dataItem.rightOwners },
+
+        scrollable: false,
+
+        sortable: true,
+
+        resizable: true,
+
+        columns: [
+
+            {title:"Имя/название правообладателя" ,template: "{{dataItem.owner.fullname === undefined? BeautyCast(dataItem.owner.surname,dataItem.owner.firstname,dataItem.owner.fathername):dataItem.owner.fullname}}" },
+
+            {field:"owner.address", title:"Адресс правообладателя" },
+
+            {title:"Тип субъекта", template: "#= data.owner.dtype=='private'?'физ. лицо':'юр. лицо'#" },
+
+            {title:"Доля в праве", template: "#= data.numerator_part+''+(data.denominator_part == 1 ?'':'/'+data.denominator_part) #" },
+
+            {field: "date_in", title: "Дата возникновения доли", template:"#= data.date_in!=null?kendo.toString(kendo.parseDate(new Date(data.date_in)), 'dd-MM-yyyy'):'' #"},
+
+            {field: "date_out", title: "Дата прекращения доли", template:"#= data.date_out!=null?kendo.toString(kendo.parseDate(new Date(data.date_out)), 'dd-MM-yyyy'):'' #"}
+
+        ]
+
+    }; };
+
     //////////////////////////////////common window////////////////////////////////////////////////////////////////////
 
     $scope.urlmodSbj = WEBDOM + '//#/subject/true';
 
     $scope.urlmodObj = WEBDOM + '//#/object';
 
-    $scope.DlgOptions = {width: "1300px", height: "500px", modal: true, actions: [ "Minimize", "Maximize", "Close"], iframe: true, visible: false };
+    $scope.DlgOptions = {width: "1300px", height: "700px", modal: true, actions: [ "Minimize", "Maximize", "Close"], iframe: true, visible: false };
 
     $scope.begin_date = new Date();
 
@@ -440,7 +459,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
-    $scope.setOperFiletr = function() {
+    $scope.setOperFilter = function() {
 
         var subType = {};
 
@@ -1708,7 +1727,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
-    $scope.BeautyCast = function(var_one, var_two , var_three ) {
+    $scope.BeautyCast = function(var_one, var_two, var_three) {
 
         return (var_one + ' ' + var_two +' '+ var_three).replace(/null/g,'').trim();
 
@@ -1769,7 +1788,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    $scope.onEditPanelChange = function(e){
+    function onEditPanelChange(e){
 
         var selectedRow = this.select();
 
@@ -1788,8 +1807,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
     $scope.refreshEditPanel = function(){
 
         $scope.editGrdOption.dataSource.data = $scope.edit_right.rightOwners;
-
-        $scope.editGrd.refresh();
 
     }
 
