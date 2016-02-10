@@ -30,7 +30,7 @@
 
             <div class = "page-header " >
 
-                <div class="btn-group" ng-init="obj_class='btn  btn-default '; sbj_class='btn active btn-danger '">
+                <div class="btn-group" ng-init="obj_class='btn btn-default'; sbj_class='btn active btn-primary'">
 
                     <button type="btn-lg" ng-class="obj_class" ng-click="ChgEntity()">По объекту</button>
                     <button type="btn-lg" ng-class="sbj_class" ng-click="ChgEntity()">По субъекту</button>
@@ -74,9 +74,13 @@
                             <table class="table table-bordered" >
 
                                 <tr><td style="color:navy">Имя объекта:</td><td><b>{{dataItem.bindedObj.object_name}}</b></td></tr>
+
                                 <tr><td style="color:navy">Адрес объекта:</td><td><b>{{dataItem.bindedObj.address}}</b></td></tr>
+
                                 <tr><td style="color:navy">Тип объекта:</td><td><b>{{dataItem.bindedObj.objectType.code_name}}</b></td></tr>
+
                                 <tr><td style="color:navy">Инвентарный номер:</td><td><b>{{dataItem.bindedObj.inventory_number}}</b></td></tr>
+
                                 <tr><td style="color:navy">Кадастровый номер:</td><td><b>{{dataItem.bindedObj.cadastre_number}}</b></td></tr>
 
                             </table>
@@ -96,13 +100,12 @@
 
         <!-------------- Main block -------------------------------------------------->
 
+
           <div id="main" ng-class="getTabPaneClass(2)"  >
 
               <!------------- Bufer  ------------->
 
-               <div class = "col-lg-12 vert-offset-top-2">
-
-                   <button class="btn btn btn-default btn-lage" ng-click="LoadBuffer()"><h4><b>Выбрать</b></h4></button>
+               <div class = "col-lg-12 ">
 
                  <uib-accordion ng-init="pnl_opn=true">
 
@@ -116,52 +119,12 @@
 
                     <div class="row">
 
-                      <table class="table table-bordered table-hover vert-offset-top-2" ng-show="edit_right.right_id">
 
-                        <thead>
+                        <div id="exmp" class="col-lg-12 vert-offset-top-1" ng-show="edit_right.right_id">
 
-                          <tr>
+                            <div kendo-grid="editGrd" class="vert-offset-top-2" options="editGrdOption" k-rebind="editGrdOption.dataSource.data" ></div>
 
-                             <th>ID</th>
-
-                             <th>Вид права</th>
-
-                             <th>Имя объекта</th>
-
-                             <th>Тип объекта</th>
-
-                             <th>Имя/название правообладателя</th>
-
-                             <th>Доля в праве</th>
-
-                          </tr>
-
-                        <thead>
-
-                        <tbody>
-
-                          <tr ng-repeat="item in edit_right.rightOwners" ng-class="{'right-edit-buffer-tab-select':$index==selected}" ng-click= "OnEditPanelTable($index, item)">
-
-                              <td  width="fit-content">{{item.right_owner_id}}</td>
-
-                              <td  width="fit-content">{{edit_right.right_type_name}}</td>
-
-                              <td  width="fit-content">{{edit_right.bindedObj.object_name}}</td>
-
-                              <td  width="fit-content">{{edit_right.bindedObj.objectType.code_name}}</td>
-
-                              <td  width="fit-content">{{item.owner.fullname?item.owner.fullname:BeautyCast(item.owner.surname,item.owner.firstname,item.owner.fathername)}}</td>
-
-                              <td  width="fit-content">{{item.numerator_part}}{{item.denominator_part == 1 ?'':'/'+item.denominator_part}}</td>
-
-                          </tr>
-
-
-                         </tbody>
-
-                       </table>
-
-                       <h4 ng-if="nullIfundefine(edit_right.rightOwners)"><b>Сумма долей - {{BeautySumm(edit_right.rightOwners)}}</b></h4>
+                        </div>
 
 
                     </div>
@@ -170,7 +133,37 @@
 
              </uib-accordion>
 
+
            </div>
+
+              <div class="col-lg-12 vert-offset-top-2">
+
+                  <nav class="navbar navbar-default" style="background-color:white">
+
+                      <div class="row container-fluid">
+
+                          <div class="col-md-3"> </div>
+
+                              <ul id="right-ul-hover" class="nav navbar-nav" >
+
+                                  <li><a href="" ng-click="LoadBuffer()"><b>Выбрать</b></a></li>
+
+                                  <li><a href="" ng-click="CreateRight()"><span class="glyphicon glyphicon-flash"></span><b> Создать</b></a></li>
+
+                                  <li><a href="" ng-click="CreateOwnerPart()"><span class="glyphicon glyphicon-plus-sign"></span><b> Добавить долю</b></a></li>
+
+                                  <li><a href="" ng-click="UpdateRight()"><span class="glyphicon glyphicon-signal"></span><b> Изменить</b></a></li>
+
+                                  <li><a href="" ng-click="CleanEditForm()"><span class="glyphicon glyphicon-remove-sign"></span><b> Очистить</b></a></li>
+
+                              </ul>
+
+                      </div>
+
+                  </nav>
+
+              </div>
+
 
               <!------------ Right  -------------->
 
@@ -188,7 +181,7 @@
 
                             <div class="input-group">
 
-                                <input type="text" class="form-control" placeholder="Объект"  ng-value="form_edit_right.bindedObj.fullname" disabled/>
+                                <textarea type="text" class="form-control" placeholder="Объект" rows="2"  ng-model="form_edit_right.bindedObj.fullname" disabled/>
 
                                 <span class="input-group-addon right-span-addon" ><span class="glyphicon glyphicon-zoom-in" ng-click="objOpen()"></span></span>
 
@@ -217,7 +210,7 @@
 
                         </div>
 
-                        <div class="form-group vert-offset-top-3">
+                        <div class="form-group vert-offset-top-2">
 
                             <label>Дата действия права:</label>
 
@@ -271,9 +264,9 @@
 
                         </div>
 
-                        <div class="checkbox vert-offset-top-3">
+                        <div class="checkbox vert-offset-top-2">
 
-                            <label><input type="checkbox" ng-init="form_edit_right.is_needed = 0" ng-model="form_edit_right.is_needed"> Признак льготного приобретения </label>
+                            <label><input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="form_edit_right.is_needed"> Признак льготного приобретения </label>
 
                         </div>
 
@@ -302,7 +295,7 @@
 
                     <div class="panel-body">
 
-                            <div class="form-group vert-offset-top-2 vert-offset-bottom-2">
+                            <div class="form-group vert-offset-top-1 vert-offset-bottom-2">
 
                                 <label class="control-label">Правообладатель:</label>
 
@@ -392,19 +385,6 @@
 
                 <div class="col-lg-4"></div>
 
-                <div class="well col-lg-10">
-
-                       <a href="" class="btn btn-success" role="button" ng-click="CreateRight()"><span class="glyphicon glyphicon-flash"></span> <br/>Создать</a>
-
-                       <a href="" class="btn btn-warning" role="button" ng-click="CreateOwnerPart()"><span class="glyphicon glyphicon-plus-sign"></span> <br/>Добавить долю</a>
-
-                       <a href="" class="btn btn-warning" role="button" ng-click="UpdateRight()"><span class="glyphicon glyphicon-signal"></span> <br/>Изменить</a>
-
-                       <a href="" class="btn btn-danger" role="button" ng-click="CleanEditForm()"><span class="glyphicon glyphicon-remove-sign"></span> <br/>Очистить</a>
-
-                   </div>
-
-
                </div>
 
         </div>
@@ -413,9 +393,9 @@
 
          <div id="detail" ng-class="getTabPaneClass(3)">
 
-             <div id="example">
+             <div id="example container" ng-show="edit_right.right_id" >
 
-                 <div kendo-grid="editGrd" class="vert-offset-top-2" options="editGrdOption" k-rebind="editGrdOption.dataSource.data"></div>
+                 <div kendo-grid="editGrd" class="vert-offset-top-2" options="editGrdOption"></div>
 
              </div>
 

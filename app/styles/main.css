@@ -113,12 +113,6 @@ button.btn.active.btn-danger {
   border: 1px solid #ffffff;
 }
 
-/*
-.table >thead,tbody > tr > td, th{
-  vertical-align: middle;
-  text-align:center ;
-}*/
-
 .astext {
   background:none;
   border:none;
@@ -126,3 +120,9 @@ button.btn.active.btn-danger {
   padding:0;
 }
 
+.right-btn-soft {
+ background-color: #f8913c;
+
+}
+
+#right-ul-hover li a:hover{color: #f8913c}
