@@ -1,0 +1,108 @@
+
+<div class="row">
+
+ <div class="panel panel-default col-lg-5">
+
+     <div class="panel-heading">Ограничения/обременения</div>
+
+    <div class="panel-body">
+
+        <div kendo-grid="limGrid" options="limitGridOption" k-rebind="limitGridOption.dataSource.data">
+
+     <div k-detail-template>
+
+        <kendo-tabstrip>
+
+            <ul>
+
+                <li class="k-state-active">Детализация</li>
+
+            </ul>
+
+            <div>
+
+                <table class="table table-bordered" >
+
+                    <tr><td style="color:navy">Правообладатель:</td><td><b>{{dataItem.rightOwners[0].owner.surname}}</b></td></tr>
+
+                    <tr><td style="color:navy">Дата <br> возникновения права:</td><td><b>{{timetoUTC(dataItem.begin_date)| date:"dd-MM-yyyy"}}</b></td></tr>
+
+                    <tr><td style="color:navy">Дата <br>прекращения права:</td><td><b>{{timetoUTC(dataItem.end_date)| date:"dd-MM-yyyy"}}</b></td></tr>
+
+                    <tr><td style="color:navy">Имя объекта:</td><td><b>{{dataItem.bindedObj.object_name}}</b></td></tr>
+
+                    <tr><td style="color:navy">Адрес объекта:</td><td><b>{{dataItem.bindedObj.address}}</b></td></tr>
+
+                    <tr><td style="color:navy">Тип объекта:</td><td><b>{{dataItem.bindedObj.objectType.code_name}}</b></td></tr>
+
+                    <tr><td style="color:navy">Инвентарный номер:</td><td><b>{{dataItem.bindedObj.inventory_number}}</b></td></tr>
+
+                    <tr><td style="color:navy">Кадастровый номер:</td><td><b>{{dataItem.bindedObj.cadastre_number}}</b></td></tr>
+
+                </table>
+
+            </div>
+
+        </kendo-tabstrip>
+
+     </div>
+
+  </div>
+
+    </div>
+
+ </div>
+
+ <div class="panel panel-default col-lg-5">
+
+     <div class="panel-heading">Список текущих ограничений и обременений в праве</div>
+
+        <div class="panel-body">
+
+            <div kendo-grid="limGrid" options="limitGridOption" k-rebind="limitGridOption.dataSource.data">
+
+                <div k-detail-template>
+
+                    <kendo-tabstrip>
+
+                        <ul>
+
+                            <li class="k-state-active">Детализация</li>
+
+                        </ul>
+
+                        <div>
+
+                            <table class="table table-bordered" >
+
+                                <tr><td style="color:navy">Правообладатель:</td><td><b>{{dataItem.rightOwners[0].owner.surname}}</b></td></tr>
+
+                                <tr><td style="color:navy">Дата <br> возникновения права:</td><td><b>{{timetoUTC(dataItem.begin_date)| date:"dd-MM-yyyy"}}</b></td></tr>
+
+                                <tr><td style="color:navy">Дата <br>прекращения права:</td><td><b>{{timetoUTC(dataItem.end_date)| date:"dd-MM-yyyy"}}</b></td></tr>
+
+                                <tr><td style="color:navy">Имя объекта:</td><td><b>{{dataItem.bindedObj.object_name}}</b></td></tr>
+
+                                <tr><td style="color:navy">Адрес объекта:</td><td><b>{{dataItem.bindedObj.address}}</b></td></tr>
+
+                                <tr><td style="color:navy">Тип объекта:</td><td><b>{{dataItem.bindedObj.objectType.code_name}}</b></td></tr>
+
+                                <tr><td style="color:navy">Инвентарный номер:</td><td><b>{{dataItem.bindedObj.inventory_number}}</b></td></tr>
+
+                                <tr><td style="color:navy">Кадастровый номер:</td><td><b>{{dataItem.bindedObj.cadastre_number}}</b></td></tr>
+
+                            </table>
+
+                        </div>
+
+                    </kendo-tabstrip>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

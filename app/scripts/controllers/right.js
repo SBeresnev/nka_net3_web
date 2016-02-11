@@ -9,7 +9,38 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     ///////////////////////////////kendo grid property/////////////////////////////////////////////////////////////////
 
-    $scope.editGrdOption = {
+
+    $scope.limitGridOption = {
+
+        dataSource: { data: []},
+
+        scrollable: false,
+
+        sortable: true,
+
+        resizable: true,
+
+        navigatable: true,
+
+        selectable:false,
+
+        columns: [
+
+            { field:"right_id" , title: "ID" },
+
+            { field:"right_type_name" , title: "Вид права" },
+
+            { field:"right_entity_type_name" , title: "Вид права" },
+
+            {title: "Добавить", template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="AppenLimClick(dataItem)">Добавить</span>'},
+
+            {title: "Удалить", template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="DeleteLimClick(dataItem)">Удалить</span>'}
+
+        ]
+
+    }
+
+    $scope.editGridOption = {
 
         dataSource: {
 
@@ -48,7 +79,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             { title: "Тип объекта:", template:"{{edit_right.bindedObj.objectType.code_name}}"},
 
-            { field:"FIO", title: "Имя/название правообладателя:", template:"{{dataItem.owner.fullname === undefined?BeautyCast(dataItem.owner.surname,dataItem.owner.firstname,dataItem.owner.fathername):dataItem.owner.fullname}}"},
+            { field:"FIO", title: "Имя/название правообладателя:", template:"{{dataItem.owner.fullname === undefined?BeautyCast(dataItem.owner.surname,dataItem.owner.firstname,dataItem.owner.fathername):(dataItem.owner.fullname)}}"},
 
             { field:"Teils", title:"Доля в праве", footerTemplate:"Сумма = {{BeautySumm()}}",template: "#= numerator_part+''+(denominator_part == 1 ?'':'/'+denominator_part) #" }
 
@@ -69,6 +100,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         navigatable: true,
 
         filterable: {
+
             extra: false,
 
             operators: {
@@ -104,9 +136,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             {title: "Тип объекта:", template: "#= bindedObj.objectType.code_name #" },
 
-            {title: "", template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="OnDeleteClick(dataItem)">Удалить</span>'},
-
-            {title: "Добавить", hidden: true ,template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="AppenLimClick(dataItem)">Добавить</span>'}
+            {title: "", template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="OnDeleteClick(dataItem)">Удалить</span>'}
 
         ]
 
@@ -175,6 +205,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         loading: false,
 
+        limitation: false,
+
         rightDetail:{},
 
         rightsDataSearch: [],
@@ -225,11 +257,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.init = function () {
 
-       // $scope.var.loading = true;
+        // $scope.var.loading = true;
 
         $scope.rightsDataSearchTabHide = true;
 
-       // $scope.detailOwnersOptions.BeautyCast() = $scope.BeautyCast;
+        // $scope.detailOwnersOptions.BeautyCast() = $scope.BeautyCast;
 
         $scope.var.url = DOMAIN + "/nka_net3/catalog/rightCountType";
 
@@ -334,7 +366,10 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         pos == -1 ? $scope.sel_subject[$scope.tabNum] = {} : $scope.sel_object[$scope.tabNum] = {};
 
-        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
+        //$scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
+
+        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
+
 
         $scope.var.loading = true;
 
@@ -640,7 +675,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         //var element = $(e.currentTarget);
         //row = element.closest("tr");
-       // var objectFound = array[elementPos];
+        // var objectFound = array[elementPos];
 
         if ($scope.tabNum == 1) {
 
@@ -666,12 +701,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             } else {
 
-            if ($scope.edit_right.right_id == rec.right_id ){
+                if ($scope.edit_right.right_id == rec.right_id ){
 
-                     $scope.edit_right = {};
+                    $scope.edit_right = {};
 
-                     $scope.CleanEditForm();
-                 }
+                    $scope.CleanEditForm();
+                }
 
             }
         }
@@ -682,7 +717,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
                 $scope.edit_right = $scope.sel_buffer.find(function (value) { return value.right_id == this.curType;}, {curType: rec.right_id});
 
-                $scope.editGrdOption.dataSource.data = $scope.edit_right.rightOwners;
+                $scope.editGridOption.dataSource.data = $scope.edit_right.rightOwners;
 
                 /////////// заполняем только левую панель права ///////////
 
@@ -763,9 +798,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.mainGridOptions.columns[9].hidden = false;
 
-        $scope.mainGridOptions.columns[10].hidden = true;
-
-
 
     };
 
@@ -807,35 +839,19 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.getLimitationRight = function(){
 
-        $scope.mainGridOptions.columns[0].hidden = true;
+        $scope.var.rightsDataLimit = $scope.sel_buffer.filter(function (value){ return ( value.right_type_name.search(/Ограничения/i)>=0 ) } );
 
-        $scope.mainGridOptions.columns[9].hidden = true;
+        $scope.limitGridOption.dataSource.data =  $scope.var.rightsDataLimit;
 
-        $scope.mainGridOptions.columns[10].hidden = false;
-
-        $scope.rightsDataLimit = $scope.sel_buffer.filter(function (value){ return ( value.right_type_name.search(/Ограничения/i)>=0 ) } );
-
-        $scope.mainGridOptions.dataSource.data =  $scope.rightsDataLimit;
+        console.log($scope.limitGridOption.dataSource.data);
 
         $scope.DlgOptions.title = "Действия с ограничениями";
 
-        $scope.bufwindow.setOptions($scope.DlgOptions);
+        $scope.limwindow.setOptions($scope.DlgOptions);
 
-        $scope.bufwindow.center();
+        $scope.limwindow.center();
 
-        var modInst =  $scope.bufwindow.open();
-
-        /////////////////////////// head rename ///////////////////////////
-
-        //$("#kg thead [data-field=bufer] .k-link").html("Редактировать");
-
-       // right_tyep в справочнике  200<=value.right_type && value.right_type<=400
-
-       // $scope.var.loading = true;
-
-       // $scope.var.url = DOMAIN + "/nka_net3/address/findDestAddress?address_id=" + obj.address_id + "&adr_num=" + obj.adr_num;
-
-       // $http.get($scope.var.url).then(function (res) { $scope.var.loading = false; });
+        var modInst =  $scope.limwindow.open();
 
     };
 
@@ -905,17 +921,17 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.CleanForm = function(){
 
-       $scope.sel_param = '';
+        $scope.sel_param = '';
 
-       $scope.checked[$scope.tabNum]=[];
+        $scope.checked[$scope.tabNum]=[];
 
-       $scope.var.rightsDataSearch = [];
+        $scope.var.rightsDataSearch = [];
 
-       var pos =  $scope.sbj_class.indexOf("active");
+        var pos =  $scope.sbj_class.indexOf("active");
 
-       pos == -1 ? $scope.sel_subject[$scope.tabNum] = {} : $scope.sel_object[$scope.tabNum] = {};
+        pos == -1 ? $scope.sel_subject[$scope.tabNum] = {} : $scope.sel_object[$scope.tabNum] = {};
 
-       $scope.rightsDataSearchTabHide=true;
+        $scope.rightsDataSearchTabHide=true;
 
     }
 
@@ -1226,7 +1242,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
-   ///////////////////////////// Checks part /////////////////////////////////////////////////////////////////
+    ///////////////////////////// Checks part /////////////////////////////////////////////////////////////////
 
     $scope.CreateRightCheck = function(to_check_right) {
 
@@ -1297,7 +1313,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         var fracion_check = new Fraction(to_check_right.rightOwner.numerator_part, to_check_right.rightOwner.denominator_part);
 
-       if($scope.nullIfundefine(to_check_right.bindedObj.obj_id) == null) {
+        if($scope.nullIfundefine(to_check_right.bindedObj.obj_id) == null) {
 
             swal("Error", $scope.ErrorMessage[2] , "error");
 
@@ -1502,9 +1518,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         tabClasses[tabN] = "active";
 
-       // if ($scope.tabNum == 1) { $scope.ChgKendoGridTitle("Действия <br> с правом");}
+        // if ($scope.tabNum == 1) { $scope.ChgKendoGridTitle("Действия <br> с правом");}
 
-       // if ($scope.tabNum == 2) { $scope.ChgKendoGridTitle("Редактировать"); }
+        // if ($scope.tabNum == 2) { $scope.ChgKendoGridTitle("Редактировать"); }
 
 
     };
@@ -1669,6 +1685,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             var_to.owner.fullname = $scope.sel_subject[$scope.tabNum].surname + ' ' + $scope.sel_subject[$scope.tabNum].firstname + ' ' + $scope.sel_subject[$scope.tabNum].fathername ;
 
+            var_to.owner.fullname = var_to.owner.fullname.replace(/null/g,'');
+
         }
 
         var_to.date_in = new Date(var_from.date_in);
@@ -1741,9 +1759,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         if ($scope.nullIfundefine(kendoObj) != null){
 
-           kendoObj.dataSource.read();
+            kendoObj.dataSource.read();
 
-           kendoObj.refresh();
+            kendoObj.refresh();
         }
 
     }
@@ -1792,13 +1810,13 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         var selectedRow = this.select();
 
-        $scope.editGrdOption.selectedDataItem = {}
+        $scope.editGridOption.selectedDataItem = {}
 
-        $scope.editGrdOption.selectedDataItem = this.dataItem(selectedRow);
+        $scope.editGridOption.selectedDataItem = this.dataItem(selectedRow);
 
         $scope.form_edit_right = $scope.copyRightForm($scope.edit_right);
 
-        $scope.form_edit_right.rightOwner = $scope.copyRightOwnerForm($scope.editGrdOption.selectedDataItem);
+        $scope.form_edit_right.rightOwner = $scope.copyRightOwnerForm($scope.editGridOption.selectedDataItem);
 
         $scope.refreshEditPanel();
 
@@ -1806,7 +1824,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.refreshEditPanel = function(){
 
-        $scope.editGrdOption.dataSource.data = $scope.edit_right.rightOwners;
+        $scope.editGridOption.dataSource.data = $scope.edit_right.rightOwners;
 
     }
 
@@ -1814,7 +1832,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.groupName = function(row_id) {
 
-        var dataItems = $scope.editGrdOption.dataSource.data.filter(function (value) {return value.owner.subjectId == this.curType;}, {curType: row_id});
+        var dataItems = $scope.editGridOption.dataSource.data.filter(function (value) {return value.owner.subjectId == this.curType;}, {curType: row_id});
 
         var summ = $scope.summRightOwnersPart(dataItems);
 

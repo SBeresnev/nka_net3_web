@@ -107,9 +107,9 @@
 
                <div class = "col-lg-12 ">
 
-                 <uib-accordion ng-init="pnl_opn=true">
+             <uib-accordion ng-init="pnl_opn=true">
 
-                  <uib-accordion-group is-open="true" panel-class="panel panel-dafault">
+                <uib-accordion-group is-open="true" panel-class="panel panel-dafault">
 
                       <uib-accordion-heading>
 
@@ -119,21 +119,18 @@
 
                     <div class="row">
 
-
                         <div id="exmp" class="col-lg-12 vert-offset-top-1" ng-show="edit_right.right_id">
 
-                            <div kendo-grid="editGrd" class="vert-offset-top-2" options="editGrdOption" k-rebind="editGrdOption.dataSource.data" ></div>
-
+                            <div kendo-grid="editGrd" class="vert-offset-top-2" options="editGridOption" k-rebind="editGridOption.dataSource.data" ></div>
 
                         </div>
 
 
                     </div>
 
-                </uib-accordion-group>
+                 </uib-accordion-group>
 
              </uib-accordion>
-
 
            </div>
 
@@ -165,12 +162,11 @@
 
               </div>
 
-
               <!------------ Right  -------------->
 
                <div class = "col-lg-6">
 
-               <div class="panel panel-default vert-offset-top-2">
+                   <div class="panel panel-default vert-offset-top-3">
 
                     <div class="panel-heading fa fa-balance-scale">Право</div>
 
@@ -194,15 +190,15 @@
 
                             <div class="well">
 
-                                <label class="control-label vert-offset-top-half">Вид права:</label>
+                                <label class="control-label vert-offset-top-1">Вид права:</label>
 
                                 <select class="form-control" data-live-search="true"  ng-change="setRightType()" ng-model="dict.currgtTyp" ng-options="rgttype.code_short_name for rgttype in dict.rightTypes | orderBy: ['code_short_name'] track by rgttype.code_id" required="required"></select>
 
-                                <label class="control-label vert-offset-top-half">Тип права по числу правообладателей:</label>
+                                <label class="control-label vert-offset-top-1">Тип права по числу правообладателей:</label>
 
                                 <select class="form-control" data-live-search="true"  ng-change="setCountType()"  ng-model="dict.currgtCountTyp" ng-options="subtype.code_short_name for subtype in dict.rightFilterCountTypes | orderBy: ['code_short_name'] track by subtype.code_id" required="required"></select>
 
-                                <label class="control-label">Объект операции (сущность)</label>
+                                <label class="control-label vert-offset-top-1">Объект операции (сущность)</label>
 
                                 <select class="form-control" data-live-search="true" ng-change="setEntityType()"  ng-model="dict.curentTyp" ng-options="type.code_name group by type.v_prm1 for type in dict.rightFilterEntityTypes | pick:'v_prm1==\'Объект\'|| v_prm1==\'Право\''" required="required"></select>
 
@@ -265,7 +261,7 @@
 
                         </div>
 
-                        <div class="checkbox vert-offset-top-2">
+                        <div class="checkbox vert-offset-top-3">
 
                             <label><input type="checkbox" ng-init="form_edit_right.is_needed = 0" ng-true-value="1" ng-false-value="0" ng-model="form_edit_right.is_needed"> Признак льготного приобретения </label>
 
@@ -282,15 +278,15 @@
 
                     </div>
 
-                </div>
+               </div>
 
-            </div>
+                </div>
 
               <!--------- RightOwner -------------->
 
                <div class = "col-lg-6">
 
-                <div class="panel panel-default vert-offset-top-2">
+               <div class="panel panel-default vert-offset-top-3">
 
                     <div class="panel-heading fa fa-users">Правообладатели</div>
 
@@ -330,7 +326,7 @@
 
                         </div>
 
-                        <div class="form-group vert-offset-top-3">
+                        <div class="form-group vert-offset-top-2">
 
                             <div class="col-xs-6">
 
@@ -384,7 +380,7 @@
 
                 </div>
 
-                <div class="col-lg-4"></div>
+               <div class="col-lg-4"></div>
 
                </div>
 
@@ -392,11 +388,7 @@
 
         <!------------------------ Details block ---------------------------------------->
 
-         <div id="detail" ng-class="getTabPaneClass(3)">
-
-
-
-         </div>
+         <div id="detail" ng-class="getTabPaneClass(3)"></div>
 
         <!------------------------ Bargain block ---------------------------------------->
 
@@ -413,6 +405,8 @@
 <div ng-include="'views/modright.html'"></div>
 
 <div ng-include="'views/modrightoper.html'"></div>
+
+<div kendo-window="limwindow" k-visible="false" k-modal="true" k-content="'views/modlimitright.html'"> </div>
 
 <div kendo-window="bufwindow" k-visible="false" k-modal="true" k-on-close="CloseBuffer()" k-content="'views/rightbuffer.html'"> </div>
 
