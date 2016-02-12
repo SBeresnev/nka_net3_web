@@ -15,8 +15,22 @@ angular.module('assetsApp')
         $scope.var.searchSubject = {number: ' ', fioAndName: ' '};
         $scope.var = angular.copy(ordervar);
         $scope.var.id = $routeParams.id;
+
+        $scope.is_representative = false; //если вкладка представитель
+
+        $scope.customer = [];
+        $scope.representative = [];
+
         $scope.selectedClient = [];
+        $scope.selectedClientSerch = [];
+
         $scope.showId = [];
+        $scope.var.typeSearch = {};
+        $scope.var.clients = new Array;
+
+        function isEnoughType(value) {
+            return value.code_short_name.toUpperCase() == "Физ. лица".toUpperCase();
+        }
 
         $scope.init = function () {
             $scope.getDecl();
@@ -31,6 +45,7 @@ angular.module('assetsApp')
             $http.get(DOMAIN + "/nka_net3/catalog/subjectTypes")
                 .then(function (res) {
                     $scope.var.subjecttypes = res.data;
+                    $scope.var.typeSearch = $scope.var.subjecttypes.filter(isEnoughType)[0];
                 });
 
             $http.get(DOMAIN + "/nka_net3/catalog/operationType")
@@ -53,10 +68,12 @@ angular.module('assetsApp')
              });*/
         };
 
-        $scope.searchSubjects = function () {
+        $scope.searchSubjects = function (modid) {
             if ($scope.var.typeSearch.code_id != undefined) {
                 $scope.var.showSubjectsTable = true;
                 $scope.var.subjects = [];
+                var myElement = angular.element(document.querySelector(modid));
+                myElement.modal("show");
                 delete $http.defaults.headers.common['X-Requested-With'];
                 httpServices.searchSubjects($scope.var.typeSearch.code_id, $scope.var.searchSubject.number, $scope.var.searchSubject.fioAndName, $scope);
             } else {
@@ -75,18 +92,31 @@ angular.module('assetsApp')
             }
         };
 
-        $scope.updateSubjectForm = function (subject) {
+        /*$scope.updateSubjectForm = function (subject) {
             $scope.var.subjects = [];
             $scope.var.showSubjectsTable = false;
             if ($scope.var.clientActive == 'active') {
                 $scope.var.typeClient = {code_id: subject.subjectType.code_id};
                 $scope.var.client = angular.copy(subject);
                 $scope.var.client.bothRegDate = new Date((angular.copy(subject)).bothRegDate);
+                $scope.var.clients.push($scope.var.client)
             }
             if ($scope.var.representativeActive == 'active') {
                 $scope.var.typeRepresent = {code_id: subject.subjectType.code_id};
                 $scope.var.represent = angular.copy(subject);
                 $scope.var.represent.bothRegDate = new Date((angular.copy(subject)).bothRegDate);
+            }
+        };*/
+
+        $scope.updateSubjectForm = function () {
+            for (var i =$scope.selectedClientSerch.length; i >= 0 ; i--) {
+                if(i>0) {
+                    if($scope.var.clientActive == "active")
+                        $scope.customer.push($scope.selectedClientSerch[i - 1]);
+                    else if($scope.var.representativeActive == "active")
+                        $scope.representative.push($scope.selectedClientSerch[i - 1]);
+                }
+                $scope.selectedClientSerch.splice(-1, 1);
             }
         };
 
@@ -170,6 +200,7 @@ angular.module('assetsApp')
 
         $scope.getDecl = function () {
             $scope.showLoading = true;
+            console.log($routeParams.id);
             $http.get(DOMAIN + "/nka_net3/decl/get_decl", {
                 params: {id: $routeParams.id}
             }).then(function (res) {
@@ -284,11 +315,29 @@ angular.module('assetsApp')
             return chosen;
         };
 
+        $scope.checkChosenSerch = function (clientId) {
+            var chosen = false;
+            for (var i = 0; i < $scope.selectedClientSerch.length; i++) {
+                if ($scope.selectedClientSerch[i] == clientId) {
+                    chosen = true;
+                }
+            }
+            return chosen;
+        };
+
         $scope.selectClient = function (clientId) {
             if ($scope.checkChosen(clientId) == false) {
                 $scope.selectedClient.push(clientId);
             } else {
                 $scope.selectedClient.splice($scope.selectedClient.indexOf(clientId), 1);
+            }
+        };
+
+        $scope.selectClientSearch = function (clientId) {
+            if ($scope.checkChosenSerch(clientId) == false) {
+                $scope.selectedClientSerch.push(clientId);
+            } else {
+                $scope.selectedClientSerch.splice($scope.selectedClientSerch.indexOf(clientId), 1);
             }
         };
 
@@ -330,5 +379,4 @@ angular.module('assetsApp')
             }
             return array;
         };
-
     });

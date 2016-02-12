@@ -10,35 +10,46 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
     ///////////////////////////////kendo grid property/////////////////////////////////////////////////////////////////
 
 
-    $scope.limitGridOption = {
+    $scope.limitGridOption = function(limdata) {
 
-        dataSource: { data: []},
+        return {
 
-        scrollable: false,
+            dataSource: {data: limdata},
 
-        sortable: true,
+            scrollable: false,
 
-        resizable: true,
+            sortable: true,
 
-        navigatable: true,
+            resizable: true,
 
-        selectable:false,
+            navigatable: true,
 
-        columns: [
+            selectable: false,
 
-            { field:"right_id" , title: "ID" },
+            columns: [
 
-            { field:"right_type_name" , title: "Вид права" },
+                {field: "right_id", title: "ID"},
 
-            { field:"right_entity_type_name" , title: "Вид права" },
+                {field: "right_type_name", title: "Вид права"},
 
-            {title: "Добавить", template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="AppenLimClick(dataItem)">Добавить</span>'},
+                {field: "right_entity_type_name", title: "Вид права"},
 
-            {title: "Удалить", template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="DeleteLimClick(dataItem)">Удалить</span>'}
+                {
+                    title: "Удалить",
+                    hidden: true,
+                    template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="DeleteLimClick(dataItem)">Удалить</span>'
+                },
 
-        ]
+                {
+                    title: "Добавить",
+                    template: '<input type="image" src="images/finger.jpg" style="margin-left:20%" height="30" width="30" alt="Submit">'
+                }
 
+            ]
+
+        }
     }
+
 
     $scope.editGridOption = {
 
@@ -198,7 +209,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.oper_right = angular.copy(operationtvar);    /////операции формы
 
-
     $scope.checked=Create2DArray(5);
 
     $scope.var = {
@@ -211,7 +221,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         rightsDataSearch: [],
 
-        rightsDataLimit:{}
+        rightsDataLimitFrom:[],
+
+        rightsDataLimitTo:[],
 
     };
 
@@ -356,6 +368,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.rightSearch = function(){
 
+
         $scope.rightstDataSearchTabHide=true;
 
         $scope.var.rightsDataSearch = [];
@@ -366,9 +379,14 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         pos == -1 ? $scope.sel_subject[$scope.tabNum] = {} : $scope.sel_object[$scope.tabNum] = {};
 
-        //$scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
+        if($scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) == '' && $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId) == ''){
 
-        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
+            swal("Info", "Не выбран субъект, либо объект поиска" , "info"); return;
+        }
+
+        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
+
+        //$scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
 
 
         $scope.var.loading = true;
@@ -839,11 +857,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.getLimitationRight = function(){
 
-        $scope.var.rightsDataLimit = $scope.sel_buffer.filter(function (value){ return ( value.right_type_name.search(/Ограничения/i)>=0 ) } );
-
-        $scope.limitGridOption.dataSource.data =  $scope.var.rightsDataLimit;
-
-        console.log($scope.limitGridOption.dataSource.data);
+        $scope.var.rightsDataLimitFrom = $scope.sel_buffer.filter(function (value){ return ( value.right_type_name.search(/Ограничения/i)>=0 ) } );
 
         $scope.DlgOptions.title = "Действия с ограничениями";
 
@@ -1092,34 +1106,17 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.form_edit_right.rightOwner.status = 1;
 
-
         $scope.form_edit_right.rightOwner.date_in = $scope.timetoUTC($scope.form_edit_right.rightOwner.date_in);
 
         $scope.form_edit_right.rightOwner.date_out = $scope.timetoUTC($scope.form_edit_right.rightOwner.date_out);
 
-
-        $scope.edit_right.begin_date = $scope.timetoUTC($scope.form_edit_right.begin_date);
-
-        $scope.edit_right.end_date =  $scope.timetoUTC($scope.form_edit_right.end_date);
-
-
-        $scope.edit_right.bindedObj = angular.copy($scope.form_edit_right.bindedObj);
-
-        $scope.edit_right.comments = $scope.form_edit_right.comments;
-
-        $scope.edit_right.is_needed = $scope.form_edit_right.is_needed;
-
-        $scope.edit_right.ooper =  $scope.form_edit_right.ooper;
+        $scope.copyRight($scope.form_edit_right,$scope.edit_right);
 
         $scope.edit_right.right_count_type = $scope.form_edit_right.right_count_type =  $scope.nullIfundefine($scope.dict.currgtCountTyp)==null ? null : $scope.dict.currgtCountTyp.code_id;
 
         $scope.edit_right.right_entity_type = $scope.form_edit_right.right_entity_type = $scope.nullIfundefine($scope.dict.curentTyp)==null ? null : $scope.dict.curentTyp.code_id;
 
         $scope.edit_right.right_type = $scope.form_edit_right.right_type = $scope.nullIfundefine($scope.dict.currgtTyp)==null ? null : $scope.dict.currgtTyp.code_id;
-
-        $scope.edit_right.status = $scope.form_edit_right.status = 1;
-
-        $scope.edit_right.is_needed = $scope.form_edit_right.is_needed ? 1 : 0;
 
         $scope.edit_right.rightOwners.push(angular.copy($scope.form_edit_right.rightOwner));
 
@@ -1565,6 +1562,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         delete item['parent_owner_obj'];
 
+        delete item['limit_rights'];
+
         delete item.bindedObj['fullname'];
 
         delete item.bindedObj['address'];
@@ -1584,6 +1583,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
             var right_owner = angular.copy(norm_right_own[item]);
 
             delete norm_right_own[item]['parent_owner_obj'];
+
+            delete norm_right_own[item]['limit_rights'];
 
             delete norm_right_own[item]['owner'];
 
@@ -1622,9 +1623,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         var_to.bindedObj = angular.copy(var_from.bindedObj);
 
-        var_to.bindedObj.fullname = var_from.bindedObj.object_name + '; '+var_from.bindedObj.address ;
+        var_to.ooper =  angular.copy(var_from.ooper);
 
-        var_to.ooper =  var_from.ooper;
+        var_to.bindedObj.fullname = var_from.bindedObj.object_name + '; '+var_from.bindedObj.address ;
 
         var_to.is_needed =  var_from.is_needed;
 
@@ -1650,8 +1651,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
     $scope.copyRightOwner = function(var_from, var_to){
 
         var_to.owner = angular.copy(var_from.owner);
-
-        var_to.limit_rights = angular.copy(var_from.limit_rights);
 
         var_to.ooper =  angular.copy(var_from.ooper);
 

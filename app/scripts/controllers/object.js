@@ -4,7 +4,7 @@
 angular.module('assetsApp')
     .controller('ObjectCtrl', function ($scope, $http, $location, $filter, httpServices, subjectvar, DOMAIN, WEBDOM) {
 
-        $scope.address = "";
+        $scope.address = {};
         $scope.address.adr="";
         $scope.type = 2;
 
@@ -199,7 +199,11 @@ angular.module('assetsApp')
 
                 $scope.var.subj = angular.copy(subject);
 
-            $scope.var.obj = $scope.isNull($scope.var.subj.cadastre_number) + $scope.isNull($scope.var.subj.org_id,$scope.var.subj.objectType.v_prm1,$scope.var.subj.inventory_number) + $scope.isNull($scope.var.subj.objectType.code_name);
+            $scope.var.obj =
+                $scope.isNull($scope.var.subj.objectType.code_name) +
+                ($scope.var.subj.address_dest.adr!=null?$scope.isNull($scope.var.subj.address_dest.adr):$scope.isNull($scope.address.adr)) +
+                $scope.isNull($scope.var.subj.cadastre_number) +
+                $scope.isNull($scope.var.subj.org_id,$scope.var.subj.objectType.v_prm1,$scope.var.subj.inventory_number);
         };
 
         $scope.isNull = function() {

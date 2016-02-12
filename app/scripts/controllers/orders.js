@@ -26,6 +26,7 @@ angular.module('assetsApp')
         };
 
         $scope.getOrderById = function (id) {
+            console.log(id);
             $location.path("/order/" + id);
         };
 

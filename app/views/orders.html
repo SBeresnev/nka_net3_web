@@ -13,7 +13,7 @@
                     <th>Документы</th>
                     <th>Статус</th>
                 </tr>
-                <tr ng-s ng-repeat="order in orders|orderBy:'decldate':true" class="btn-default cursor-pointer" ng-click='getOrderById("{{order.decl_id}}")'>
+                <tr ng-s ng-repeat="order in orders|orderBy:'decldate':true" class="btn-default cursor-pointer" ng-click='getOrderById(order.decl_id)'>
                     <td width="5%">{{order.declnumber}}</td>
                     <td width="8%">{{order.decldate|date:"dd.MM.yyyy - HH:mm"}}</td>
                     <td width="16%"><ul class="nav"><li  ng-repeat=" declarant in order.declarants | filter: filterIdenticalSubject">{{declarant.declrepr_type==2?"представитель: ":"заявитель: "}}{{declarant.person.surname +" "}}{{declarant.person.firstname+ " "}}{{declarant.person.fullname+" "}}</li></ul></td>

@@ -125,4 +125,19 @@ button.btn.active.btn-danger {
 
 }
 
-#right-ul-hover li a:hover{color: #f8913c}
+#right-ul-hover li a:hover
+{
+  color: #f8913c
+}
+
+.right-vertical-line {
+
+  height:1000px;
+  width:10px;
+  border:0px;
+  border-left:3px;
+  border-style:double;
+  border-color:black;
+  margin-left:3% ;
+
+}
