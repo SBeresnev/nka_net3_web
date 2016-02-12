@@ -1,0 +1,30 @@
+<modal title="Результат поиска"  visible="var.showSubjectsTable" id="tableOrder">
+    <!--    <div class="col-xs-11 white-background window"
+             click-anywhere-but-here="var.showSubjectsTable = false">-->
+    <!--ng-show="var.showSubjectsTable"-->
+    <table class="table table-bordered" id="search-order-table">
+        <tr>
+            <th>Тип</th>
+            <th>ФИО/Наименование</th>
+            <th>Дата рождения/регистрации</th>
+            <th ng-if="var.subjects[0].dtype == 'juridical'">УНП</th>
+            <th>Регистрационный/Идентификационный номер</th>
+            <th>Адрес</th>
+        </tr>
+        <tr ng-repeat="subject in var.subjects"
+            class="btn-default cursor-pointer"
+            ng-click="selectClientSearch(subject.subjectId)"
+            ng-class="{'success': checkChosenSerch(subject.subjectId)}">
+            <td width="5%">{{subject.subjectType.code_short_name}}</td>
+            <td width="25%">{{subject.surname}}{{" " + subject.firstname}}{{" "+subject.fathername}}{{" " + subject.fullname}}
+            </td>
+            <td width="25%">{{subject.bothRegDate|date}}</td>
+            <td width="10%" ng-if="subject.dtype == 'juridical'">{{subject.unp}}
+            </td>
+            <td width="25%">{{subject.personalNumber}} {{subject.regNumber}}</td>
+            <td width="25%">{{subject.address}}</td>
+        </tr>
+    </table>
+<button ng-click="updateSubjectForm()">OK</button>
+    <!--</div>-->
+</modal>
