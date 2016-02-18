@@ -245,6 +245,9 @@
 
                         </div>
 
+                        <span ng-if="!limitHide" class="btn btn-default vert-offset-top-2"  ng-click="dispalyOperations('#operModal')">Операции   <blink ng-if="true"> <span class="glyphicon glyphicon-exclamation-sign"></span></blink></span>
+
+
                         <div class="form-group vert-offset-top-2">
 
                             <label for="comment">Комментарии:</label>
@@ -253,6 +256,10 @@
 
                         </div>
 
+
+                        <div ng-if="!limitHide" ng-value="form_edit_right.rightOwner.numerator_part=form_edit_right.rightOwner.denominator_part=1"> </div>
+                        <div ng-if="!limitHide" class="input-group" ng-value = "form_edit_right.rightOwner.owner = anonymous"></div>
+                        <div ng-if="!limitHide" class="form-group vert-offset-top-2" ng-value = "form_edit_right.rightOwner.date_in=form_edit_right.begin_date; form_edit_right.rightOwner.date_out=form_edit_right.end_date "></div>
 
                     </div>
 
@@ -264,7 +271,7 @@
 
                <div class = "col-lg-6">
 
-               <div class="panel panel-default vert-offset-top-3">
+               <div  ng-if="limitHide"  class="panel panel-default vert-offset-top-3">
 
                     <div class="panel-heading fa fa-users">Правообладатели</div>
 
@@ -274,7 +281,7 @@
 
                                 <label class="control-label">Правообладатель:</label>
 
-                                <div ng-if="limitHide" class="input-group">
+                                <div class="input-group">
 
                                     <input type="text" class="form-control"  placeholder="Субъект" ng-value="BeautyCast(nullIfundefine(form_edit_right.rightOwner.owner.fullname),'','')" disabled />
 
@@ -282,15 +289,10 @@
 
                                 </div>
 
-                                <div ng-if="!limitHide" class="input-group">
-
-                                    <input type="text" class="form-control"  placeholder="Субъект" ng-init = "form_edit_right.rightOwner.owner = anonymous" ng-value="BeautyCast(nullIfundefine(form_edit_right.rightOwner.owner.surname),'','')" disabled />
-
-                                </div>
 
                             </div>
 
-                        <div ng-if="limitHide" class="form-group vert-offset-top-3">
+                        <div class="form-group vert-offset-top-3">
 
                             <form class="form-inline" role="form">
 
@@ -310,9 +312,7 @@
 
                         </div>
 
-                        <div ng-if="!limitHide" ng-value="form_edit_right.rightOwner.numerator_part=form_edit_right.rightOwner.denominator_part=1"> </div>
-
-                        <div ng-if="limitHide" class="form-group vert-offset-top-2">
+                        <div class="form-group vert-offset-top-2">
 
                             <div class="col-xs-6">
 
@@ -330,9 +330,7 @@
 
                         </div>
 
-                        <div ng-if="!limitHide" class="form-group vert-offset-top-2" ng-value = "form_edit_right.rightOwner.date_in=form_edit_right.begin_date; form_edit_right.rightOwner.date_out=form_edit_right.end_date "></div>
-
-                        <div ng-if="limitHide" class="form-group vert-offset-top-2">
+                        <div class="form-group vert-offset-top-2">
 
                            <button class="astext vert-offset-top-3" ng-click = "operLimitationRightOwner()" style="color:#005580"><h4><b>ограничение/обременение доли</b></h4></button>
 

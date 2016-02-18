@@ -738,6 +738,10 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
                 $scope.form_edit_right = $scope.copyRightForm( $scope.edit_right );
 
+                /////////// копируем операции в случае ограничений и обременений //////
+
+                if(!$scope.limitHide) {$scope.copyOperLimitonForm();};
+
 
             } else
             {
@@ -745,7 +749,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
                 $scope.CleanEditForm();
             }
-
 
             for (var item in $scope.checked[$scope.tabNum]  ) {
 
@@ -1785,6 +1788,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         //////////////////////////////другие поля ////////////////////////////////////////
 
+        if ($scope.nullIfundefine(var_from.bindedObj.address) == null) { $scope.getAddress(var_from.bindedObj) }
+
         var_to.begin_date = new Date(var_from.begin_date);
 
         var_to.end_date = this.nullIfundefine(var_from.end_date) == null? null: new Date(var_from.end_date);
@@ -1986,6 +1991,14 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         $scope.form_edit_right.rightOwner = $scope.copyRightOwnerForm($scope.editGridOption.selectedDataItem);
 
         $scope.refreshEditPanel();
+
+    };
+
+    $scope.copyOperLimitonForm = function() {
+
+        $scope.form_edit_right.rightOwner = $scope.copyRightOwnerForm($scope.edit_right.rightOwners[0]);
+
+        $scope.fillOper($scope.form_edit_right.rightOwner);
 
     }
 
