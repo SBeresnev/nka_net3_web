@@ -7,10 +7,17 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     kendo.culture("ru-RU");
 
+
+    $scope.anonymous = {
+        "subjectId":1,"reestrdataID":1,"isOwner":1,"subjectType":110,
+        "dtype":"private", "subjectdataid":1, "firstname":null,
+        "surname":"аноним", "fathername":null, "sitizens":112,
+        "bothRegDate":"1900-01-01T00:00:00.000Z","personalNumber":"АААААААААААААА",
+        "address":null,"remark":null}
+
     ///////////////////////////////kendo grid property/////////////////////////////////////////////////////////////////
 
-
-    $scope.limitGridOption = function(limdata) {
+    $scope.limitGridOption = function(limdata, hide) {
 
         return {
 
@@ -36,20 +43,20 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
                 {
                     title: "Удалить",
-                    hidden: true,
-                    template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="DeleteLimClick(dataItem)">Удалить</span>'
+                    hidden: !hide,
+                    template: '<input type="image" src="images/deletion.jpg" , ng-click = "detachLimit(dataItem,limit_part)",style="margin-left:30%" height="30" width="30" alt="Submit">'
                 },
 
                 {
                     title: "Добавить",
-                    template: '<input type="image" src="images/finger.jpg" style="margin-left:20%" height="30" width="30" alt="Submit">'
+                    hidden: hide,
+                    template: '<input type="image" src="images/rfinger.jpg" , ng-click = "attachLimit(dataItem,limit_part)" style="margin-left:20%" height="30" width="30" alt="Submit">'
                 }
 
             ]
 
         }
     }
-
 
     $scope.editGridOption = {
 
@@ -195,6 +202,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.tabNum = 1;
 
+    $scope.limitHide = true; // признак обременения
+
     $scope.tabClasses = ["","","","",""];
 
     $scope.sel_subject = [];              ///// субъект поиска, а так же субъект на форме
@@ -223,7 +232,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         rightsDataLimitFrom:[],
 
-        rightsDataLimitTo:[],
+        rightsDataLimitTo:[]
 
     };
 
@@ -379,15 +388,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         pos == -1 ? $scope.sel_subject[$scope.tabNum] = {} : $scope.sel_object[$scope.tabNum] = {};
 
-        if($scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) == '' && $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId) == ''){
-
-            swal("Info", "Не выбран субъект, либо объект поиска" , "info"); return;
-        }
+        if($scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) == '' && $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId) == '')
+        { swal("Info", "Не выбран субъект, либо объект поиска" , "info"); return; }
 
         $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
 
-        //$scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
-
+       // $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
 
         $scope.var.loading = true;
 
@@ -480,6 +486,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
     /////////////////////////////// Filter operation block /////////////////////////////////////////////////////////////
 
     $scope.setRightType =  function(){
+
+        $scope.limitHide = $scope.dict.currgtTyp.code_name.indexOf('Ограничения')>=0 ? false : true;
 
         $scope.var.url = DOMAIN + "/nka_net3/catalog/get_analytic_depended_item?id=" + this.nullIfundefine($scope.dict.currgtTyp.code_id)+ "&type=1" + "&parentType="+this.nullIfundefine($scope.dict.currgtTyp.analytic_type);
 
@@ -660,19 +668,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
     };
 
     /////////////////////////// Bufer and Limitation operation //////////////////////////////////////////////////////////////
-
-    $scope.AppendLimClick = function(dataItem){
-
-        var find_ind_lim  = $scope.form_edit_right.rightOwner.limit_rights.findIndex(function (value) {return value.right_id == this.curType;}, {curType:  dataItem.right_id});
-
-        if ( find_ind_lim > -1) {
-
-            $scope.form_edit_right.rightOwner.limit_rights[find_ind_lim] = dataItem;
-
-        } else {  $scope.form_edit_right.rightOwner.limit_rights.push(dataItem); }
-
-    }
-
     $scope.OnDeleteClick = function(rec){
 
         $scope.checked[$scope.tabNum][rec.right_id] = false;
@@ -687,7 +682,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.sel_buffer.splice(idx, 1);
 
-    }
+    };
 
     $scope.BufferChange = function(rec, e){
 
@@ -787,7 +782,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         }
 
 
-    }
+    };
 
     ///////////////////////////// Modal Window part ///////////////////////////////////////////////////////////
 
@@ -855,9 +850,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.setParentOwner = function(){};
 
-    $scope.getLimitationRight = function(){
-
-        $scope.var.rightsDataLimitFrom = $scope.sel_buffer.filter(function (value){ return ( value.right_type_name.search(/Ограничения/i)>=0 ) } );
+    $scope.displayLimitation = function(){
 
         $scope.DlgOptions.title = "Действия с ограничениями";
 
@@ -866,28 +859,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         $scope.limwindow.center();
 
         var modInst =  $scope.limwindow.open();
-
-    };
-
-    $scope.setLimitationRight = function(){
-
-        $scope.mainGridOptions.columns[0].hidden = true;
-
-        $scope.mainGridOptions.columns[9].hidden = true;
-
-        $scope.mainGridOptions.columns[10].hidden = false;
-
-        $scope.rightsDataLimit = $scope.sel_buffer.filter(function (value){ return ( value.right_type_name.search(/Ограничения/i)>=0 ) } );
-
-        $scope.mainGridOptions.dataSource.data =  $scope.rightsDataLimit;
-
-        $scope.DlgOptions.title = "Действия с ограничениями";
-
-        $scope.bufwindow.setOptions($scope.DlgOptions);
-
-        $scope.bufwindow.center();
-
-        var modInst =  $scope.bufwindow.open();
 
     };
 
@@ -908,6 +879,195 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         var myElement = angular.element(document.querySelector(modid));
 
         myElement.modal("show");
+
+    };
+
+    /////////////////////////////// limitation operations /////////////////////////////////////////////////
+
+    $scope.detachLimit = function(dataItem, limit_part){
+
+        var upd_form = angular.copy(dataItem);
+
+        $scope.var.rightsDataLimitTo = $scope.var.rightsDataLimitTo.filter(function(value){ return value.right_id != this.rightId},{rightId: dataItem.right_id});
+
+        limit_part ? upd_form.limit_right = null : upd_form.rightOwners[0].parent_owner = null;
+
+        upd_form.ooper.parent_id_order = null;
+
+        upd_form = $scope.bringtoRight(upd_form);
+
+        $scope.var.loading = true;
+
+        $http.post(DOMAIN + "/nka_net3/right/updRight?", upd_form).success(function (data, status, headers) {
+
+            $scope.var.loading = false;
+
+            var idx = $scope.sel_buffer.findIndex(function (value) { return ( value.right_id == this.CurType ); }, {CurType: dataItem.right_id});
+
+            dataItem = data;
+
+            $scope.fillDictName(dataItem);
+
+            if( idx != -1 ) { $scope.sel_buffer[idx] =  dataItem;}
+            else { $scope.sel_buffer.push(dataItem); }
+
+            $scope.var.rightsDataLimitFrom.push(dataItem);
+
+
+        }).error(function (data, status, header, config) {
+
+            $scope.var.loading = false;
+
+            $scope.ServerResponse = 'Error message: '+data + "\n\n\n\nstatus: " + status + "\n\n\n\nheaders: " + header + "\n\n\n\nconfig: " + config;
+
+            alert("Error " + data.message );
+
+        });
+
+    };
+
+    $scope.attachLimit = function(dataItem, limit_part){
+
+        var upd_form = angular.copy(dataItem);
+
+        $scope.var.rightsDataLimitFrom = $scope.var.rightsDataLimitFrom.filter(function(value){ return value.right_id != this.rightId},{rightId: dataItem.right_id});
+
+        limit_part ? upd_form.limit_right = $scope.form_edit_right.right_id : upd_form.rightOwners[0].parent_owner = $scope.form_edit_right.rightOwner.right_owner_id;
+
+        upd_form.ooper.parent_id_order = $scope.form_edit_right.ooper.ooperId;
+
+        upd_form = $scope.bringtoRight(upd_form);
+
+        $scope.var.loading = true;
+
+        $http.post(DOMAIN + "/nka_net3/right/updRight?", upd_form).success(function (data, status, headers) {
+
+            $scope.var.loading = false;
+
+            var idx = $scope.sel_buffer.findIndex(function (value) { return ( value.right_id == this.CurType ); }, {CurType: dataItem.right_id});
+
+            dataItem = data;
+
+            $scope.fillDictName(dataItem);
+
+            if( idx != -1 ) { $scope.sel_buffer[idx] =  dataItem;}
+
+            $scope.var.rightsDataLimitTo.push(dataItem);
+
+        }).error(function (data, status, header, config) {
+
+            $scope.var.loading = false;
+
+            $scope.ServerResponse = 'Error message: '+data + "\n\n\n\nstatus: " + status + "\n\n\n\nheaders: " + header + "\n\n\n\nconfig: " + config;
+
+            alert("Error: " + data.message);
+
+        });
+
+    };
+
+    $scope.operLimitationRight = function(){
+
+        $scope.limit_part =true;
+
+        $scope.var.rightsDataLimitFrom = [];
+
+        $scope.var.rightsDataLimitTo = [];
+
+        var cur_right_id = $scope.form_edit_right.right_id;
+
+        if(cur_right_id == null ) {  swal("Error", "Не выбрано либо не создано право", "error"); return; }
+
+            $scope.var.rightsDataLimitTo = [];
+
+            $scope.var.url = DOMAIN + "/nka_net3/right/getLimitObject?right_id=" + cur_right_id + "&right_owner_id=";
+
+            $http.get($scope.var.url).success(function (res) {
+
+                $scope.form_edit_right.limit_rights = res;
+
+                $scope.var.loading = false;
+
+                $scope.var.rightsDataLimitTo = $scope.var.rightsDataLimitTo.concat($scope.form_edit_right.limit_rights);
+
+                $scope.var.rightsDataLimitTo.forEach(function (value) {
+                    $scope.fillDictName(value);
+                    value.bindedObj = angular.copy($scope.form_edit_right.bindedObj);
+                });
+
+                $scope.var.rightsDataLimitFrom = $scope.sel_buffer.filter(function (value) {
+                    return ( value.right_type_name.search(/Ограничения/i) >= 0 ) && (value.bindedObj.obj_id == this.curObj) && (value.limit_right == null) &&  (value.rightOwners[0].parent_owner == null)
+                }, {curObj: $scope.form_edit_right.bindedObj.obj_id});
+
+                $scope.var.rightsDataLimitFrom = $scope.var.rightsDataLimitFrom.filter(function (limFrom) {
+
+                    return !(this.limTo.find(function (value) {
+                        return ( value.right_id == this.CurType );
+                    }, {CurType: limFrom.right_id}))
+
+                }, {limTo: $scope.var.rightsDataLimitTo});
+
+                $scope.displayLimitation();
+
+            }).error(function (data, status, header, config) {
+
+                $scope.var.loading = false;
+
+                swal("Error", data.message, "error");
+
+            });
+        };
+
+    $scope.operLimitationRightOwner = function(){
+
+        $scope.limit_part = false;
+
+        $scope.var.rightsDataLimitFrom = [];
+
+        $scope.var.rightsDataLimitTo = [];
+
+        var cur_right_own_id = $scope.form_edit_right.rightOwner.right_owner_id;
+
+        if(cur_right_own_id == null ) {  swal("Error", "Не выбрано либо не создано доля в праве", "error"); return; }
+
+        //if ($scope.nullIfundefine($scope.form_edit_right.rightOwner.limit_rights) == null) {
+        //}
+        //else { $scope.displayLimitation(); }
+
+            $scope.var.url = DOMAIN + "/nka_net3/right/getLimitObject?right_id=" + "&right_owner_id="+cur_right_own_id;
+
+            $http.get($scope.var.url).success(function (res) {
+
+                $scope.form_edit_right.rightOwner.limit_rights = res;
+
+                $scope.var.loading = false;
+
+                $scope.var.rightsDataLimitTo = $scope.var.rightsDataLimitTo.concat($scope.form_edit_right.rightOwner.limit_rights);
+
+                $scope.var.rightsDataLimitTo.forEach(function (value) {
+                    $scope.fillDictName(value);
+                    value.bindedObj = angular.copy($scope.form_edit_right.bindedObj);
+                });
+
+                $scope.var.rightsDataLimitFrom = $scope.sel_buffer.filter(function (value) {
+                    return ( value.right_type_name.search(/Ограничения/i) >= 0 ) && (value.bindedObj.obj_id == this.curObj) && (value.rightOwners[0].parent_owner == null) && (value.limit_right == null)
+                }, {curObj: $scope.form_edit_right.bindedObj.obj_id});
+
+                $scope.var.rightsDataLimitFrom = $scope.var.rightsDataLimitFrom.filter(function (limFrom) {
+
+                    return !(this.limTo.find(function (value) { return ( value.rightOwners[0].right_owner_id == this.CurType ); }, {CurType: limFrom.rightOwners[0].right_owner_id}))
+
+                }, {limTo: $scope.var.rightsDataLimitTo});
+
+                $scope.displayLimitation();
+
+            }).error(function (data, status, header, config) {
+
+                $scope.var.loading = false;
+
+                swal("Error", data.message, "error");
+
+            });
 
     };
 
@@ -1067,9 +1227,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.postCreateRight = function(ret_val){
 
+
         $scope.form_edit_right.right_id = ret_val.right_id;
 
         $scope.edit_right.right_id = ret_val.right_id;
+
+        $scope.edit_right.ooper = angular.copy(ret_val.ooper);
 
         $scope.fillDictName($scope.edit_right);
 
@@ -1082,6 +1245,10 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
             $scope.edit_right.rightOwners[0].right_owner_id = ret_val.rightOwners[0].right_owner_id;
 
             $scope.edit_right.rightOwners[0].right_id = ret_val.rightOwners[0].right_id;
+
+            $scope.edit_right.rightOwners[0].ooper = angular.copy(ret_val.rightOwners[0].ooper);
+
+            $scope.edit_right.ooper = angular.copy(ret_val.ooper);
 
             $scope.edit_right.bindedObj.address = $scope.form_edit_right.bindedObj.address_dest.adr;
 
@@ -1133,13 +1300,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         $scope.form_edit_right.right_owner_id = null;
 
-        $scope.form_edit_right.ooper.ooperId = null;
-
         $scope.form_edit_right.rightOwner.right_id = $scope.form_edit_right.right_id;
 
         $scope.form_edit_right.rightOwner.ooper = $scope.createOperObject();
 
-        $scope.form_edit_right.rightOwner.ooper.parent_id_order =  $scope.form_edit_right.ooper.right_id;
+        $scope.form_edit_right.rightOwner.ooper.parent_id_order = $scope.form_edit_right.ooper.ooperId;
 
     }
 
@@ -1196,10 +1361,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         var old_ooper = $scope.form_edit_right.rightOwner.ooper;
 
-        if( new_ooper.operType != old_ooper.operType || new_ooper.operSubtype != old_ooper.operSubtype || new_ooper.reason != old_ooper.reason)
-        {
-            $scope.form_edit_right.rightOwner.ooper = $scope.createOperObject();
-        }
+        $scope.form_edit_right.rightOwner.ooper.operType = new_ooper.operType;
+
+        $scope.form_edit_right.rightOwner.ooper.operSubtype = new_ooper.operSubtype;
+
+        $scope.form_edit_right.rightOwner.ooper.reason =  new_ooper.reason;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1578,7 +1744,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         var norm_right_own = angular.copy(edit_right_val.rightOwners);
 
-        for ( var item in norm_right_own) {
+        if ($scope.nullIfundefine(norm_right_own.length) == null) {return;}
+
+        for ( var item = 0 ; item < norm_right_own.length; item ++) {
 
             var right_owner = angular.copy(norm_right_own[item]);
 

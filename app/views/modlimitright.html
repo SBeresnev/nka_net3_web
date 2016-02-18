@@ -7,7 +7,7 @@
 
    <div class="panel-body">
 
-    <div kendo-grid="limGridFrom" k-options="limitGridOption(var.rightsDataLimitFrom)" k-rebind="var.rightsDataLimitFrom">
+    <div kendo-grid="limGridFrom" k-options="limitGridOption(var.rightsDataLimitFrom,false)" k-rebind="var.rightsDataLimitFrom">
 
      <div k-detail-template>
 
@@ -61,7 +61,7 @@
 
         <div class="panel-body">
 
-            <div kendo-grid="limGridTo"  k-options="limitGridOption(var.rightsDataLimitTo)"  k-rebind="var.rightsDataLimitTo">
+            <div kendo-grid="limGridTo" k-options="limitGridOption(var.rightsDataLimitTo,true)"  k-rebind="var.rightsDataLimitTo">
 
                 <div k-detail-template>
 
