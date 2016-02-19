@@ -39,7 +39,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
                 {field: "right_type_name", title: "Вид права"},
 
-                {field: "right_entity_type_name", title: "Вид права"},
+                {field: "right_entity_type_name", title: "<center>Объект операции  <br> (сущность)</center>"},
 
                 {
                     title: "Удалить",
