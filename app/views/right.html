@@ -349,62 +349,156 @@
 
         </div>
 
-        <!------------------------ Details block ------------------------------------>
+        <!------------------------ Transfer block ------------------------------------>
 
          <div id="transfer" ng-class="getTabPaneClass(3)">
 
-             <div class="raw">
+           <div class = "container">
 
-              <div id="right_trans_panel" class="col-lg-5 vert-offset-top-6">
-                 <div class="panel panel-default">
-                     <div class="panel-heading">
-                         <button class="astext" ng-click="LoadBuffer()" style="color:#005580"><h4><b>От кого</b></h4></button>
+              <div class="raw">
+
+                 <div id="right_trans_panel" class="col-lg-6 vert-offset-top-6">
+
+                     <!------------------------ From welll ------------------------------------>
+
+                    <div class="well well-sm">
+
+                      <button class="astext" ng-click="var.transformActive='FROM'; LoadBuffer()" style="color:#005580"><h4><b>От кого</b></h4></button>
+
+                    </div>
+
+                     <div>
+
+                      <table class="table table-bordered table-hover vert-offset-top-2" ng-show="var.rightsTransformFrom.right_id">
+
+                          <thead>
+
+                             <tr style="background-color:#f9f9f9">
+
+                                 <th>ID</th>
+
+                                 <th>Вид права</th>
+
+                                 <th>Имя объекта</th>
+
+                                 <th>Тип объекта</th>
+
+                                 <th>Имя/название правообладателя</th>
+
+                                 <th>Доля в праве</th>
+
+                             </tr>
+
+                           <thead>
+
+                           <tbody>
+
+                             <tr  ng-repeat="item in var.rightsTransformFrom.rightOwners" ng-click= "OnEditPanelTable()">
+
+                                 <td  width="fit-content">{{var.rightsTransformFrom.right_id}}</td>
+
+                                 <td  width="fit-content">{{var.rightsTransformFrom.right_type_name}}</td>
+
+                                 <td  width="fit-content">{{var.rightsTransformFrom.bindedObj.object_name}}</td>
+
+                                 <td  width="fit-content">{{var.rightsTransformFrom.bindedObj.objectType.code_name}}</td>
+
+                                 <td  width="fit-content">{{item.owner.surname}}{{" "+item.owner.firstname}}{{" "+item.owner.fathername }}{{item.owner.fullname}}</td>
+
+                                 <td  width="fit-content">{{item.numerator_part}}{{item.denominator_part == 1 ?'':'/'+item.denominator_part}}</td>
+
+                             </tr>
+
+                           </tbody>
+
+                       </table>
+
                      </div>
-                     <div class="panel-body">
-                         <p>Lorem</p>
+
+                     <div class="col-lg-4"></div>
+
+                     <div class="col-lg-2">
+
+                         <input type="image" src="images/dfinger.jpg" with="60" height="60"/>
+
                      </div>
 
                  </div>
+
               </div>
 
-                 <div class="col-lg-2"></div>
+              <div class="col-lg-2"></div>
 
-              <div class="col-lg-5 vert-offset-top-6">
-                 <div class="panel panel-default">
-                     <div class="panel-heading">
-                         <button class="astext" ng-click="LoadBuffer()" style="color:#005580"><h4><b>Кому</b></h4></button>
-                     </div>
-                     <div class="panel-body">
-                         <p>Lorem</p>
-                     </div>
+              <div class="col-lg-6 vert-offset-top-6">
+
+                  <!------------------------ To welll ------------------------------------>
+
+                 <div class="well well-sm">
+
+                         <button class="astext" ng-click="var.transformActive='TO'; LoadBuffer()" style="color:#005580"><h4><b>Кому</b></h4></button>
 
                  </div>
+
+                 <div>
+
+                      <table class="table table-bordered table-hover vert-offset-top-2" ng-show="var.rightsTransformTo.right_id">
+
+                          <thead>
+
+                          <tr style="background-color:#f9f9f9">
+
+                              <th>ID</th>
+
+                              <th>Вид права</th>
+
+                              <th>Имя объекта</th>
+
+                              <th>Тип объекта</th>
+
+                              <th>Имя/название правообладателя</th>
+
+                              <th>Доля в праве</th>
+
+                          </tr>
+
+                          <thead>
+
+                          <tbody>
+
+                          <tr  ng-repeat="item in var.rightsTransformTo.rightOwners" ng-click= "OnEditPanelTable()">
+
+                              <td  width="fit-content">{{var.rightsTransformTo.right_id}}</td>
+
+                              <td  width="fit-content">{{var.rightsTransformTo.right_type_name}}</td>
+
+                              <td  width="fit-content">{{var.rightsTransformTo.bindedObj.object_name}}</td>
+
+                              <td  width="fit-content">{{var.rightsTransformTo.bindedObj.objectType.code_name}}</td>
+
+                              <td  width="fit-content">{{item.owner.surname}}{{" "+item.owner.firstname}}{{" "+item.owner.fathername }}{{item.owner.fullname}}</td>
+
+                              <td  width="fit-content">{{item.numerator_part}}{{item.denominator_part == 1 ?'':'/'+item.denominator_part}}</td>
+
+                          </tr>
+
+                          </tbody>
+
+                      </table>
+
+                     <div class="col-lg-5"></div>
+
+                      <div class="col-lg-2">
+
+                          <input type="image" src="images/dfinger.jpg" with="60" height="60"/>
+
+                      </div>
+
+                  </div>
+
+
               </div>
 
             </div>
-
-
-
-             <div class="row">
-
-                <div class="col-lg-2"></div>
-
-                <div class="col-lg-2">
-
-                    <input type="image" src="images/dfinger.jpg" with="60" height="60"/>
-
-                </div>
-
-                 <div class="col-lg-5"></div>
-
-                 <div class="col-lg-2">
-
-                     <input type="image" src="images/dfinger.jpg" with="60" height="60"/>
-
-                 </div>
-
-
-             </div>
 
              <div class="row">
 
@@ -415,7 +509,7 @@
                   <div class="panel panel-default">
 
                      <div class="panel-body">
-                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
+
                      </div>
 
                   </div>
@@ -423,8 +517,6 @@
                </div>
 
              </div>
-
-
 
          </div>
 
@@ -439,6 +531,8 @@
 
 
 <!--***********************************************modal block****************************************************************************************************-->
+
+<span kendo-notification="notif" k-options="notifOption" k-append-to="'#kg'"></span>
 
 <div ng-include="'views/modright.html'"></div>
 

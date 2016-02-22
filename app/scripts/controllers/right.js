@@ -154,7 +154,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             {title: "Тип объекта:", template: "#= bindedObj.objectType.code_name #" },
 
-            {title: "", template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1" ng-click="OnDeleteClick(dataItem)">Удалить</span>'}
+            {title: "", template: '<span class="btn btn-default" ng-hide="mainGridOptions.curTabNum==1||mainGridOptions.curTabNum==3" ng-click="OnDeleteClick(dataItem)">Удалить</span>'}
 
         ]
 
@@ -218,6 +218,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.oper_right = angular.copy(operationtvar);    /////операции формы
 
+    $scope.notifOption = { autoHideAfter: 1000 };
+
     $scope.checked=Create2DArray(5);
 
     $scope.var = {
@@ -232,7 +234,13 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         rightsDataLimitFrom:[],
 
-        rightsDataLimitTo:[]
+        rightsDataLimitTo:[],
+
+        rightsTransformFrom:{},
+
+        rightsTransformTo:{},
+
+        transformActive:""
 
     };
 
@@ -686,10 +694,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     $scope.BufferChange = function(rec, e){
 
-        //var element = $(e.currentTarget);
-        //row = element.closest("tr");
-        // var objectFound = array[elementPos];
-
         if ($scope.tabNum == 1) {
 
             $scope.checked[$scope.tabNum+1][rec.right_id] = false;
@@ -753,6 +757,72 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
             for (var item in $scope.checked[$scope.tabNum]  ) {
 
                 if (item != rec.right_id) { $scope.checked[$scope.tabNum][item] = false;}
+
+            }
+
+        }
+
+        if ($scope.tabNum == 3) {
+
+            var scip_right_id = null;
+
+            var right_to_trans = $scope.sel_buffer.find(function (value) {return value.right_id == this.curType; }, {curType: rec.right_id});
+
+            var was_checked = $scope.checked[$scope.tabNum][rec.right_id];
+
+            if ($scope.var.transformActive == 'FROM') {
+
+                scip_right_id = $scope.nullIfundefine($scope.var.rightsTransformTo.right_id);
+
+                if (scip_right_id == rec.right_id) {
+
+                    $scope.checked[$scope.tabNum][scip_right_id] = true;
+
+                    $scope.notif.show("Право выбрано, как родительское", "warning");
+
+                    return;
+                }
+
+                if (was_checked) {
+
+                    $scope.checked[$scope.tabNum][$scope.var.rightsTransformFrom.right_id] = false;
+
+                    $scope.var.rightsTransformFrom = angular.copy(right_to_trans);
+
+                } else {
+
+                    $scope.var.rightsTransformFrom = {};
+
+                }
+            }
+
+
+             if ( $scope.var.transformActive == 'TO' ) {
+
+                scip_right_id = $scope.nullIfundefine($scope.var.rightsTransformFrom.right_id);
+
+                if(scip_right_id == rec.right_id ) {
+
+                    $scope.checked[$scope.tabNum][scip_right_id] = true;
+
+                    $scope.notif.show("Право выбрано, как источник", "warning");
+
+                    return;
+                }
+
+
+                if (was_checked) {
+
+                    $scope.checked[$scope.tabNum][$scope.var.rightsTransformTo.right_id] = false;
+
+                    $scope.var.rightsTransformTo = angular.copy(right_to_trans);
+
+                }else {
+
+                    $scope.var.rightsTransformTo = {} ;
+
+                }
+
 
             }
 
@@ -1959,11 +2029,10 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
     };
 
     function Create2DArray(rows) {
+
         var arr = [];
 
-        for (var i=0;i<rows;i++) {
-            arr[i] = [];
-        }
+        for (var i=0; i<rows; i++) {  arr[i] = []; }
 
         return arr;
     };
