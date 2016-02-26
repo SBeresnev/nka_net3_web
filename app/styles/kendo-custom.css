@@ -3,11 +3,16 @@
     width:555px;
     margin-left: 15px;}
 
-#k-my-spn  * {
+#k-my-spn * {
     height:34px;
     color:#555;
 }
 
+.k-grid-content
+{
+    background:white;
+
+}
 
 .k-treeview .k-in {
     padding: 5px;
@@ -18,3 +23,13 @@
     color: #5f2200;
 }
 
+
+.right-mixtransfer-grid>table>tbody>tr>td
+{
+    background:white;
+
+    border-width:0.1px;
+
+    border-bottom: 0.1px solid #f9f9f9;
+
+}

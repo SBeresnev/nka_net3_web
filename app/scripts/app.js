@@ -147,7 +147,7 @@ var app = angular
                     $element.css("display", "none");
                     $timeout(showElement, 1000);
                 }
-                showElement();
+
             },
             template: '<span ng-transclude></span>',
             replace: true

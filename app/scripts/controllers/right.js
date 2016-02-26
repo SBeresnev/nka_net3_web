@@ -3,19 +3,129 @@
  */
 
 
-angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOMAIN, WEBDOM, rightvar, dictvar ,operationtvar) {
+angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $timeout ,DOMAIN, WEBDOM, rightvar, dictvar ,operationtvar) {
 
     kendo.culture("ru-RU");
 
+    $scope.transfer_img_left = "images/dfinger.jpg";
+
+    $scope.transfer_img_right = "images/dfinger.jpg";
 
     $scope.anonymous = {
         "subjectId":1,"reestrdataID":1,"isOwner":1,"subjectType":110,
         "dtype":"private", "subjectdataid":1, "firstname":null,
         "surname":"аноним", "fathername":null, "sitizens":112,
         "bothRegDate":"1900-01-01T00:00:00.000Z","personalNumber":"АААААААААААААА",
-        "address":null,"remark":null}
+        "address":null,"remark":null};
+
+    $scope.mixMap = {Id: null, fromTeils:{n: null, d: null}, fromFIO:null, fromRoid:null, transTeils:{n: null, d: null}, toRoid:null, toFIO:null, toTeils:{n: null, d: null} };
 
     ///////////////////////////////kendo grid property/////////////////////////////////////////////////////////////////
+
+    $scope.mixGridOption = function(data) {
+
+        return {
+
+            dataSource: {data: data,
+
+                schema: {
+
+                    model: {
+
+                        fields: {
+                            "fromTeils": {  editable: false },
+                            "fromFIO": { type: "string", editable: false },
+                            "fromRoid":{ type: "number", editable: false },
+                            "transTeils.n" : { type: "number", editable: true },
+                            "transTeils.d" : { type: "number", editable: true },
+                            "toTeils": {  editable: false },
+                            "toFIO": { type: "string", editable: false },
+                            "toRoid":{ type: "number", editable: false }
+                        }
+                    }
+                }
+            },
+
+            scrollable: false,
+
+            sortable: false,
+
+            resizable: true,
+
+            navigatable: true,
+
+            groupable: true,
+
+            selectable: false,
+
+            editable: true,
+
+            messages : {
+                commands: {
+                    save: "Сохранить"
+                }
+            },
+
+            groupable : {
+                messages: {
+                    empty : "Перетяните сюда заголовок колонки для группировки"
+                }
+            },
+
+            headerAttributes: {
+                style: "text-align: center;"
+            },
+
+            saveChanges: function(e) {
+
+                console.log(e);
+
+                  if (!confirm("Are you sure you want to save all changes?")) {
+
+                    saveTransChange(e);
+
+                }
+            },
+
+            toolbar: ["save"],
+
+            columns: [
+
+                { title: "Удалить", attributes: { style: "background-color: white" }, template: '<input type="image" src="images/deletion.jpg" , ng-click = "detachTrans(dataItem.Id,\'FROM\')",style="margin-left:30%" height="30" width="30" alt="Submit">'},
+
+                { field:"fromTeils", title:"Доля", template:'<p>{{BeautyFraction(dataItem.fromTeils.n,dataItem.fromTeils.d)}}</p>'},
+
+                { field:"fromFIO", title:"Имя/название правообладателя", headerTemplate:'<p align="center">Имя/название<br>правообладателя</p>'},
+
+                { field: "fromRoid", title: "From Id" },
+
+                {
+                  title: "<center>Переходящая<br>доля</center>",
+
+                columns:[
+
+                { field: "transTeils.n",attributes: { style: "background-color:rgba(227, 223, 231, 0.70)" }, title: "Числитель"},
+
+                { title:" ", template: ' <img src="images/FS.png" height="40" width="40"/>'},
+
+                { field: "transTeils.d",attributes: { style: "background-color:rgba(227, 223, 231, 0.70)" }, title: "Знаменатель"}
+
+                       ]
+                } ,
+
+                { field: "toRoid", title: "To Id"},
+
+                { field:"toFIO", title:"Имя/название правообладателя", headerTemplate:'<p align="center">Имя/название<br>правообладателя</p>'},
+
+                { field:"toTeils", title:"Доля",  template:'<p>{{BeautyFraction(dataItem.toTeils.n,dataItem.toTeils.d)}}</p>' },
+
+                { title: "Удалить", template: '<input type="image" style="background-color:white" src="images/deletion.jpg" , ng-click = "detachTrans(dataItem.Id,\'TO\')", style="margin-left:30%" height="30" width="30" alt="Submit">'}
+
+
+            ]
+
+        }
+    }
 
     $scope.limitGridOption = function(limdata, hide) {
 
@@ -56,6 +166,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
             ]
 
         }
+
     }
 
     $scope.editGridOption = {
@@ -140,15 +251,15 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             {field: "right_id",  filterable: false, title: "ID"},
 
-            {field: "right_type_name",  filterable: false, title: "Вид права:"},
+            {field: "right_type_name",  filterable: false, title: "Вид"},
 
             {field: "right_entity_type_name",  filterable: false, title: "<center>Объект операции  <br> (сущность)</center>"},
 
             {field: "right_count_type_name", filterable: false, title: "<center>Тип права по числу <br> правообладателей</center>"},
 
-            {field: "begin_date",  filterable: false, title: "<center> Дата <br> возникновения права</center>", template:"#= begin_date!=null?kendo.toString(kendo.parseDate(new Date(begin_date)), 'dd-MM-yyyy'):'' #"},
+            {field: "begin_date",  filterable: false, title: "<center> Дата <br> возникновения</center>", template:"#= begin_date!=null?kendo.toString(kendo.parseDate(new Date(begin_date)), 'dd-MM-yyyy'):'' #"},
 
-            {field: "end_date",  filterable: false, title: "<center> Дата <br>прекращения права</center>", template:"#= end_date!=null?kendo.toString(kendo.parseDate(new Date(end_date)), 'dd-MM-yyyy'):'' #"},
+            {field: "end_date",  filterable: false, title: "<center> Дата <br>прекращения</center>", template:"#= end_date!=null?kendo.toString(kendo.parseDate(new Date(end_date)), 'dd-MM-yyyy'):'' #"},
 
             {field: "bindedObj.object_name",  title: "Имя объекта"} ,
 
@@ -236,9 +347,15 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         rightsDataLimitTo:[],
 
-        rightsTransformFrom:{},
+        ///////////////////////////////////////////////////
 
-        rightsTransformTo:{},
+        mixTransformMap: [],
+
+        rightsTransformFrom:[],
+
+        rightsTransformTo:[],
+
+        ///////////////////////////////////////////////////
 
         transformActive:""
 
@@ -381,10 +498,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
+    function saveTransChange(e) { }
+
     /////////////////////////////// Search block ///////////////////////////////////////////////////////////////////////
 
     $scope.rightSearch = function(){
-
 
         $scope.rightstDataSearchTabHide=true;
 
@@ -396,12 +514,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         pos == -1 ? $scope.sel_subject[$scope.tabNum] = {} : $scope.sel_object[$scope.tabNum] = {};
 
-        if($scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) == '' && $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId) == '')
-        { swal("Info", "Не выбран субъект, либо объект поиска" , "info"); return; }
+       // if($scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) == '' && $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId) == '')
+       //  { swal("Info", "Не выбран субъект, либо объект поиска" , "info"); return; }
+       // $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
 
-        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
-
-       // $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
+        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
 
         $scope.var.loading = true;
 
@@ -636,6 +753,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             if (this.nullIfundefine($scope.sel_object[1].obj_id)) {
 
+
                 $scope.sel_param = $scope.sel_object[1].object_name + ';' + $scope.sel_object[1].address_dest.adr;
             }
         }
@@ -649,6 +767,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
                 $scope.form_edit_right.bindedObj = angular.copy($scope.sel_object[2]);
 
                 $scope.form_edit_right.bindedObj.fullname = $scope.sel_object[2].object_name + ';' + $scope.sel_object[2].address_dest.adr;
+
+
             }
         }
 
@@ -670,7 +790,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
         /////////////////// for second part only ////////////////////////////////////////////////////////////////////////////
 
-        if($scope.tabNum == 2){$scope.form_edit_right.rightOwner.owner = angular.copy($scope.sel_subject[2]);}
+        if($scope.tabNum == 2){
+
+            $scope.form_edit_right.rightOwner.owner = angular.copy($scope.sel_subject[2]);
+
+            $scope.form_edit_right.rightOwner.owner.fullname = $scope.BeautyCast($scope.nullIfundefine($scope.form_edit_right.rightOwner.owner.fullname),'','');
+        }
 
 
     };
@@ -770,6 +895,17 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
             var was_checked = $scope.checked[$scope.tabNum][rec.right_id];
 
+
+            if (right_to_trans.right_type_name.indexOf('Ограничения') >=0 ){
+
+                $scope.checked[$scope.tabNum][rec.right_id] = false;
+
+                $scope.notif.show("Ограничения/обременение передавать нельзя", "error");
+
+                return;
+
+            }
+
             if ($scope.var.transformActive == 'FROM') {
 
                 scip_right_id = $scope.nullIfundefine($scope.var.rightsTransformTo.right_id);
@@ -778,7 +914,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
                     $scope.checked[$scope.tabNum][scip_right_id] = true;
 
-                    $scope.notif.show("Право выбрано, как родительское", "warning");
+                    $scope.notif.show("Право уже выбрано, как родительское", "warning");
 
                     return;
                 }
@@ -796,8 +932,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
                 }
             }
 
-
-             if ( $scope.var.transformActive == 'TO' ) {
+            if ( $scope.var.transformActive == 'TO' ) {
 
                 scip_right_id = $scope.nullIfundefine($scope.var.rightsTransformFrom.right_id);
 
@@ -805,7 +940,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
                     $scope.checked[$scope.tabNum][scip_right_id] = true;
 
-                    $scope.notif.show("Право выбрано, как источник", "warning");
+                    $scope.notif.show("Право уже выбрано, как источник", "warning");
 
                     return;
                 }
@@ -955,7 +1090,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
-    /////////////////////////////// limitation operations /////////////////////////////////////////////////
+    /////////////////////////////// Limitation operations /////////////////////////////////////////////////
 
     $scope.detachLimit = function(dataItem, limit_part){
 
@@ -1730,6 +1865,125 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     }
 
+    ///////////////////////////// Transform part /////////////////////////////////////////////////////////////////
+
+    $scope.copytoMixRow = function(mixstr, rec, trans_part ) {
+
+        if(trans_part == 'FROM') {
+
+            mixstr.fromTeils.n = rec.numerator_part;
+
+            mixstr.fromTeils.d = rec.denominator_part;
+
+            mixstr.fromFIO = $scope.nullIfundefine(rec.owner.fullname) == null ? $scope.BeautyCast(rec.owner.surname, rec.owner.firstname, rec.owner.fathername) : rec.owner.fullname;
+
+            mixstr.fromRoid = rec.right_owner_id;
+
+        }
+
+        if(trans_part == 'TO') {
+
+            mixstr.toTeils.n = rec.numerator_part;
+
+            mixstr.toTeils.d = rec.denominator_part;
+
+            mixstr.toFIO = $scope.nullIfundefine(rec.owner.fullname) == null ? $scope.BeautyCast(rec.owner.surname, rec.owner.firstname, rec.owner.fathername) : rec.owner.fullname;
+
+            mixstr.toRoid = rec.right_owner_id;
+
+        }
+
+        return mixstr;
+
+    }
+
+    $scope.transimageBlick = function(trans_part) {
+
+        if(trans_part == 'FROM') {
+
+            $timeout(function(){ $scope.transfer_img_left = "images/dfinger.jpg"; }, 500);
+
+            $scope.transfer_img_left = "images/dfinger_color.jpg";
+        }
+
+        if(trans_part == 'TO') {
+
+            $timeout(function(){ $scope.transfer_img_right = "images/dfinger.jpg"; }, 500);
+
+            $scope.transfer_img_right = "images/dfinger_color.jpg";
+        }
+
+
+
+    }
+
+    $scope.detachTrans = function (idx, trans_part){
+
+        var copyMix = $scope.var.mixTransformMap[idx];
+
+        if (trans_part == 'FROM'){
+
+            copyMix.fromTeils.n = null;
+
+            copyMix.fromTeils.d = null;
+
+            copyMix.fromFIO = null;
+
+            copyMix.fromRoid = null;
+
+        }
+
+        if (trans_part == 'TO'){
+
+            copyMix.toTeils.n = null;
+
+            copyMix.toTeils.d = null;
+
+            copyMix.toFIO = null;
+
+            copyMix.toRoid = null;
+
+        }
+
+        if ((copyMix.toRoid == null)&& (copyMix.fromRoid ==  null)) {
+
+            for( var i = idx+1 ; i < $scope.var.mixTransformMap.length ; i++ ){
+
+                $scope.var.mixTransformMap[i].Id = i-1;
+
+            }
+
+            $scope.var.mixTransformMap.splice(idx, 1) ;
+
+
+        }
+    }
+
+    $scope.OnTransSelect = function (rec, trans_part) {
+
+        var mixRow = angular.copy($scope.mixMap);
+
+        $scope.transimageBlick(trans_part)
+
+        if(trans_part == 'FROM') { var idx = $scope.var.mixTransformMap.findIndex(function(value){ return value.fromRoid == null })};
+
+        if(trans_part == 'TO') { var idx = $scope.var.mixTransformMap.findIndex(function(value){ return value.toRoid == null })};
+
+        if (idx == -1) {
+
+            $scope.copytoMixRow(mixRow,rec,trans_part);
+
+            mixRow.Id = $scope.var.mixTransformMap.length;
+
+            $scope.var.mixTransformMap.push(mixRow);
+
+        }
+        else {  $scope.copytoMixRow($scope.var.mixTransformMap[idx],rec,trans_part);  }
+
+
+    }
+
+
     ///////////////////////////// Service part /////////////////////////////////////////////////////////////////
 
     $scope.getTabClass = function (tabN) {
@@ -1993,6 +2247,14 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
 
     };
 
+    $scope.BeautyFraction = function(numerator_part,denominator_part) {
+
+         var fraction =  new Fraction(numerator_part, denominator_part);
+
+        return fraction.n==0?"":fraction.n + (denominator_part==1 ?"":"/" + fraction.d);
+
+    };
+
     $scope.ChgKendoGridTitle = function(name) {
 
         var kendoObj = $("#kg").data("kendoGrid");
@@ -2035,6 +2297,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, DOM
         for (var i=0; i<rows; i++) {  arr[i] = []; }
 
         return arr;
+
     };
 
     function initTabs() {

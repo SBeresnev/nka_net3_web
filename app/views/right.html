@@ -104,7 +104,7 @@
 
               <!------------- Bufer  ------------->
 
-               <div class = "col-lg-12 ">
+              <div class = "col-lg-12 ">
 
              <uib-accordion ng-init="pnl_opn=true">
 
@@ -133,7 +133,7 @@
 
            </div>
 
-               <div class="col-lg-12 vert-offset-top-2">
+              <div class="col-lg-12 vert-offset-top-2">
 
                   <nav class="navbar navbar-default" style="background-color:white">
 
@@ -165,7 +165,7 @@
 
               <div ng-if="!limitHide" class="col-lg-3"></div>
 
-               <div class = "col-lg-6">
+              <div class = "col-lg-6">
 
                    <div class="panel panel-default vert-offset-top-3">
 
@@ -246,7 +246,7 @@
 
                         </div>
 
-                        <span ng-if="!limitHide" class="btn btn-default vert-offset-top-2"  ng-click="dispalyOperations('#operModal')">Операции   <blink ng-if="true"> <span class="glyphicon glyphicon-exclamation-sign"></span></blink></span>
+                        <span ng-if="!limitHide" class="btn btn-default vert-offset-top-2"  ng-click="dispalyOperations('#operModal')">Операции   <blink  ng-if="true"> <span class="glyphicon glyphicon-exclamation-sign"></span></blink></span>
 
                         <div class="form-group vert-offset-top-2">
 
@@ -269,7 +269,7 @@
 
               <!--------- RightOwner -------------->
 
-               <div class = "col-lg-6">
+              <div class = "col-lg-6">
 
                <div ng-if="limitHide"  class="panel panel-default vert-offset-top-3">
 
@@ -277,13 +277,14 @@
 
                     <div class="panel-body">
 
-                        <div class="form-group vert-offset-top-2 vert-offset-bottom-2">
+                        <div class="form-group vert-offset-top-1 vert-offset-bottom-2">
 
                                 <label class="control-label">Правообладатель:</label>
 
                                 <div class="input-group">
 
-                                    <input type="text" class="form-control"  placeholder="Субъект" ng-value="BeautyCast(nullIfundefine(form_edit_right.rightOwner.owner.fullname),'','')" disabled />
+
+                                    <textarea type="text" class="form-control"  placeholder="Субъект" rows="2" ng-model="form_edit_right.rightOwner.owner.fullname" disabled />
 
                                     <span class="input-group-addon right-span-addon" ><span class="glyphicon glyphicon-zoom-in" ng-click="sbjOpen()"></span></span>
 
@@ -355,11 +356,9 @@
 
            <div class = "container">
 
-              <div class="raw">
+             <!------------------------ From welll -------------------------------------------->
 
-                 <div id="right_trans_panel" class="col-lg-6 vert-offset-top-6">
-
-                     <!------------------------ From welll ------------------------------------>
+              <div id="right_trans_panel" class="col-lg-6 vert-offset-top-6">
 
                     <div class="well well-sm">
 
@@ -369,13 +368,13 @@
 
                      <div>
 
-                      <table class="table table-bordered table-hover vert-offset-top-2" ng-show="var.rightsTransformFrom.right_id">
+                       <table class="table table-bordered table-hover vert-offset-top-2" ng-show="var.rightsTransformFrom.right_id">
 
                           <thead>
 
                              <tr style="background-color:#f9f9f9">
 
-                                 <th>ID</th>
+                                 <th>id</th>
 
                                  <th>Вид права</th>
 
@@ -385,7 +384,7 @@
 
                                  <th>Имя/название правообладателя</th>
 
-                                 <th>Доля в праве</th>
+                                 <th >Доля в праве</th>
 
                              </tr>
 
@@ -393,9 +392,9 @@
 
                            <tbody>
 
-                             <tr  ng-repeat="item in var.rightsTransformFrom.rightOwners" ng-click= "OnEditPanelTable()">
+                             <tr  ng-repeat="item in var.rightsTransformFrom.rightOwners" ng-click= "OnTransSelect(item,'FROM')" >
 
-                                 <td  width="fit-content">{{var.rightsTransformFrom.right_id}}</td>
+                                 <td  width="fit-content">{{item.right_owner_id}}</td>
 
                                  <td  width="fit-content">{{var.rightsTransformFrom.right_type_name}}</td>
 
@@ -403,15 +402,15 @@
 
                                  <td  width="fit-content">{{var.rightsTransformFrom.bindedObj.objectType.code_name}}</td>
 
-                                 <td  width="fit-content">{{item.owner.surname}}{{" "+item.owner.firstname}}{{" "+item.owner.fathername }}{{item.owner.fullname}}</td>
+                                 <td  width="fit-content">{{nullIfundefine(item.owner.fullname) == null ? BeautyCast(item.owner.surname, item.owner.firstname, item.owner.fathername) : item.owner.fullname}}</td>
 
-                                 <td  width="fit-content">{{item.numerator_part}}{{item.denominator_part == 1 ?'':'/'+item.denominator_part}}</td>
+                                 <td  width="fit-content">{{BeautyFraction(item.numerator_part,item.denominator_part)}}</td>
 
                              </tr>
 
                            </tbody>
 
-                       </table>
+                        </table>
 
                      </div>
 
@@ -419,35 +418,37 @@
 
                      <div class="col-lg-2">
 
-                         <input type="image" src="images/dfinger.jpg" with="60" height="60"/>
+                         <input type="image" src="{{transfer_img_left}}"  width="60" height="60"/>
 
                      </div>
 
                  </div>
 
-              </div>
+              <!------------------------------------------------------------------------------>
 
-              <div class="col-lg-2"></div>
+
+                 <div class="col-lg-2"></div>
+
+
+              <!------------------------ To well ---------------------------------------------->
 
               <div class="col-lg-6 vert-offset-top-6">
 
-                  <!------------------------ To welll ------------------------------------>
-
                  <div class="well well-sm">
 
-                         <button class="astext" ng-click="var.transformActive='TO'; LoadBuffer()" style="color:#005580"><h4><b>Кому</b></h4></button>
+                    <button class="astext" ng-click="var.transformActive='TO'; LoadBuffer()" style="color:#005580"><h4><b>Кому</b></h4></button>
 
                  </div>
 
                  <div>
 
-                      <table class="table table-bordered table-hover vert-offset-top-2" ng-show="var.rightsTransformTo.right_id">
+                     <table class="table table-bordered table-hover vert-offset-top-2" ng-show="var.rightsTransformTo.right_id">
 
                           <thead>
 
                           <tr style="background-color:#f9f9f9">
 
-                              <th>ID</th>
+                              <th>id</th>
 
                               <th>Вид права</th>
 
@@ -465,9 +466,9 @@
 
                           <tbody>
 
-                          <tr  ng-repeat="item in var.rightsTransformTo.rightOwners" ng-click= "OnEditPanelTable()">
+                          <tr ng-repeat="item in var.rightsTransformTo.rightOwners" ng-click= "OnTransSelect(item,'TO')" >
 
-                              <td  width="fit-content">{{var.rightsTransformTo.right_id}}</td>
+                              <td  width="fit-content">{{item.right_owner_id}}</td>
 
                               <td  width="fit-content">{{var.rightsTransformTo.right_type_name}}</td>
 
@@ -475,9 +476,9 @@
 
                               <td  width="fit-content">{{var.rightsTransformTo.bindedObj.objectType.code_name}}</td>
 
-                              <td  width="fit-content">{{item.owner.surname}}{{" "+item.owner.firstname}}{{" "+item.owner.fathername }}{{item.owner.fullname}}</td>
+                              <td  width="fit-content">{{nullIfundefine(item.owner.fullname) == null ? BeautyCast(item.owner.surname, item.owner.firstname, item.owner.fathername) : item.owner.fullname}}</td>
 
-                              <td  width="fit-content">{{item.numerator_part}}{{item.denominator_part == 1 ?'':'/'+item.denominator_part}}</td>
+                              <td  width="fit-content">{{BeautyFraction(item.numerator_part,item.denominator_part)}}</td>
 
                           </tr>
 
@@ -487,20 +488,23 @@
 
                      <div class="col-lg-5"></div>
 
-                      <div class="col-lg-2">
+                     <div class="col-lg-2">
 
-                          <input type="image" src="images/dfinger.jpg" with="60" height="60"/>
+                         <input type="image" src="{{transfer_img_right}}" with="60" height="60"/>
 
                       </div>
 
                   </div>
 
-
               </div>
+
+               <!------------------------------------------------------------------------------>
 
             </div>
 
-             <div class="row">
+            <!------------------------ Mix part -------------------------------------------->
+
+           <div class="row">
 
                <div class="col-lg-3"></div>
 
@@ -508,7 +512,9 @@
 
                   <div class="panel panel-default">
 
-                     <div class="panel-body">
+                     <div  class="panel-body">
+
+                        <div class="right-mixtransfer-grid" kendo-grid k-options="mixGridOption(var.mixTransformMap)" k-rebind="var.mixTransformMap"></div>
 
                      </div>
 
@@ -520,7 +526,7 @@
 
          </div>
 
-        <!------------------------ Bargain block ---------------------------------------->
+        <!------------------------ Bargain block -------------------------------------------->
 
          <div id="bargain" ng-class="getTabPaneClass(4)">Сделки</div>
 
