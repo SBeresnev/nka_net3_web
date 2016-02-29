@@ -76,16 +76,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
                 style: "text-align: center;"
             },
 
-            saveChanges: function(e) {
-
-                console.log(e);
-
-                  if (!confirm("Are you sure you want to save all changes?")) {
-
-                    saveTransChange(e);
-
-                }
-            },
+            saveChanges: function(e) {   $scope.saveTransChange(e);  },
 
             toolbar: ["save"],
 
@@ -395,7 +386,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
         14:"Пивязанный к праву объект изменить нельзя",
         15:"Вид права изменить нельзя",
         16:"Тип права по числу правообладателей изменить нельзя",
-        17:"Объект операции (сущность) изменить нельзя"
+        17:"Объект операции (сущность) изменить нельзя",
+        18:"Cумма передаваемой доли превышает долю отправителя ",
+        19:"Сумма передаваемой доли превышает долю получателя "
 
     }
 
@@ -498,7 +491,54 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     };
 
-    function saveTransChange(e) { }
+    $scope.saveTransChange = function (e){
+
+        var data_send = angular.copy(e.sender._data);
+
+        for( var i = 0; i < data_send.length ; i++) {
+
+            var fromSumm = new Fraction(0,1);
+
+            var toSumm = new Fraction(0,1);
+
+            var num = data_send[i].transTeils.n;
+
+            var de_num = data_send[i].transTeils.d;
+
+            for( var j = 0; j< data_send.length ; j++) {
+
+                 if( data_send[i].fromRoid ==  data_send[j].fromRoid) {
+
+                     fracion_check = new Fraction( data_send[j].transTeils.n, data_send[j].transTeils.d);
+
+                     fromSumm = fromSumm.add(fracion_check);
+
+                 }
+
+            }
+
+            data_send[i].fromSumm = fromSumm;
+
+            for( var j = 0; j< data_send.length ; j++) {
+
+                if( data_send[i].toRoid ==  data_send[j].toRoid) {
+
+                    fracion_check = new Fraction( data_send[j].transTeils.n, data_send[j].transTeils.d);
+
+                    toSumm = toSumm.add(fracion_check);
+
+                }
+
+            }
+
+            data_send[i].toSumm = toSumm;
+
+        }
+
+
+        $scope.transRightCheck(data_send);
+
+    }
 
     /////////////////////////////// Search block ///////////////////////////////////////////////////////////////////////
 
@@ -514,11 +554,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         pos == -1 ? $scope.sel_subject[$scope.tabNum] = {} : $scope.sel_object[$scope.tabNum] = {};
 
-       // if($scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) == '' && $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId) == '')
-       //  { swal("Info", "Не выбран субъект, либо объект поиска" , "info"); return; }
-       // $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
+        if($scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) == '' && $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId) == '')
+         { swal("Info", "Не выбран субъект, либо объект поиска" , "info"); return; }
 
-        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
+        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
+
+       // $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
 
         $scope.var.loading = true;
 
@@ -1614,6 +1655,57 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
     };
 
     ///////////////////////////// Checks part /////////////////////////////////////////////////////////////////
+
+    $scope.transRightCheck = function(tdata){
+
+        var ret_val = false;
+
+        console.log(tdata);
+
+        for( var i = 0; i < tdata.length ; i++) {
+
+            var fsumm = new Fraction(tdata[i].fromSumm);
+
+            var tsumm = new Fraction(tdata[i].toSumm);
+
+            if( $scope.nullIfundefine(tdata[i].fromRoid) == null  ) {
+
+                swal("Error", "Не указан родительское право в строке с To Id = " + tdata[i].toRoid , "error");
+
+                ret_val = true;
+
+            } else if( fsumm.compare(new Fraction(tdata[i].fromTeils)) > 0 ){
+
+                swal("Error", $scope.ErrorMessage[18] + " " + tdata[i].fromFIO + " "  , "error");
+
+                ret_val = true;
+
+            } else if( tsumm.compare(new Fraction(tdata[i].toTeils)) > 0 ){
+
+                swal("Error",  $scope.ErrorMessage[19] + " " + tdata[i].toFIO + " " , "error");
+
+                ret_val = true;
+
+            }else if( tdata[i].transTeils.n == null || tdata[i].transTeils.n < 0 ) {
+
+                swal("Error", "Передаваемая доля с From Id = " + tdata[i].fromRoid + " имеет пустой, либо отрицательный числитель"  , "error");
+
+                ret_val = true;
+
+            } else if(  tdata[i].transTeils.d == null || tdata[i].transTeils.d <= 0 ) {
+
+                swal("Error", "Передаваемая строка с From Id = " + tdata[i].toRoid + " имеет пустой (=0), либо отрицательный знаменатель", "error");
+
+                ret_val = true;
+
+            }
+
+
+        }
+
+        return ret_val;
+
+    }
 
     $scope.CreateRightCheck = function(to_check_right) {
 
