@@ -68,7 +68,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
             groupable : {
                 messages: {
-                    empty : "Перетяните сюда заголовок колонки для группировки"
+                    empty : "Перетяните сюда заголовок колонки правообладателя"
                 }
             },
 
@@ -76,17 +76,17 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
                 style: "text-align: center;"
             },
 
-            saveChanges: function(e) {   $scope.saveTransChange(e);  },
+            saveChanges: function(e) { $scope.saveTransChange(e); },
 
             toolbar: ["save"],
 
             columns: [
 
-                { title: "Удалить", attributes: { style: "background-color: white" }, template: '<input type="image" src="images/deletion.jpg" , ng-click = "detachTrans(dataItem.Id,\'FROM\')",style="margin-left:30%" height="30" width="30" alt="Submit">'},
+                { title: "Удалить", groupable:"false" ,attributes: { style: "background-color: white" }, template: '<input type="image" src="images/deletion.jpg" , ng-click = "detachTrans(dataItem.Id,\'FROM\')",style="margin-left:30%" height="30" width="30" alt="Submit">'},
 
-                { field:"fromTeils", title:"Доля", template:'<p>{{BeautyFraction(dataItem.fromTeils.n,dataItem.fromTeils.d)}}</p>'},
+                { field:"fromTeils", groupable:"false",title:"Доля", template:'<p>{{BeautyFraction(dataItem.fromTeils.n,dataItem.fromTeils.d)}}</p>'},
 
-                { field:"fromFIO", title:"Имя/название правообладателя", headerTemplate:'<p align="center">Имя/название<br>правообладателя</p>'},
+                { field:"fromFIO",title:"Имя/название правообладателя", headerTemplate:'<p align="center">Имя/название<br>правообладателя</p>'},
 
                 { field: "fromRoid", title: "From Id" },
 
@@ -95,11 +95,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
                 columns:[
 
-                { field: "transTeils.n",attributes: { style: "background-color:rgba(227, 223, 231, 0.70)" }, title: "Числитель"},
+                { field: "transTeils.n" , groupable:"false",attributes: { style: "background-color:rgba(227, 223, 231, 0.70)" }, title:"<span style='padding-left:40px;'> </span>"},
 
-                { title:" ", template: ' <img src="images/FS.png" height="40" width="40"/>'},
+                { title:" ", groupable:"false" ,template: ' <img src="images/FS.png" height="40" width="40"/>'},
 
-                { field: "transTeils.d",attributes: { style: "background-color:rgba(227, 223, 231, 0.70)" }, title: "Знаменатель"}
+                { field: "transTeils.d" , groupable:"false" ,attributes: { style: "background-color:rgba(227, 223, 231, 0.70)" }, title: "<span style='padding-left:40px;'> </span>"}
 
                        ]
                 } ,
@@ -108,9 +108,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
                 { field:"toFIO", title:"Имя/название правообладателя", headerTemplate:'<p align="center">Имя/название<br>правообладателя</p>'},
 
-                { field:"toTeils", title:"Доля",  template:'<p>{{BeautyFraction(dataItem.toTeils.n,dataItem.toTeils.d)}}</p>' },
+                { field:"toTeils", groupable:"false", title:"Доля",  template:'<p>{{BeautyFraction(dataItem.toTeils.n,dataItem.toTeils.d)}}</p>' },
 
-                { title: "Удалить", template: '<input type="image" style="background-color:white" src="images/deletion.jpg" , ng-click = "detachTrans(dataItem.Id,\'TO\')", style="margin-left:30%" height="30" width="30" alt="Submit">'}
+                { title: "Удалить", groupable:"false", template: '<input type="image" style="background-color:white" src="images/deletion.jpg" , ng-click = "detachTrans(dataItem.Id,\'TO\')", style="margin-left:30%" height="30" width="30" alt="Submit">'}
 
 
             ]
@@ -262,6 +262,39 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     };
 
+    $scope.errNotifications  = function(data) {
+
+        return {
+
+            dataSource: {
+
+                data: data,
+
+                group: {
+
+                    field: "ID"
+                }
+
+            },
+
+            scrollable: false,
+
+            sortable: true,
+
+            resizable: true,
+
+            columns: [
+
+                {field: "ID", title: "ID"},
+
+                {field: "errorMessage", title: "Текст Ошибки", attributes:{style:"color:red"} }
+
+            ]
+
+        }
+
+    };
+
     $scope.detailOwnersOptions = function(dataItem) { return {
 
         dataSource: { data: dataItem === undefined ? null : dataItem.rightOwners },
@@ -348,7 +381,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         ///////////////////////////////////////////////////
 
-        transformActive:""
+        transformActive:"",
+
+        ErrorNotific:[] // { errorMessage:"", Name (ID):"" };
 
     };
 
@@ -387,10 +422,16 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
         15:"Вид права изменить нельзя",
         16:"Тип права по числу правообладателей изменить нельзя",
         17:"Объект операции (сущность) изменить нельзя",
-        18:"Cумма передаваемой доли превышает долю отправителя ",
-        19:"Сумма передаваемой доли превышает долю получателя "
+        18:"Cумма передаваемой доли превышает долю отправителя",
+        19:"Сумма передаваемой доли превышает долю получателя",
+        20:"Передаваемая доля имеет пустой, либо отрицательный числитель",
+        21:"Передаваемая доля имеет пустой (=0), либо отрицательный знаменатель",
+        22:"В строке не указано родительское право",
+        23:"Выбранное право является принимаемым",
+        24:"Выбранное право является переходящим",
+        25:"Нельзя передавать права между разными объектами"
+    };
 
-    }
 
     /////////////////////////////// Init block ///////////////////////////////////////////////////////////////////////
 
@@ -509,6 +550,15 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
                  if( data_send[i].fromRoid ==  data_send[j].fromRoid) {
 
+                     if( data_send[j].transTeils.n == null || data_send[j].transTeils.d == null )
+                     {
+                         fracion_check = new Fraction( data_send[j].transTeils.n, data_send[j].transTeils.d);
+
+                     } else {
+
+                         fracion_check = new Fraction(0,1);
+                     }
+
                      fracion_check = new Fraction( data_send[j].transTeils.n, data_send[j].transTeils.d);
 
                      fromSumm = fromSumm.add(fracion_check);
@@ -536,7 +586,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
         }
 
 
-        $scope.transRightCheck(data_send);
+        if($scope.transRightCheck(data_send)) {return} ;
 
     }
 
@@ -554,12 +604,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         pos == -1 ? $scope.sel_subject[$scope.tabNum] = {} : $scope.sel_object[$scope.tabNum] = {};
 
-        if($scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) == '' && $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId) == '')
-         { swal("Info", "Не выбран субъект, либо объект поиска" , "info"); return; }
+       /*if($scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) == '' && $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId) == '')
+        { swal("Info", "Не выбран субъект, либо объект поиска" , "info"); return; }
+         $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
+        */
 
-        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
-
-       // $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
+       $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
 
         $scope.var.loading = true;
 
@@ -841,7 +891,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     };
 
-    /////////////////////////// Bufer and Limitation operation //////////////////////////////////////////////////////////////
+    /////////////////////////// Bufer and Limitation operation ////////////////////////////////////////////////
+
     $scope.OnDeleteClick = function(rec){
 
         $scope.checked[$scope.tabNum][rec.right_id] = false;
@@ -882,7 +933,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
                 $scope.sel_buffer.push(item);
 
-            } else {
+            }  else {
 
                 if ($scope.edit_right.right_id == rec.right_id ){
 
@@ -947,18 +998,14 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
             }
 
-            if ($scope.var.transformActive == 'FROM') {
+            if ( $scope.var.transformActive == 'FROM' ) {
 
                 scip_right_id = $scope.nullIfundefine($scope.var.rightsTransformTo.right_id);
 
-                if (scip_right_id == rec.right_id) {
+                var res_trans = $scope.checkTransBuffer(rec,$scope.var.rightsTransformTo,'FROM');
 
-                    $scope.checked[$scope.tabNum][scip_right_id] = true;
+                if( res_trans ) { return;}
 
-                    $scope.notif.show("Право уже выбрано, как родительское", "warning");
-
-                    return;
-                }
 
                 if (was_checked) {
 
@@ -966,9 +1013,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
                     $scope.var.rightsTransformFrom = angular.copy(right_to_trans);
 
-                } else {
+                }
+                else {
 
                     $scope.var.rightsTransformFrom = {};
+
+                    $scope.var.mixTransformMap = [];
 
                 }
             }
@@ -977,15 +1027,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
                 scip_right_id = $scope.nullIfundefine($scope.var.rightsTransformFrom.right_id);
 
-                if(scip_right_id == rec.right_id ) {
+                var res_trans = $scope.checkTransBuffer(rec,$scope.var.rightsTransformFrom,'TO');
 
-                    $scope.checked[$scope.tabNum][scip_right_id] = true;
-
-                    $scope.notif.show("Право уже выбрано, как источник", "warning");
-
-                    return;
-                }
-
+                if( res_trans ) { return;}
 
                 if (was_checked) {
 
@@ -993,10 +1037,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
                     $scope.var.rightsTransformTo = angular.copy(right_to_trans);
 
-                }else {
+                }
+                else {
 
                     $scope.var.rightsTransformTo = {} ;
 
+                    $scope.var.mixTransformMap = [];
                 }
 
 
@@ -1048,7 +1094,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
         $scope.bufwindow.center();
 
         var modInst =  $scope.bufwindow.open();
-
 
     };
 
@@ -1120,7 +1165,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
         $scope.dispalyModal(modid);
 
 
-
     }
 
     $scope.dispalyModal = function(modid) {
@@ -1130,6 +1174,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
         myElement.modal("show");
 
     };
+
 
     /////////////////////////////// Limitation operations /////////////////////////////////////////////////
 
@@ -1656,11 +1701,46 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     ///////////////////////////// Checks part /////////////////////////////////////////////////////////////////
 
-    $scope.transRightCheck = function(tdata){
+    $scope.checkTransBuffer = function(one_right, two_right, transf_active){
 
         var ret_val = false;
 
-        console.log(tdata);
+        if( (typeof one_right.bindedObj.obj_id != 'undefined') && (typeof two_right.bindedObj != 'undefined') &&
+
+            (one_right.bindedObj.obj_id != two_right.bindedObj.obj_id)) {
+
+            $scope.checked[$scope.tabNum][rec.right_id] = false;
+
+            $scope.notif.show( $scope.ErrorMessage[25], "error");
+
+            ret_val = true;
+        }
+
+        if (one_right.right_id == two_right.right_id) {
+
+            $scope.checked[$scope.tabNum][one_right.right_id] = true;
+
+            if( transf_active = 'FROM' ) { $scope.notif.show($scope.ErrorMessage[23], "warning"); }
+            else if( transf_active = 'TO' ) { $scope.notif.show($scope.ErrorMessage[24], "warning"); }
+
+            ret_val = true;
+        }
+
+        return ret_val;
+
+    }
+
+    $scope.transRightCheck = function(tdata){
+
+        $scope.var.ErrorNotific = [];
+
+        var err = { errorMessage:"", ID:"" };
+
+        var double = [];
+
+        //$scope.ErrorNotific = []; // { errorMessage:"", Name (ID):"" };
+
+        var ret_val = false;
 
         for( var i = 0; i < tdata.length ; i++) {
 
@@ -1668,37 +1748,85 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
             var tsumm = new Fraction(tdata[i].toSumm);
 
+
             if( $scope.nullIfundefine(tdata[i].fromRoid) == null  ) {
 
-                swal("Error", "Не указан родительское право в строке с To Id = " + tdata[i].toRoid , "error");
+                err.errorMessage =  $scope.ErrorMessage[22];
+
+                err.ID = "To Id = " + tdata[i].toRoid;
+
+                $scope.var.ErrorNotific.push(angular.copy(err));
+
+                $scope.dispalyModal('#errorModal');
 
                 ret_val = true;
 
-            } else if( fsumm.compare(new Fraction(tdata[i].fromTeils)) > 0 ){
+                return;
 
-                swal("Error", $scope.ErrorMessage[18] + " " + tdata[i].fromFIO + " "  , "error");
+            }
 
-                ret_val = true;
+            if( fsumm.compare(new Fraction(tdata[i].fromTeils)) > 0 ){
 
-            } else if( tsumm.compare(new Fraction(tdata[i].toTeils)) > 0 ){
+                err.errorMessage = $scope.ErrorMessage[18] + " " + $scope.BeautyFraction(fsumm)+ ">" + $scope.BeautyFraction(new Fraction(tdata[i].fromTeils));
 
-                swal("Error",  $scope.ErrorMessage[19] + " " + tdata[i].toFIO + " " , "error");
+                err.ID =  tdata[i].fromFIO;
 
-                ret_val = true;
+                if(!double[tdata[i].fromId+''+ 18]) {
 
-            }else if( tdata[i].transTeils.n == null || tdata[i].transTeils.n < 0 ) {
+                    $scope.var.ErrorNotific.push(angular.copy(err));
 
-                swal("Error", "Передаваемая доля с From Id = " + tdata[i].fromRoid + " имеет пустой, либо отрицательный числитель"  , "error");
+                    double[tdata[i].fromId + '' + 18] = true;
 
-                ret_val = true;
-
-            } else if(  tdata[i].transTeils.d == null || tdata[i].transTeils.d <= 0 ) {
-
-                swal("Error", "Передаваемая строка с From Id = " + tdata[i].toRoid + " имеет пустой (=0), либо отрицательный знаменатель", "error");
+                }
 
                 ret_val = true;
 
             }
+
+            if( tsumm.compare(new Fraction(tdata[i].toTeils)) > 0 ){
+
+                err.errorMessage = $scope.ErrorMessage[19] + " " + $scope.BeautyFraction(tsumm)+ ">" + $scope.BeautyFraction(new Fraction(tdata[i].toTeils));
+
+                err.ID = tdata[i].toFIO;
+
+                if(!double[tdata[i].toId+''+ 19]) {
+
+                    $scope.var.ErrorNotific.push(angular.copy(err));
+
+                    double[tdata[i].toId + '' + 19] = true;
+                }
+
+                ret_val = true;
+
+
+            }
+
+            if( tdata[i].transTeils.n == null || tdata[i].transTeils.n < 0 ) {
+
+                err.errorMessage = $scope.ErrorMessage[20];
+
+                err.ID =  "From Id = " + tdata[i].fromRoid ;
+
+                $scope.var.ErrorNotific.push(angular.copy(err));
+
+                ret_val = true;
+
+            }
+
+            if(  tdata[i].transTeils.d == null || tdata[i].transTeils.d <= 0 ) {
+
+                err.errorMessage = $scope.ErrorMessage[21];
+
+                err.ID =  "From Id = " + tdata[i].fromRoid ;
+
+                $scope.var.ErrorNotific.push(angular.copy(err));
+
+                ret_val = true;
+
+            }
+
+
+            $scope.dispalyModal('#errorModal');
 
 
         }

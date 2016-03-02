@@ -514,7 +514,7 @@
 
                      <div  class="panel-body">
 
-                        <div id="transTab" class="right-mixtransfer-grid" kendo-grid k-options="mixGridOption(var.mixTransformMap)" k-rebind="var.mixTransformMap"></div>
+                        <div class="right-mixtransfer-grid" kendo-grid="transTab" k-options="mixGridOption(var.mixTransformMap)" k-rebind="var.mixTransformMap"></div>
 
                      </div>
 
@@ -543,6 +543,8 @@
 <div ng-include="'views/modright.html'"></div>
 
 <div ng-include="'views/modrightoper.html'"></div>
+
+<div ng-include="'views/errorright.html'"></div>
 
 <div kendo-window="limwindow" k-visible="false" k-modal="true" k-content="'views/modlimitright.html'"> </div>
 
