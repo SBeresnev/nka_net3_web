@@ -78,7 +78,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
             saveChanges: function(e) { $scope.saveTransChange(e); },
 
-            toolbar: ["save"],
+            toolbar: ["save", {template:kendo.template("<input type='button' value='Проверить и показать итог' ng-click='showTransCheck()' class='k-button'/>") }  ],
 
             columns: [
 
@@ -531,66 +531,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
 
     };
-
-    $scope.saveTransChange = function (e){
-
-        var data_send = angular.copy(e.sender._data);
-
-        for( var i = 0; i < data_send.length ; i++) {
-
-            var fromSumm = new Fraction(0,1);
-
-            var toSumm = new Fraction(0,1);
-
-            var num = data_send[i].transTeils.n;
-
-            var de_num = data_send[i].transTeils.d;
-
-            for( var j = 0; j< data_send.length ; j++) {
-
-                 if( data_send[i].fromRoid ==  data_send[j].fromRoid) {
-
-                     if( data_send[j].transTeils.n == null || data_send[j].transTeils.d == null )
-                     {
-                         fracion_check = new Fraction( data_send[j].transTeils.n, data_send[j].transTeils.d);
-
-                     } else {
-
-                         fracion_check = new Fraction(0,1);
-                     }
-
-                     fracion_check = new Fraction( data_send[j].transTeils.n, data_send[j].transTeils.d);
-
-                     fromSumm = fromSumm.add(fracion_check);
-
-                 }
-
-            }
-
-            data_send[i].fromSumm = fromSumm;
-
-            for( var j = 0; j< data_send.length ; j++) {
-
-                if( data_send[i].toRoid ==  data_send[j].toRoid) {
-
-                    fracion_check = new Fraction( data_send[j].transTeils.n, data_send[j].transTeils.d);
-
-                    toSumm = toSumm.add(fracion_check);
-
-                }
-
-            }
-
-            data_send[i].toSumm = toSumm;
-
-        }
-
-
-        if($scope.transRightCheck(data_send)) {return} ;
-
-    }
-
-    /////////////////////////////// Search block ///////////////////////////////////////////////////////////////////////
+   /////////////////////////////// Search block ///////////////////////////////////////////////////////////////////////
 
     $scope.rightSearch = function(){
 
@@ -604,16 +545,16 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         pos == -1 ? $scope.sel_subject[$scope.tabNum] = {} : $scope.sel_object[$scope.tabNum] = {};
 
-       /*if($scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) == '' && $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId) == '')
-        { swal("Info", "Не выбран субъект, либо объект поиска" , "info"); return; }
-         $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
-        */
+       //if($scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) == '' && $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId) == '')
+       // { swal("Info", "Не выбран субъект, либо объект поиска" , "info"); return; }
+       //$scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
+
 
        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
 
-        $scope.var.loading = true;
+       $scope.var.loading = true;
 
-        $http.get($scope.urlSearch).success(function (res) {
+       $http.get($scope.urlSearch).success(function (res) {
 
             $scope.var.loading = false;
 
@@ -627,9 +568,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
             $scope.mainGridOptions.dataSource.data = $scope.var.rightsDataSearch;
 
-            ////////////////////////////////////////////////////////////////////////////////
-
-
         }).error(function (data, status, header, config) {
 
             $scope.var.loading = false;
@@ -638,6 +576,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         });
 
+       ///////////////////////////////////////////////////////////////////////////////////
 
     };
 
@@ -1721,6 +1660,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
             $scope.checked[$scope.tabNum][one_right.right_id] = true;
 
             if( transf_active = 'FROM' ) { $scope.notif.show($scope.ErrorMessage[23], "warning"); }
+
             else if( transf_active = 'TO' ) { $scope.notif.show($scope.ErrorMessage[24], "warning"); }
 
             ret_val = true;
@@ -1756,8 +1696,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
                 err.ID = "To Id = " + tdata[i].toRoid;
 
                 $scope.var.ErrorNotific.push(angular.copy(err));
-
-                $scope.dispalyModal('#errorModal');
 
                 ret_val = true;
 
@@ -1825,8 +1763,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
             }
 
-
-            $scope.dispalyModal('#errorModal');
 
 
         }
@@ -2086,6 +2022,92 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
     }
 
     ///////////////////////////// Transform part /////////////////////////////////////////////////////////////////
+
+    $scope.runtransRightCheck = function(data){
+
+        var ret_val = false;
+
+        var data_send = angular.copy(data);
+
+        ///////////////////// подсчет общих сумм //////////////////////////////////////
+
+        for( var i = 0; i < data_send.length ; i++) {
+
+            var fromSumm = new Fraction(0,1);
+
+            var toSumm = new Fraction(0,1);
+
+            var num = data_send[i].transTeils.n;
+
+            var de_num = data_send[i].transTeils.d;
+
+            for( var j = 0; j< data_send.length ; j++) {
+
+                if( data_send[i].fromRoid ==  data_send[j].fromRoid) {
+
+
+                    if( data_send[j].transTeils.n != null && data_send[j].transTeils.d != null && data_send[j].transTeils.d != 0 )
+                    {
+                        fracion_check = new Fraction( data_send[j].transTeils.n, data_send[j].transTeils.d);
+
+                    } else {
+
+                        fracion_check = new Fraction(0,1);
+                    }
+
+                    fromSumm = fromSumm.add(fracion_check);
+
+                }
+
+            }
+
+            data_send[i].fromSumm = fromSumm;
+
+            for( var j = 0; j< data_send.length ; j++) {
+
+                if( data_send[i].toRoid ==  data_send[j].toRoid) {
+
+                    if( data_send[j].transTeils.n != null && data_send[j].transTeils.d != null && data_send[j].transTeils.d != 0 )
+                    {
+                        fracion_check = new Fraction( data_send[j].transTeils.n, data_send[j].transTeils.d);
+
+                    } else {
+
+                        fracion_check = new Fraction(0,1);
+                    }
+
+
+                    toSumm = toSumm.add(fracion_check);
+
+                }
+
+            }
+
+            data_send[i].toSumm = toSumm;
+
+        }
+
+        ret_val = $scope.transRightCheck(data_send);
+
+        if(ret_val) {$scope.dispalyModal('#errorModal')};
+
+        return ret_val;
+
+    }
+
+    $scope.saveTransChange = function (e){
+
+        if($scope.runtransRightCheck(e.sender._data)) { return;}
+
+    }
+
+    $scope.showTransCheck = function() {
+
+        if($scope.runtransRightCheck($scope.transTab._data)) { return;}
+
+        console.log($scope.transTab);
+
+    }
 
     $scope.copytoMixRow = function(mixstr, rec, trans_part ) {
 
