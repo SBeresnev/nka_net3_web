@@ -1,0 +1,81 @@
+<modal id="resTrans" title="Право в результате трансформации">
+
+    <table class="table table-bordered table-hover vert-offset-top-2">
+
+        <thead>
+
+        <tr style="background-color:#f9f9f9">
+
+            <th>id</th>
+
+            <th>Вид права</th>
+
+            <th>Имя объекта</th>
+
+            <th>Тип объекта</th>
+
+            <th>Имя/название правообладателя</th>
+
+            <th>Дата возникновения доли</th>
+
+            <th>Дата прекращения доли</th>
+
+            <th >Доля в праве</th>
+
+        </tr>
+
+        <thead>
+
+        <tfoot>
+
+        <tr style="background-color:#f9f9f9">
+
+            <th></th>
+
+            <th></th>
+
+            <th></th>
+
+            <th></th>
+
+            <th></th>
+
+            <th></th>
+
+            <th></th>
+
+            <th>Общая сумма = {{BeautyFractionT(summRightOwnersPart(var.rightTransform.rightOwners))}}</th>
+
+        </tr>
+
+        </tfoot>
+
+        <tbody>
+
+        <tr  ng-repeat="item in var.rightTransform.rightOwners" >
+
+            <td  width="fit-content">{{item.right_owner_id}}</td>
+
+            <td  width="fit-content">{{var.rightTransform.right_type_name}}</td>
+
+            <td  width="fit-content">{{var.rightTransform.bindedObj.object_name}}</td>
+
+            <td  width="fit-content">{{var.rightTransform.bindedObj.objectType.code_name}}</td>
+
+            <td  width="fit-content">{{nullIfundefine(item.owner.fullname) == null ? BeautyCast(item.owner.surname, item.owner.firstname, item.owner.fathername) : item.owner.fullname}}</td>
+
+            <td  width="fit-content"><b>{{timetoUTC(item.date_in)| date:"dd-MM-yyyy"}}</b></td>
+
+            <td  width="fit-content"><b>{{timetoUTC(item.date_out)| date:"dd-MM-yyyy"}}</b></td>
+
+            <td  width="fit-content">{{BeautyFraction(item.numerator_part,item.denominator_part)}}</td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <div class="row col-lg-9"> </div> <div> <button class="btn btn-default col-lg-3" onclick="$('#resTrans').modal('hide')">Ok</button> </div>
+
+</modal>

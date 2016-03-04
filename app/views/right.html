@@ -102,9 +102,9 @@
 
           <div id="edit" ng-class="getTabPaneClass(2)"  >
 
-              <!------------- Bufer  ------------->
+              <!------------- Buffer  ------------->
 
-              <div class = "col-lg-12 ">
+             <div class = "col-lg-12 ">
 
              <uib-accordion ng-init="pnl_opn=true">
 
@@ -256,7 +256,6 @@
 
                         </div>
 
-
                         <div ng-if="!limitHide" ng-value="form_edit_right.rightOwner.numerator_part=form_edit_right.rightOwner.denominator_part=1"> </div>
                         <div ng-if="!limitHide" class="input-group" ng-value = "form_edit_right.rightOwner.owner = anonymous"></div>
                         <div ng-if="!limitHide" class="form-group vert-offset-top-2" ng-value = "form_edit_right.rightOwner.date_in=form_edit_right.begin_date; form_edit_right.rightOwner.date_out=form_edit_right.end_date "></div>
@@ -356,19 +355,25 @@
 
            <div class = "container">
 
-             <!------------------------ From welll -------------------------------------------->
+             <!------------------------ From well -------------------------------------------->
 
-              <div id="right_trans_panel" class="col-lg-6 vert-offset-top-6">
+              <div class="vert-offset-top-6 col-lg-12">
 
-                    <div class="well well-sm">
+               <div class="well well-sm col-lg-11" align="center">
 
-                      <button class="astext" ng-click="var.transformActive='FROM'; LoadBuffer()" style="color:#005580"><h4><b>От кого</b></h4></button>
+                   <button class="astext" ng-click="LoadBuffer()" style="color:#005580"><h4><b>Выбрать</b></h4></button>
 
-                    </div>
+               </div>
 
-                     <div>
+             </div>
 
-                       <table class="table table-bordered table-hover vert-offset-top-2" ng-show="var.rightsTransformFrom.right_id">
+              <div id="right_trans_panel" class="col-lg-6">
+
+                     <div ng-show="var.rightsOwnersTransformFrom.length">
+
+                         <h4><b>От кого </b></h4>
+
+                         <table class="table table-bordered table-hover vert-offset-top-2">
 
                           <thead>
 
@@ -392,15 +397,15 @@
 
                            <tbody>
 
-                             <tr  ng-repeat="item in var.rightsTransformFrom.rightOwners" ng-click= "OnTransSelect(item,'FROM')" >
+                             <tr  ng-repeat="item in var.rightsOwnersTransformFrom" ng-click= "OnTransSelect(item,'FROM')" >
 
                                  <td  width="fit-content">{{item.right_owner_id}}</td>
 
-                                 <td  width="fit-content">{{var.rightsTransformFrom.right_type_name}}</td>
+                                 <td  width="fit-content">{{var.rightTransform.right_type_name}}</td>
 
-                                 <td  width="fit-content">{{var.rightsTransformFrom.bindedObj.object_name}}</td>
+                                 <td  width="fit-content">{{var.rightTransform.bindedObj.object_name}}</td>
 
-                                 <td  width="fit-content">{{var.rightsTransformFrom.bindedObj.objectType.code_name}}</td>
+                                 <td  width="fit-content">{{var.rightTransform.bindedObj.objectType.code_name}}</td>
 
                                  <td  width="fit-content">{{nullIfundefine(item.owner.fullname) == null ? BeautyCast(item.owner.surname, item.owner.firstname, item.owner.fathername) : item.owner.fullname}}</td>
 
@@ -412,8 +417,6 @@
 
                         </table>
 
-                     </div>
-
                      <div class="col-lg-4"></div>
 
                      <div class="col-lg-2">
@@ -422,29 +425,25 @@
 
                      </div>
 
+                   </div>
+
                  </div>
 
               <!------------------------------------------------------------------------------>
 
-
               <div class="col-lg-2"></div>
-
 
               <!------------------------ To well ---------------------------------------------->
 
-              <div class="col-lg-6 vert-offset-top-6">
+              <div class="col-lg-6">
 
-                 <div class="well well-sm">
+                 <div ng-show="var.rightsOwnersTransformTo.length">
 
-                    <button class="astext" ng-click="var.transformActive='TO'; LoadBuffer()" style="color:#005580"><h4><b>Кому</b></h4></button>
+                     <h4><b>Кому</b></h4> <p style="color:darkred" ng-hide="var.rightsOwnersTransformFrom.length"> нет правообладателей с нулевой долей</p>
 
-                 </div>
+                     <table class="table table-bordered table-hover vert-offset-top-2">
 
-                 <div>
-
-                     <table class="table table-bordered table-hover vert-offset-top-2" ng-show="var.rightsTransformTo.right_id">
-
-                          <thead>
+                        <thead>
 
                           <tr style="background-color:#f9f9f9">
 
@@ -462,19 +461,19 @@
 
                           </tr>
 
-                          <thead>
+                        <thead>
 
                           <tbody>
 
-                          <tr ng-repeat="item in var.rightsTransformTo.rightOwners" ng-click= "OnTransSelect(item,'TO')" >
+                          <tr ng-repeat="item in var.rightsOwnersTransformTo" ng-click= "OnTransSelect(item,'TO')" >
 
                               <td  width="fit-content">{{item.right_owner_id}}</td>
 
-                              <td  width="fit-content">{{var.rightsTransformTo.right_type_name}}</td>
+                              <td  width="fit-content">{{var.rightTransform.right_type_name}}</td>
 
-                              <td  width="fit-content">{{var.rightsTransformTo.bindedObj.object_name}}</td>
+                              <td  width="fit-content">{{var.rightTransform.bindedObj.object_name}}</td>
 
-                              <td  width="fit-content">{{var.rightsTransformTo.bindedObj.objectType.code_name}}</td>
+                              <td  width="fit-content">{{var.rightTransform.bindedObj.objectType.code_name}}</td>
 
                               <td  width="fit-content">{{nullIfundefine(item.owner.fullname) == null ? BeautyCast(item.owner.surname, item.owner.firstname, item.owner.fathername) : item.owner.fullname}}</td>
 
@@ -492,7 +491,7 @@
 
                          <input type="image" src="{{transfer_img_right}}" with="60" height="60"/>
 
-                      </div>
+                     </div>
 
                   </div>
 
@@ -508,7 +507,7 @@
 
                <div class="col-lg-3"></div>
 
-               <div class="col-lg-12 vert-offset-top-6">
+               <div class="col-lg-12 vert-offset-top-2">
 
                   <div class="panel panel-default">
 
@@ -522,7 +521,7 @@
 
                </div>
 
-             </div>
+            </div>
 
          </div>
 
@@ -539,6 +538,8 @@
 <!--***********************************************modal block****************************************************************************************************-->
 
 <span kendo-notification="notif" k-options="notifOption" k-append-to="'#kg'"></span>
+
+<div ng-include="'views/modrighttransres.html'"></div>
 
 <div ng-include="'views/modright.html'"></div>
 

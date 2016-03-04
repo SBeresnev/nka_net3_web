@@ -18,7 +18,7 @@ var app = angular
         'kendo.directives'
     ])
     .constant('DOMAIN', "" + window.location.protocol + '//'+ window.location.hostname+":8080")
-    .constant('WEBDOM', "" + window.location.protocol + '//'+ window.location.hostname+":8080" + '//nka_net3_web')
+    .constant('WEBDOM', "" + window.location.protocol + '//'+ window.location.hostname+":9000") // + '//nka_net3_web')
     .config(function ($routeProvider, $httpProvider) {
         $httpProvider.defaults.useXDomain = true;
         $routeProvider
@@ -97,14 +97,14 @@ var app = angular
     })
     .directive('modal', function () {
         return {
-            template: '<div class="modal fade" >' +
+            template: '<div class="modal fade ">' +
             '<div class="modal-dialog">' +
-            '<div class="modal-content">' +
+            '<div class="modal-content" style="width:1000px">' +
             '<div class="modal-header">' +
             '<button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="modal()">&times;</button>' +
             '<h4 class="modal-title">{{ title }}</h4>' +
             '</div>' +
-            '<div class="modal-body" style="height: 750px; overflow-y: auto;" ng-transclude>' +
+            '<div class="modal-body" style="overflow-y: auto;" ng-transclude>' +
             '</div>' +
             '</div>' +
             '</div>' +

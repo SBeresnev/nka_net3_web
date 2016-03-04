@@ -375,9 +375,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         mixTransformMap: [],
 
-        rightsTransformFrom:[],
+        rightTransform:{},
 
-        rightsTransformTo:[],
+        rightsOwnersTransformTo:[],
+
+        rightsOwnersTransformFrom:[],
 
         ///////////////////////////////////////////////////
 
@@ -426,10 +428,13 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
         19:"Сумма передаваемой доли превышает долю получателя",
         20:"Передаваемая доля имеет пустой, либо отрицательный числитель",
         21:"Передаваемая доля имеет пустой (=0), либо отрицательный знаменатель",
-        22:"В строке не указано родительское право",
+        22:"В строке не указано, от кого передается право",
         23:"Выбранное право является принимаемым",
         24:"Выбранное право является переходящим",
-        25:"Нельзя передавать права между разными объектами"
+        25:"Нельзя передавать права между разными объектами",
+        26:"Отсутствуют правообладатели с нулевой долей",
+        27:"Ограничения обременение передавать нельзя",
+        28:"В строке не указано, кому передается право"
     };
 
 
@@ -548,7 +553,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
        //if($scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) == '' && $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId) == '')
        // { swal("Info", "Не выбран субъект, либо объект поиска" , "info"); return; }
        //$scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
-
 
        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
 
@@ -922,70 +926,44 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
             var scip_right_id = null;
 
-            var right_to_trans = $scope.sel_buffer.find(function (value) {return value.right_id == this.curType; }, {curType: rec.right_id});
-
             var was_checked = $scope.checked[$scope.tabNum][rec.right_id];
 
+            var right_to_trans = $scope.sel_buffer.find(function (value) {return value.right_id == this.curType; }, {curType: rec.right_id});
 
             if (right_to_trans.right_type_name.indexOf('Ограничения') >=0 ){
 
                 $scope.checked[$scope.tabNum][rec.right_id] = false;
 
-                $scope.notif.show("Ограничения/обременение передавать нельзя", "error");
+                $scope.notif.show($scope.ErrorMessage[27], "error");
 
                 return;
 
             }
 
-            if ( $scope.var.transformActive == 'FROM' ) {
+            var trans_to = right_to_trans.rightOwners.filter(function (value){return value.numerator_part == 0; });
 
-                scip_right_id = $scope.nullIfundefine($scope.var.rightsTransformTo.right_id);
+            if( !trans_to.length ) {
 
-                var res_trans = $scope.checkTransBuffer(rec,$scope.var.rightsTransformTo,'FROM');
+                $scope.checked[$scope.tabNum][rec.right_id] = false;
 
-                if( res_trans ) { return;}
+                $scope.notif.show($scope.ErrorMessage[26], "error");
 
-
-                if (was_checked) {
-
-                    $scope.checked[$scope.tabNum][$scope.var.rightsTransformFrom.right_id] = false;
-
-                    $scope.var.rightsTransformFrom = angular.copy(right_to_trans);
-
-                }
-                else {
-
-                    $scope.var.rightsTransformFrom = {};
-
-                    $scope.var.mixTransformMap = [];
-
-                }
-            }
-
-            if ( $scope.var.transformActive == 'TO' ) {
-
-                scip_right_id = $scope.nullIfundefine($scope.var.rightsTransformFrom.right_id);
-
-                var res_trans = $scope.checkTransBuffer(rec,$scope.var.rightsTransformFrom,'TO');
-
-                if( res_trans ) { return;}
-
-                if (was_checked) {
-
-                    $scope.checked[$scope.tabNum][$scope.var.rightsTransformTo.right_id] = false;
-
-                    $scope.var.rightsTransformTo = angular.copy(right_to_trans);
-
-                }
-                else {
-
-                    $scope.var.rightsTransformTo = {} ;
-
-                    $scope.var.mixTransformMap = [];
-                }
-
+                return;
 
             }
+
+            $scope.var.rightsOwnersTransformFrom = right_to_trans.rightOwners.filter(function (value){return value.numerator_part != 0; });
+
+            $scope.var.rightsOwnersTransformTo = angular.copy(trans_to);
+
+
+            if (was_checked) {
+
+               $scope.checked[$scope.tabNum][$scope.var.rightTransform.right_id] = false;
+
+               $scope.var.rightTransform = angular.copy(right_to_trans);
+
+            } else {  $scope.transFormClean(); }
 
         }
 
@@ -1018,11 +996,24 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     };
 
+    $scope.transFormClean = function(){
+
+
+        $scope.var.rightsOwnersTransformTo = [];
+
+        $scope.var.rightsOwnersTransformFrom = [];
+
+        $scope.var.rightTransform = {};
+
+        $scope.var.mixTransformMap = [];
+
+
+    }
+
     ///////////////////////////// Modal Window part ///////////////////////////////////////////////////////////
+    ///////////////////////////     head rename     ///////////////////////////
 
     $scope.LoadBuffer = function(){
-
-        /////////////////////////// head rename ///////////////////////////
 
         $scope.mainGridOptions.dataSource.data = $scope.sel_buffer;
 
@@ -1644,7 +1635,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         var ret_val = false;
 
-        if( (typeof one_right.bindedObj.obj_id != 'undefined') && (typeof two_right.bindedObj != 'undefined') &&
+         if( (typeof one_right.bindedObj.obj_id != 'undefined') && (typeof two_right.bindedObj != 'undefined') &&
 
             (one_right.bindedObj.obj_id != two_right.bindedObj.obj_id)) {
 
@@ -1678,16 +1669,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         var double = [];
 
-        //$scope.ErrorNotific = []; // { errorMessage:"", Name (ID):"" };
-
         var ret_val = false;
 
         for( var i = 0; i < tdata.length ; i++) {
 
             var fsumm = new Fraction(tdata[i].fromSumm);
-
-            var tsumm = new Fraction(tdata[i].toSumm);
-
 
             if( $scope.nullIfundefine(tdata[i].fromRoid) == null  ) {
 
@@ -1699,7 +1685,21 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
                 ret_val = true;
 
-                return;
+                return ret_val;
+
+            }
+
+            if( $scope.nullIfundefine(tdata[i].toRoid) == null  ) {
+
+                err.errorMessage =  $scope.ErrorMessage[28];
+
+                err.ID = "From Id = " + tdata[i].fromRoid;
+
+                $scope.var.ErrorNotific.push(angular.copy(err));
+
+                ret_val = true;
+
+                return ret_val;
 
             }
 
@@ -1718,24 +1718,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
                 }
 
                 ret_val = true;
-
-            }
-
-            if( tsumm.compare(new Fraction(tdata[i].toTeils)) > 0 ){
-
-                err.errorMessage = $scope.ErrorMessage[19] + " " + $scope.BeautyFraction(tsumm)+ ">" + $scope.BeautyFraction(new Fraction(tdata[i].toTeils));
-
-                err.ID = tdata[i].toFIO;
-
-                if(!double[tdata[i].toId+''+ 19]) {
-
-                    $scope.var.ErrorNotific.push(angular.copy(err));
-
-                    double[tdata[i].toId + '' + 19] = true;
-                }
-
-                ret_val = true;
-
 
             }
 
@@ -1762,8 +1744,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
                 ret_val = true;
 
             }
-
-
 
         }
 
@@ -1838,7 +1818,21 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         var ret_val = false;
 
-        var fracion_check = new Fraction(to_check_right.rightOwner.numerator_part, to_check_right.rightOwner.denominator_part);
+        try {
+
+            var fracion_check = new Fraction(to_check_right.rightOwner.numerator_part, to_check_right.rightOwner.denominator_part);
+
+        }catch(err) {
+
+            to_check_right.rightOwner.numerator_part = 0;
+
+            to_check_right.rightOwner.denominator_part = 1;
+
+            swal("Error", "В доле ошибка:  " + err + " исправлено на (0,1)", "error");
+
+            ret_val = true;
+
+        }
 
         if($scope.nullIfundefine(to_check_right.bindedObj.obj_id) == null) {
 
@@ -1903,7 +1897,21 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         var ret_val = false;
 
-        var fracion_check = new Fraction(to_check_right.rightOwner.numerator_part,to_check_right.rightOwner.denominator_part);
+        try {
+
+            var fracion_check = new Fraction(to_check_right.rightOwner.numerator_part, to_check_right.rightOwner.denominator_part);
+
+        }catch(err) {
+
+            to_check_right.rightOwner.numerator_part = 0;
+
+            to_check_right.rightOwner.denominator_part = 1;
+
+            swal("Error", "В доле ошибка:  " + err + " исправлено на (0,1)", "error");
+
+            ret_val = true;
+
+        }
 
         if(this.nullIfundefine(to_check_right.rightOwner.right_owner_id) != null) {
 
@@ -2045,7 +2053,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
                 if( data_send[i].fromRoid ==  data_send[j].fromRoid) {
 
-
                     if( data_send[j].transTeils.n != null && data_send[j].transTeils.d != null && data_send[j].transTeils.d != 0 )
                     {
                         fracion_check = new Fraction( data_send[j].transTeils.n, data_send[j].transTeils.d);
@@ -2063,28 +2070,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
             data_send[i].fromSumm = fromSumm;
 
-            for( var j = 0; j< data_send.length ; j++) {
-
-                if( data_send[i].toRoid ==  data_send[j].toRoid) {
-
-                    if( data_send[j].transTeils.n != null && data_send[j].transTeils.d != null && data_send[j].transTeils.d != 0 )
-                    {
-                        fracion_check = new Fraction( data_send[j].transTeils.n, data_send[j].transTeils.d);
-
-                    } else {
-
-                        fracion_check = new Fraction(0,1);
-                    }
-
-
-                    toSumm = toSumm.add(fracion_check);
-
-                }
-
-            }
-
-            data_send[i].toSumm = toSumm;
-
         }
 
         ret_val = $scope.transRightCheck(data_send);
@@ -2099,13 +2084,82 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         if($scope.runtransRightCheck(e.sender._data)) { return;}
 
+        var data = e.sender._data;
+
+        for( var i = 0; i < data.length ; i++) {
+
+            data[i].toTeils.n = data[i].transTeils.n;
+
+            data[i].toTeils.d = data[i].transTeils.d;
+
+        }
+
+        $scope.rightRecalculate(data);
+
+        $scope.dispalyModal('#resTrans');
+
     }
 
     $scope.showTransCheck = function() {
 
         if($scope.runtransRightCheck($scope.transTab._data)) { return;}
 
-        console.log($scope.transTab);
+        var data = $scope.transTab._data;
+
+        for( var i = 0; i < data.length ; i++) {
+
+            data[i].toTeils.n = data[i].transTeils.n;
+
+            data[i].toTeils.d = data[i].transTeils.d;
+
+        }
+
+        $scope.rightRecalculate(data);
+
+        $scope.dispalyModal('#resTrans');
+
+    }
+
+    $scope.rightRecalculate = function(data){
+
+           /* Id: 0, fromFIO: "Дженкинс_1010 Владимир_10 Обамович_10", fromRoid: 1527,
+              fromTeils: Object,  toFIO: "Дженкинс_88 Владимир_8 Обамович_8",  toRoid: 1528, toTeils: Object,
+              transTeils: Object, transTeils.d: null,  transTeils.n: null */
+
+         var right_transfer = $scope.var.rightTransform;
+
+        for( var i = 0; i < data.length ; i++) {
+
+            var update = right_transfer.rightOwners.find(function(value){ return value.right_owner_id == this.curType;},{curType:data[i].fromRoid});
+
+            var res_fraction = new Fraction (data[i].fromTeils).sub(new Fraction(data[i].transTeils));
+
+            update = right_transfer.rightOwners.find(function(value){ return value.right_owner_id == this.curType;},{curType:data[i].toRoid});
+
+            update.numerator_part = data[i].transTeils.n;
+
+            update.denominator_part = data[i].transTeils.d;
+
+            if (res_fraction.n == 0) {
+
+                update.date_in = new Date();
+
+            }
+
+        }
+
+        /*if (res_fraction.n == 0) {
+
+            update.date_out = new Date();
+
+        } else {
+
+            update.numerator_part = res_fraction.n;
+
+            update.denominator_part = res_fraction.d;
+
+        } */
+
 
     }
 
@@ -2224,7 +2278,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
 
     }
-
 
     ///////////////////////////// Service part /////////////////////////////////////////////////////////////////
 
@@ -2497,6 +2550,13 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     };
 
+    $scope.BeautyFractionT = function(fraction) {
+
+        var frac = new Fraction(fraction.n,fraction.d);
+
+        return frac.n==0?"":frac.n + (frac.d==1 ?"":"/" + frac.d)
+    };
+
     $scope.ChgKendoGridTitle = function(name) {
 
         var kendoObj = $("#kg").data("kendoGrid");
@@ -2510,7 +2570,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
             kendoObj.refresh();
         }
 
-    }
+    };
 
     $scope.ChgEntity = function(){
 
@@ -2532,6 +2592,10 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     };
 
+    $scope.setActiveTab(1);
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     function Create2DArray(rows) {
 
         var arr = [];
@@ -2547,10 +2611,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
         tabClasses = ["","","","",""];
 
     };
-
-    $scope.setActiveTab(1);
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     function onEditPanelChange(e){
 
@@ -2574,13 +2634,13 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         $scope.fillOper($scope.form_edit_right.rightOwner);
 
-    }
+    };
 
     $scope.refreshEditPanel = function(){
 
         $scope.editGridOption.dataSource.data = $scope.edit_right.rightOwners;
 
-    }
+    };
 
     /////////////////////////////////////////new part/////////////////////////////////////////////////////////////
 
@@ -2597,7 +2657,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
         ret_val = ret_val+ " ( Сумма доли = "+(summ.n+ "/" + summ.d) +" )";
 
         return ret_val;
-    }
+    };
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
