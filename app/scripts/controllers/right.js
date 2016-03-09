@@ -91,17 +91,17 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
                 { field: "fromRoid", title: "From Id" },
 
                 {
-                  title: "<center>Переходящая<br>доля</center>",
+                    title: "<center>Переходящая<br>доля</center>",
 
-                columns:[
+                    columns:[
 
-                { field: "transTeils.n" , groupable:"false",attributes: { style: "background-color:rgba(227, 223, 231, 0.70)" }, title:"<span style='padding-left:40px;'> </span>"},
+                        { field: "transTeils.n" , groupable:"false",attributes: { style: "background-color:rgba(227, 223, 231, 0.70)" }, title:"<span style='padding-left:40px;'> </span>"},
 
-                { title:" ", groupable:"false" ,template: ' <img src="images/FS.png" height="40" width="40"/>'},
+                        { title:" ", groupable:"false" ,template: ' <img src="images/FS.png" height="40" width="40"/>'},
 
-                { field: "transTeils.d" , groupable:"false" ,attributes: { style: "background-color:rgba(227, 223, 231, 0.70)" }, title: "<span style='padding-left:40px;'> </span>"}
+                        { field: "transTeils.d" , groupable:"false" ,attributes: { style: "background-color:rgba(227, 223, 231, 0.70)" }, title: "<span style='padding-left:40px;'> </span>"}
 
-                       ]
+                    ]
                 } ,
 
                 { field: "toRoid", title: "To Id"},
@@ -536,7 +536,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
 
     };
-   /////////////////////////////// Search block ///////////////////////////////////////////////////////////////////////
+    /////////////////////////////// Search block ///////////////////////////////////////////////////////////////////////
 
     $scope.rightSearch = function(){
 
@@ -550,15 +550,15 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         pos == -1 ? $scope.sel_subject[$scope.tabNum] = {} : $scope.sel_object[$scope.tabNum] = {};
 
-       //if($scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) == '' && $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId) == '')
-       // { swal("Info", "Не выбран субъект, либо объект поиска" , "info"); return; }
-       //$scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
+        //if($scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) == '' && $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId) == '')
+        // { swal("Info", "Не выбран субъект, либо объект поиска" , "info"); return; }
+        //$scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
 
-       $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
+        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
 
-       $scope.var.loading = true;
+        $scope.var.loading = true;
 
-       $http.get($scope.urlSearch).success(function (res) {
+        $http.get($scope.urlSearch).success(function (res) {
 
             $scope.var.loading = false;
 
@@ -580,7 +580,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         });
 
-       ///////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////
 
     };
 
@@ -959,9 +959,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
             if (was_checked) {
 
-               $scope.checked[$scope.tabNum][$scope.var.rightTransform.right_id] = false;
+                $scope.checked[$scope.tabNum][$scope.var.rightTransform.right_id] = false;
 
-               $scope.var.rightTransform = angular.copy(right_to_trans);
+                $scope.var.rightTransform = angular.copy(right_to_trans);
 
             } else {  $scope.transFormClean(); }
 
@@ -1202,45 +1202,45 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         if(cur_right_id == null ) {  swal("Error", "Не выбрано либо не создано право", "error"); return; }
 
-            $scope.var.rightsDataLimitTo = [];
+        $scope.var.rightsDataLimitTo = [];
 
-            $scope.var.url = DOMAIN + "/nka_net3/right/getLimitObject?right_id=" + cur_right_id + "&right_owner_id=";
+        $scope.var.url = DOMAIN + "/nka_net3/right/getLimitObject?right_id=" + cur_right_id + "&right_owner_id=";
 
-            $http.get($scope.var.url).success(function (res) {
+        $http.get($scope.var.url).success(function (res) {
 
-                $scope.form_edit_right.limit_rights = res;
+            $scope.form_edit_right.limit_rights = res;
 
-                $scope.var.loading = false;
+            $scope.var.loading = false;
 
-                $scope.var.rightsDataLimitTo = $scope.var.rightsDataLimitTo.concat($scope.form_edit_right.limit_rights);
+            $scope.var.rightsDataLimitTo = $scope.var.rightsDataLimitTo.concat($scope.form_edit_right.limit_rights);
 
-                $scope.var.rightsDataLimitTo.forEach(function (value) {
-                    $scope.fillDictName(value);
-                    value.bindedObj = angular.copy($scope.form_edit_right.bindedObj);
-                });
-
-                $scope.var.rightsDataLimitFrom = $scope.sel_buffer.filter(function (value) {
-                    return ( value.right_type_name.search(/Ограничения/i) >= 0 ) && (value.bindedObj.obj_id == this.curObj) && (value.limit_right == null) &&  (value.rightOwners[0].parent_owner == null)
-                }, {curObj: $scope.form_edit_right.bindedObj.obj_id});
-
-                $scope.var.rightsDataLimitFrom = $scope.var.rightsDataLimitFrom.filter(function (limFrom) {
-
-                    return !(this.limTo.find(function (value) {
-                        return ( value.right_id == this.CurType );
-                    }, {CurType: limFrom.right_id}))
-
-                }, {limTo: $scope.var.rightsDataLimitTo});
-
-                $scope.displayLimitation();
-
-            }).error(function (data, status, header, config) {
-
-                $scope.var.loading = false;
-
-                swal("Error", data.message, "error");
-
+            $scope.var.rightsDataLimitTo.forEach(function (value) {
+                $scope.fillDictName(value);
+                value.bindedObj = angular.copy($scope.form_edit_right.bindedObj);
             });
-        };
+
+            $scope.var.rightsDataLimitFrom = $scope.sel_buffer.filter(function (value) {
+                return ( value.right_type_name.search(/Ограничения/i) >= 0 ) && (value.bindedObj.obj_id == this.curObj) && (value.limit_right == null) &&  (value.rightOwners[0].parent_owner == null)
+            }, {curObj: $scope.form_edit_right.bindedObj.obj_id});
+
+            $scope.var.rightsDataLimitFrom = $scope.var.rightsDataLimitFrom.filter(function (limFrom) {
+
+                return !(this.limTo.find(function (value) {
+                    return ( value.right_id == this.CurType );
+                }, {CurType: limFrom.right_id}))
+
+            }, {limTo: $scope.var.rightsDataLimitTo});
+
+            $scope.displayLimitation();
+
+        }).error(function (data, status, header, config) {
+
+            $scope.var.loading = false;
+
+            swal("Error", data.message, "error");
+
+        });
+    };
 
     $scope.operLimitationRightOwner = function(){
 
@@ -1258,40 +1258,40 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
         //}
         //else { $scope.displayLimitation(); }
 
-            $scope.var.url = DOMAIN + "/nka_net3/right/getLimitObject?right_id=" + "&right_owner_id="+cur_right_own_id;
+        $scope.var.url = DOMAIN + "/nka_net3/right/getLimitObject?right_id=" + "&right_owner_id="+cur_right_own_id;
 
-            $http.get($scope.var.url).success(function (res) {
+        $http.get($scope.var.url).success(function (res) {
 
-                $scope.form_edit_right.rightOwner.limit_rights = res;
+            $scope.form_edit_right.rightOwner.limit_rights = res;
 
-                $scope.var.loading = false;
+            $scope.var.loading = false;
 
-                $scope.var.rightsDataLimitTo = $scope.var.rightsDataLimitTo.concat($scope.form_edit_right.rightOwner.limit_rights);
+            $scope.var.rightsDataLimitTo = $scope.var.rightsDataLimitTo.concat($scope.form_edit_right.rightOwner.limit_rights);
 
-                $scope.var.rightsDataLimitTo.forEach(function (value) {
-                    $scope.fillDictName(value);
-                    value.bindedObj = angular.copy($scope.form_edit_right.bindedObj);
-                });
-
-                $scope.var.rightsDataLimitFrom = $scope.sel_buffer.filter(function (value) {
-                    return ( value.right_type_name.search(/Ограничения/i) >= 0 ) && (value.bindedObj.obj_id == this.curObj) && (value.rightOwners[0].parent_owner == null) && (value.limit_right == null)
-                }, {curObj: $scope.form_edit_right.bindedObj.obj_id});
-
-                $scope.var.rightsDataLimitFrom = $scope.var.rightsDataLimitFrom.filter(function (limFrom) {
-
-                    return !(this.limTo.find(function (value) { return ( value.rightOwners[0].right_owner_id == this.CurType ); }, {CurType: limFrom.rightOwners[0].right_owner_id}))
-
-                }, {limTo: $scope.var.rightsDataLimitTo});
-
-                $scope.displayLimitation();
-
-            }).error(function (data, status, header, config) {
-
-                $scope.var.loading = false;
-
-                swal("Error", data.message, "error");
-
+            $scope.var.rightsDataLimitTo.forEach(function (value) {
+                $scope.fillDictName(value);
+                value.bindedObj = angular.copy($scope.form_edit_right.bindedObj);
             });
+
+            $scope.var.rightsDataLimitFrom = $scope.sel_buffer.filter(function (value) {
+                return ( value.right_type_name.search(/Ограничения/i) >= 0 ) && (value.bindedObj.obj_id == this.curObj) && (value.rightOwners[0].parent_owner == null) && (value.limit_right == null)
+            }, {curObj: $scope.form_edit_right.bindedObj.obj_id});
+
+            $scope.var.rightsDataLimitFrom = $scope.var.rightsDataLimitFrom.filter(function (limFrom) {
+
+                return !(this.limTo.find(function (value) { return ( value.rightOwners[0].right_owner_id == this.CurType ); }, {CurType: limFrom.rightOwners[0].right_owner_id}))
+
+            }, {limTo: $scope.var.rightsDataLimitTo});
+
+            $scope.displayLimitation();
+
+        }).error(function (data, status, header, config) {
+
+            $scope.var.loading = false;
+
+            swal("Error", data.message, "error");
+
+        });
 
     };
 
@@ -1635,7 +1635,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         var ret_val = false;
 
-         if( (typeof one_right.bindedObj.obj_id != 'undefined') && (typeof two_right.bindedObj != 'undefined') &&
+        if( (typeof one_right.bindedObj.obj_id != 'undefined') && (typeof two_right.bindedObj != 'undefined') &&
 
             (one_right.bindedObj.obj_id != two_right.bindedObj.obj_id)) {
 
@@ -2070,6 +2070,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
             data_send[i].fromSumm = fromSumm;
 
+            data[i].fromSumm = fromSumm;
+
         }
 
         ret_val = $scope.transRightCheck(data_send);
@@ -2122,43 +2124,77 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     $scope.rightRecalculate = function(data){
 
-           /* Id: 0, fromFIO: "Дженкинс_1010 Владимир_10 Обамович_10", fromRoid: 1527,
-              fromTeils: Object,  toFIO: "Дженкинс_88 Владимир_8 Обамович_8",  toRoid: 1528, toTeils: Object,
-              transTeils: Object, transTeils.d: null,  transTeils.n: null */
+        /* Id: 0, fromFIO: "Дженкинс_1010 Владимир_10 Обамович_10", fromRoid: 1527,
+         fromTeils: Object,  toFIO: "Дженкинс_88 Владимир_8 Обамович_8",  toRoid: 1528, toTeils: Object,
+         transTeils: Object, transTeils.d: null,  transTeils.n: null */
 
-         var right_transfer = $scope.var.rightTransform;
+        var right_transfer = $scope.var.rightTransform;
 
-        for( var i = 0; i < data.length ; i++) {
+        console.log(data);
 
-            var update = right_transfer.rightOwners.find(function(value){ return value.right_owner_id == this.curType;},{curType:data[i].fromRoid});
+        for( var i = 0; i < right_transfer.rightOwners.length ; i++) {
 
-            var res_fraction = new Fraction (data[i].fromTeils).sub(new Fraction(data[i].transTeils));
+            var row_id = right_transfer.rightOwners[i].right_owner_id;
 
-            update = right_transfer.rightOwners.find(function(value){ return value.right_owner_id == this.curType;},{curType:data[i].toRoid});
+            var res_from = data.find(function(value){ return value.fromRoid == this.curId;},{curId:row_id});
 
-            update.numerator_part = data[i].transTeils.n;
+            var res_to = data.find(function(value){ return value.fromRoid == this.curId;},{curId:row_id});
 
-            update.denominator_part = data[i].transTeils.d;
 
-            if (res_fraction.n == 0) {
+            if ( $scope.nullIfundefine(res_from) != null ){
 
-                update.date_in = new Date();
+                var res_fraction = new Fraction (res_from.fromTeils).sub(new Fraction(res_from.fromSumm));
+
+                //console.log(res_from);
+
+                if (res_fraction.n == 0) {
+
+                    right_transfer.rightOwners[i].date_out = new Date();
+
+                } else {
+
+                    right_transfer.rightOwners[i].date_out = null;
+
+                    right_transfer.rightOwners[i].numerator_part = res_fraction.n;
+
+                    right_transfer.rightOwners[i].denominator_part = res_fraction.d;
+
+                }
+
+            }
+
+
+            if ( $scope.nullIfundefine(res_to) != null ){
+
+                var res_fraction = new Fraction (res_to.toTeils).sub(new Fraction(res_to.toSumm));
+
+                //console.log(res_from);
+
+                if (res_to.n == 0) {
+
+                    var copy_zero_ro = angular.copy(right_transfer.rightOwners[i]);
+
+                    copy_zero_ro.numerator_part = res_to.fromTeils.n;
+
+                    copy_zero_ro.denominator_part = res_to.fromTeils.d;
+
+                    delete right_transfer.rightOwners[i];
+
+
+                } else {
+
+                    right_transfer.rightOwners[i].date_out = null;
+
+                    right_transfer.rightOwners[i].numerator_part = res_fraction.n;
+
+                    right_transfer.rightOwners[i].denominator_part = res_fraction.d;
+
+                }
 
             }
 
         }
 
-        /*if (res_fraction.n == 0) {
-
-            update.date_out = new Date();
-
-        } else {
-
-            update.numerator_part = res_fraction.n;
-
-            update.denominator_part = res_fraction.d;
-
-        } */
 
 
     }
@@ -2544,7 +2580,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     $scope.BeautyFraction = function(numerator_part,denominator_part) {
 
-         var fraction =  new Fraction(numerator_part, denominator_part);
+        var fraction =  new Fraction(numerator_part, denominator_part);
 
         return fraction.n==0?"":fraction.n + (denominator_part==1 ?"":"/" + fraction.d);
 
