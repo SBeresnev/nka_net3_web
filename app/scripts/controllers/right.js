@@ -377,6 +377,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         rightTransform:{},
 
+        rightTransformCh:{},
+
         rightsOwnersTransformTo:[],
 
         rightsOwnersTransformFrom:[],
@@ -536,6 +538,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
 
     };
+
     /////////////////////////////// Search block ///////////////////////////////////////////////////////////////////////
 
     $scope.rightSearch = function(){
@@ -550,11 +553,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         pos == -1 ? $scope.sel_subject[$scope.tabNum] = {} : $scope.sel_object[$scope.tabNum] = {};
 
-        //if($scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) == '' && $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId) == '')
-        // { swal("Info", "Не выбран субъект, либо объект поиска" , "info"); return; }
-        //$scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
+        if($scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) == '' && $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId) == '')
+         { swal("Info", "Не выбран субъект, либо объект поиска" , "info"); return; }
 
-        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
+        $scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids="+ $scope.emptyIfundefine($scope.sel_object[$scope.tabNum].obj_id) + "&person_id=" + $scope.emptyIfundefine($scope.sel_subject[$scope.tabNum].subjectId);
+
+        //$scope.urlSearch = DOMAIN + "/nka_net3/right/getRightObjectPerson?obj_ids=261&person_id=";
 
         $scope.var.loading = true;
 
@@ -780,7 +784,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         $scope.sel_object[$scope.tabNum] = sel_object_test;
 
-
         /////////////////// for first part only ////////////////////////////////////////////////////////////////////////////
 
         if ($scope.tabNum == 1) {
@@ -801,7 +804,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
                 $scope.form_edit_right.bindedObj = angular.copy($scope.sel_object[2]);
 
                 $scope.form_edit_right.bindedObj.fullname = $scope.sel_object[2].object_name + ';' + $scope.sel_object[2].address_dest.adr;
-
 
             }
         }
@@ -998,10 +1000,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     $scope.transFormClean = function(){
 
-
         $scope.var.rightsOwnersTransformTo = [];
 
         $scope.var.rightsOwnersTransformFrom = [];
+
+        $scope.var.rightTransformCh = {};
 
         $scope.var.rightTransform = {};
 
@@ -1010,7 +1013,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     }
 
-    ///////////////////////////// Modal Window part ///////////////////////////////////////////////////////////
+    ///////////////////////////// Modal Window part ///////////////////////////
     ///////////////////////////     head rename     ///////////////////////////
 
     $scope.LoadBuffer = function(){
@@ -1104,7 +1107,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
         myElement.modal("show");
 
     };
-
 
     /////////////////////////////// Limitation operations /////////////////////////////////////////////////
 
@@ -1295,7 +1297,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     };
 
-    ///////////////////////////// Operation part /////////////////////////////////////////////////////////////////
+    ///////////////////////////// Operation part //////////////////////////////////////////////////////////
 
     $scope.CleanEditForm = function() {
 
@@ -1388,6 +1390,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         $scope.var.loading = true;
 
+        console.log(crete_right_owner);
+
         $http.post(DOMAIN + "/nka_net3/right/addRightOwnerPart?", crete_right_owner).success(function (data, status, headers) {
 
             $scope.var.loading = false;
@@ -1447,7 +1451,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     }
 
-    ///////////// обработка объектов до и  после операций ///////////////////////////////////////////////////////
+    ///////////// обработка объектов до и  после операций //////////////////////////////////////////////////
 
     $scope.postCreateRight = function(ret_val){
 
@@ -1518,7 +1522,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     $scope.preCreateRightOwnerPart = function() {
 
-        $scope.form_edit_right.rightOwner.date_in = $scope.timetoUTC($scope.form_edit_right.rightOwner.date_in);
+        $scope.form_edit_right.rightOwner.date_in = $scope.timetoUTC($scope.form_edit_right.rightOwner.date_in); //$scope.timetoUTC($scope.form_edit_right.rightOwner.date_in);
 
         $scope.form_edit_right.rightOwner.date_out = $scope.timetoUTC($scope.form_edit_right.rightOwner.date_out);
 
@@ -1529,6 +1533,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
         $scope.form_edit_right.rightOwner.ooper = $scope.createOperObject();
 
         $scope.form_edit_right.rightOwner.ooper.parent_id_order = $scope.form_edit_right.ooper.ooperId;
+
 
     }
 
@@ -1542,7 +1547,11 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
             $scope.form_edit_right.rightOwner = angular.copy(rightvar.rightOwner);//.right_owner_id = ret_val.rightOwners[0].right_owner_id;
 
-            $scope.edit_right.bindedObj.address = $scope.form_edit_right.bindedObj.address_dest.adr;
+            console.log($scope.form_edit_right.bindedObj);
+
+            var bind_obj = $scope.form_edit_right.bindedObj;
+
+            $scope.edit_right.bindedObj.address = bind_obj.address_dest != null ? bind_obj.address_dest.adr : bind_obj.address ;
 
             $scope.addToBuffer($scope.edit_right);
 
@@ -1611,21 +1620,33 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         var buf_idx = $scope.sel_buffer.findIndex(function (value) {return value.right_id == this.curId;}, {curId: $scope.form_edit_right.right_id});
 
-        ret_val.bindedObj = $scope.sel_object[$scope.tabNum];
+        if ( ret_val_idx != -1) {
 
-        $scope.form_edit_right = $scope.copyRightForm(ret_val);
+            ret_val.bindedObj = $scope.sel_object[$scope.tabNum];
 
-        $scope.copyRight($scope.form_edit_right, $scope.edit_right);
+            $scope.form_edit_right = $scope.copyRightForm(ret_val);
 
-        $scope.copyRight($scope.edit_right, $scope.sel_buffer[buf_idx]);
+            $scope.copyRight($scope.form_edit_right, $scope.edit_right);
 
-        $scope.fillDictName($scope.edit_right);
+            $scope.copyRight($scope.edit_right, $scope.sel_buffer[buf_idx]);
 
-        $scope.form_edit_right.rightOwner = $scope.copyRightOwnerForm(ret_val.rightOwners[ret_val_idx]);
+            $scope.fillDictName($scope.edit_right);
 
-        $scope.copyRightOwner($scope.form_edit_right.rightOwner, $scope.edit_right.rightOwners[r_own_idx]);
+            $scope.form_edit_right.rightOwner = $scope.copyRightOwnerForm(ret_val.rightOwners[ret_val_idx]);
 
-        $scope.copyRightOwner($scope.edit_right.rightOwners[r_own_idx], $scope.sel_buffer[buf_idx].rightOwners[r_own_idx]);
+            $scope.copyRightOwner($scope.form_edit_right.rightOwner, $scope.edit_right.rightOwners[r_own_idx]);
+
+            $scope.copyRightOwner($scope.edit_right.rightOwners[r_own_idx], $scope.sel_buffer[buf_idx].rightOwners[r_own_idx]);
+
+        } else {
+
+            $scope.form_edit_right.rightOwner = {};
+
+            $scope.edit_right.rightOwners.splice(r_own_idx, 1);
+
+            $scope.sel_buffer[buf_idx].rightOwners.splice(r_own_idx, 1);
+
+        }
 
     };
 
@@ -2029,7 +2050,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     }
 
-    ///////////////////////////// Transform part /////////////////////////////////////////////////////////////////
+    ///////////////////////////// Transform part //////////////////////////////////////////////////////////////
 
     $scope.runtransRightCheck = function(data){
 
@@ -2070,8 +2091,6 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
             data_send[i].fromSumm = fromSumm;
 
-            data[i].fromSumm = fromSumm;
-
         }
 
         ret_val = $scope.transRightCheck(data_send);
@@ -2079,6 +2098,42 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
         if(ret_val) {$scope.dispalyModal('#errorModal')};
 
         return ret_val;
+
+    }
+
+    $scope.updateTransRight = function() {
+
+        $scope.var.loading = true;
+
+        $scope.var.rightTransformCh = $scope.bringtoRight($scope.var.rightTransformCh);
+
+        $http.post(DOMAIN + "/nka_net3/right/updRight?",  $scope.var.rightTransformCh).success(function (data, status, headers) {
+
+            $scope.var.loading = false;
+
+            $scope.fillDictName(data);
+
+            var idx = $scope.sel_buffer.findIndex(function (value) {return value.right_id == this.curId; }, {curId: data.right_id});
+
+            $scope.checked[$scope.tabNum][data.right_id] = false;
+
+            $scope.sel_buffer[idx] = data;
+
+            $scope.transFormClean();
+
+            $scope.getAddress(data.bindedObj);
+
+            swal("Ок", "Право обновлено", "success");
+
+        }).error(function (data, status, header, config) {
+
+            $scope.var.loading = false;
+
+            $scope.ServerResponse = 'Error message: '+data + "\n\n\n\nstatus: " + status + "\n\n\n\nheaders: " + header + "\n\n\n\nconfig: " + config;
+
+            swal("Error", data.message , "error");
+
+        });
 
     }
 
@@ -2098,7 +2153,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         $scope.rightRecalculate(data);
 
-        $scope.dispalyModal('#resTrans');
+        $scope.updateTransRight();
 
     }
 
@@ -2124,77 +2179,61 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     $scope.rightRecalculate = function(data){
 
-        /* Id: 0, fromFIO: "Дженкинс_1010 Владимир_10 Обамович_10", fromRoid: 1527,
-         fromTeils: Object,  toFIO: "Дженкинс_88 Владимир_8 Обамович_8",  toRoid: 1528, toTeils: Object,
-         transTeils: Object, transTeils.d: null,  transTeils.n: null */
+        /* Id: 0, fromFIO: "Дженкинс_1010 Владимир_10 Обамович_10", fromRoid: 1527, fromTeils: Object, toFIO: "Дженкинс_88 Владимир_8 Обамович_8",
+            toRoid: 1528, toTeils: Object, transTeils: Object, transTeils.d: null,  transTeils.n: null */
 
-        var right_transfer = $scope.var.rightTransform;
+        $scope.var.rightTransformCh = {} ;
 
-        console.log(data);
+        var right_transfer = $scope.var.rightTransformCh = angular.copy($scope.var.rightTransform);
 
-        for( var i = 0; i < right_transfer.rightOwners.length ; i++) {
+        for ( var i = 0 ; i < data.length ; i++)
+        {
 
-            var row_id = right_transfer.rightOwners[i].right_owner_id;
+            var res_from = right_transfer.rightOwners.find(function(value){ return value.right_owner_id == this.curId ;},{curId:data[i].fromRoid});
 
-            var res_from = data.find(function(value){ return value.fromRoid == this.curId;},{curId:row_id});
+            var res_fraction_from = new Fraction (res_from.numerator_part, res_from.denominator_part ).sub(new Fraction(data[i].transTeils));
 
-            var res_to = data.find(function(value){ return value.fromRoid == this.curId;},{curId:row_id});
+            res_from.numerator_part = res_fraction_from.n;
 
+            res_from.denominator_part = res_fraction_from.d;
 
-            if ( $scope.nullIfundefine(res_from) != null ){
+            if (res_fraction_from.n == 0) {
 
-                var res_fraction = new Fraction (res_from.fromTeils).sub(new Fraction(res_from.fromSumm));
+                res_from.date_out = $scope.timetoUTC(new Date());
 
-                //console.log(res_from);
+            } else {
 
-                if (res_fraction.n == 0) {
-
-                    right_transfer.rightOwners[i].date_out = new Date();
-
-                } else {
-
-                    right_transfer.rightOwners[i].date_out = null;
-
-                    right_transfer.rightOwners[i].numerator_part = res_fraction.n;
-
-                    right_transfer.rightOwners[i].denominator_part = res_fraction.d;
-
-                }
+                res_from.date_out = null;
 
             }
 
+            var res_to_idx = right_transfer.rightOwners.findIndex(function(value){ return value.right_owner_id == this.curId ;},{curId:data[i].toRoid});
 
-            if ( $scope.nullIfundefine(res_to) != null ){
+            var res_to = angular.copy(right_transfer.rightOwners[res_to_idx]);
 
-                var res_fraction = new Fraction (res_to.toTeils).sub(new Fraction(res_to.toSumm));
+            res_to.numerator_part = data[i].toTeils.n ;
 
-                //console.log(res_from);
+            res_to.denominator_part = data[i].toTeils.d;
 
-                if (res_to.n == 0) {
+            res_to.parent_owner = data[i].fromRoid ;
 
-                    var copy_zero_ro = angular.copy(right_transfer.rightOwners[i]);
+            if ( right_transfer.rightOwners[res_to_idx].numerator_part == 0 ){
 
-                    copy_zero_ro.numerator_part = res_to.fromTeils.n;
+                right_transfer.rightOwners[res_to_idx].denominator_part = 1;
 
-                    copy_zero_ro.denominator_part = res_to.fromTeils.d;
+                right_transfer.rightOwners.splice(res_to_idx,1);
 
-                    delete right_transfer.rightOwners[i];
+                right_transfer.rightOwners.push(angular.copy(res_to));
 
+            } else {
 
-                } else {
+                res_to.right_owner_id = null;
 
-                    right_transfer.rightOwners[i].date_out = null;
-
-                    right_transfer.rightOwners[i].numerator_part = res_fraction.n;
-
-                    right_transfer.rightOwners[i].denominator_part = res_fraction.d;
-
-                }
+                right_transfer.rightOwners.push(angular.copy(res_to));
 
             }
 
         }
-
 
 
     }
@@ -2315,6 +2354,12 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     }
 
+    $scope.closeTransWin = function() {
+
+        $('#resTrans').modal('hide')
+
+    }
+
     ///////////////////////////// Service part /////////////////////////////////////////////////////////////////
 
     $scope.getTabClass = function (tabN) {
@@ -2421,7 +2466,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
         return norm_right_own;
     }
 
-    ////////////////////// копирование права на объект и на форму ///////////////////////
+    ////////////////////// копирование права на объект и на форму /////////////////////////////////////////////
 
     $scope.copyRightForm = function(var_from){
 
@@ -2526,7 +2571,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     }
 
-    //////////////////////////////////////////////// служебные функции ////////////////////////////////////////////
+    //////////////////////////////////////////////// служебные функции ////////////////////////////////////////
 
     $scope.filterType = function(value){
 

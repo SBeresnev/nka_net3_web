@@ -52,7 +52,7 @@
 
         <tbody>
 
-        <tr  ng-repeat="item in var.rightTransform.rightOwners" >
+        <tr  ng-repeat="item in var.rightTransformCh.rightOwners" >
 
             <td  width="fit-content">{{item.right_owner_id}}</td>
 
@@ -76,6 +76,6 @@
 
     </table>
 
-    <div class="row col-lg-9"> </div> <div> <button class="btn btn-default col-lg-3" onclick="$('#resTrans').modal('hide')">Ok</button> </div>
+    <div class="row col-lg-9"> </div> <div> <button class="btn btn-default col-lg-3" ng-click="closeTransWin()">Ok</button> </div>
 
 </modal>
