@@ -8,8 +8,7 @@
  *
  * Main module of the application.
  */
-var app = angular
-    .module('assetsApp', [
+var app = angular.module('assetsApp', [
         'ngResource',
         'ngRoute',
         'ngAnimate',
@@ -18,7 +17,7 @@ var app = angular
         'kendo.directives'
     ])
     .constant('DOMAIN', "" + window.location.protocol + '//'+ window.location.hostname+":8080")
-    .constant('WEBDOM', "" + window.location.protocol + '//'+ window.location.hostname+":9000") // + '//nka_net3_web')
+    .constant('WEBDOM', "" + window.location.protocol + '//'+ window.location.hostname+":9000")//  + '//nka_net3_web')
     .config(function ($routeProvider, $httpProvider) {
         $httpProvider.defaults.useXDomain = true;
         $routeProvider
