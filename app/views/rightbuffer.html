@@ -8,16 +8,25 @@
 
                 <li class="k-state-active">Правообладатели</li>
 
+                <li >Кандидаты в правообладатели</li>
+
                 <li>Объект (детализация)</li>
 
             </ul>
 
+            <div>
+
+                <div kendo-grid k-options="detailOwnersOptions(nonzeroFilterDataItem(dataItem))" k-rebind="mainGridOptions.dataSource.data"></div>
+
+            </div>
 
             <div>
 
-                <div kendo-grid k-options="detailOwnersOptions(dataItem)" k-rebind="mainGridOptions.dataSource.data"></div>
+                <div kendo-grid k-options="detailOwnersOptions(zeroFilterDataItem(dataItem))" k-rebind="mainGridOptions.dataSource.data"></div>
 
             </div>
+
+
 
             <div>
 

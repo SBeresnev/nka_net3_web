@@ -36,7 +36,6 @@ angular.module('assetsApp').factory('httpServices', function (DOMAIN) {
     return xmlhttp;
   };
 
-
   httpServices.updateSubject = function (subject) {
     var url = DOMAIN+'/nka_net3/subject/update';
     var params = "?";

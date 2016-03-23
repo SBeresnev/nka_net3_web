@@ -12,7 +12,7 @@
 
         <li ng-class="getTabClass(2)" ng-click="setActiveTab(2)"> <a ui-sref="main" href="" data-toggle="tab" ng-click="initOper()">Редактор</a> </li>
 
-        <li ng-class="getTabClass(3)" ng-click="setActiveTab(3)"> <a ui-sref="collateral" href="" data-toggle="tab">Переход</a></li>
+        <li ng-class="getTabClass(3)" ng-click="setActiveTab(3)"> <a ui-sref="collateral" href="" data-toggle="tab" ng-click="initOper()">Переход</a></li>
 
         <li ng-class="getTabClass(4)" ng-click="setActiveTab(4)"> <a ui-sref="rating" href="" data-toggle="tab">Сделки</a></li>
 
@@ -24,7 +24,7 @@
 
         <!------------------------ Search block ------------------------------------->
 
-          <div id="search" ng-class="getTabPaneClass(1)" >
+        <div id="search" ng-class="getTabPaneClass(1)" >
 
             <!--***************************************************************************************************************************************************-->
 
@@ -59,13 +59,21 @@
 
                             <li class="k-state-active">Правообладатели</li>
 
+                            <li >Кандидаты в правообладатели</li>
+
                             <li>Объект (детализация)</li>
 
                         </ul>
 
                         <div>
 
-                            <div kendo-grid k-options="detailOwnersOptions(dataItem)"></div>
+                            <div kendo-grid k-options="detailOwnersOptions(nonzeroFilterDataItem(dataItem))"></div>
+
+                        </div>
+
+                        <div>
+
+                            <div kendo-grid k-options="detailOwnersOptions(zeroFilterDataItem(dataItem))"></div>
 
                         </div>
 
@@ -100,74 +108,73 @@
 
         <!----------------------- Main block ---------------------------------------->
 
-          <div id="edit" ng-class="getTabPaneClass(2)"  >
+        <div id="edit" ng-class="getTabPaneClass(2)"  >
 
-              <!------------- Buffer  ------------->
+            <!------------- Buffer  ------------->
 
-             <div class = "col-lg-12 ">
+            <div class = "col-lg-12 ">
 
-             <uib-accordion ng-init="pnl_opn=true">
+                <uib-accordion ng-init="pnl_opn=true">
 
-                <uib-accordion-group is-open="true" panel-class="panel panel-dafault">
+                    <uib-accordion-group is-open="true" panel-class="panel panel-dafault">
 
-                      <uib-accordion-heading>
+                        <uib-accordion-heading>
 
-                          <i ng-click="pnl_opn=!pnl_opn" class="pull-left glyphicon" ng-class="{true:'glyphicon-chevron-down', false: 'glyphicon-chevron-right'}[pnl_opn]"></i>
+                            <i ng-click="pnl_opn=!pnl_opn" class="pull-left glyphicon" ng-class="{true:'glyphicon-chevron-down', false: 'glyphicon-chevron-right'}[pnl_opn]"></i>
 
-                      </uib-accordion-heading>
+                        </uib-accordion-heading>
 
-                    <div class="row">
+                        <div class="row">
 
-                        <div id="exmp" class="col-lg-12 vert-offset-top-1" ng-show="edit_right.right_id">
+                            <div id="exmp" class="col-lg-12 vert-offset-top-1" ng-show="edit_right.right_id">
 
-                            <div kendo-grid="editGrd" class="vert-offset-top-2" options="editGridOption" k-rebind="editGridOption.dataSource.data" ></div>
+                                <div kendo-grid="editGrd" class="vert-offset-top-2" options="editGridOption" k-rebind="editGridOption.dataSource.data" ></div>
+
+                            </div>
 
                         </div>
 
+                    </uib-accordion-group>
+
+                </uib-accordion>
+
+            </div>
+
+            <div class="col-lg-12 vert-offset-top-2">
+
+                <nav class="navbar navbar-default" style="background-color:white">
+
+                    <div class="row container-fluid">
+
+                        <div class="col-md-3"> </div>
+
+                        <ul id="right-ul-hover" class="nav navbar-nav" >
+
+                            <li><a href="" ng-click="LoadBuffer()"><b>Выбрать</b></a></li>
+
+                            <li><a href="" ng-click="CreateRight()"><span class="glyphicon glyphicon-flash"></span><b> Создать</b></a></li>
+
+                            <li><a href="" ng-click="CreateOwnerPart()"><span class="glyphicon glyphicon-plus-sign"></span><b> Добавить долю</b></a></li>
+
+                            <li><a href="" ng-click="UpdateRight()"><span class="glyphicon glyphicon-signal"></span><b> Изменить</b></a></li>
+
+                            <li><a href="" ng-click="CleanEditForm()"><span class="glyphicon glyphicon-remove-sign"></span><b> Очистить</b></a></li>
+
+                        </ul>
 
                     </div>
 
-                 </uib-accordion-group>
+                </nav>
 
-             </uib-accordion>
+            </div>
 
-           </div>
+            <!------------ Right  -------------->
 
-              <div class="col-lg-12 vert-offset-top-2">
+            <div ng-if="!limitHide" class="col-lg-3"></div>
 
-                  <nav class="navbar navbar-default" style="background-color:white">
+            <div class = "col-lg-6">
 
-                      <div class="row container-fluid">
-
-                          <div class="col-md-3"> </div>
-
-                              <ul id="right-ul-hover" class="nav navbar-nav" >
-
-                                  <li><a href="" ng-click="LoadBuffer()"><b>Выбрать</b></a></li>
-
-                                  <li><a href="" ng-click="CreateRight()"><span class="glyphicon glyphicon-flash"></span><b> Создать</b></a></li>
-
-                                  <li><a href="" ng-click="CreateOwnerPart()"><span class="glyphicon glyphicon-plus-sign"></span><b> Добавить долю</b></a></li>
-
-                                  <li><a href="" ng-click="UpdateRight()"><span class="glyphicon glyphicon-signal"></span><b> Изменить</b></a></li>
-
-                                  <li><a href="" ng-click="CleanEditForm()"><span class="glyphicon glyphicon-remove-sign"></span><b> Очистить</b></a></li>
-
-                              </ul>
-
-                      </div>
-
-                  </nav>
-
-              </div>
-
-              <!------------ Right  -------------->
-
-              <div ng-if="!limitHide" class="col-lg-3"></div>
-
-              <div class = "col-lg-6">
-
-                   <div class="panel panel-default vert-offset-top-3">
+                <div class="panel panel-default vert-offset-top-3">
 
                     <div class="panel-heading fa fa-balance-scale">Право</div>
 
@@ -189,11 +196,11 @@
 
                         <div class="form-group">
 
-                            <div class="well">
+                            <div class="well" ng-show="sel_object[2]">
 
                                 <label class="control-label vert-offset-top-1">Вид права:</label>
 
-                                <select class="form-control" data-live-search="true"  ng-change="setRightType()" ng-model="dict.currgtTyp" ng-options="rgttype.code_short_name for rgttype in dict.rightTypes | orderBy: ['code_short_name'] track by rgttype.code_id" required="required"></select>
+                                <select class="form-control" data-live-search="true"  ng-change="setRightType()" ng-model="dict.currgtTyp" ng-options="rgttype.code_short_name for rgttype in dict.rightFilterTypes | orderBy: ['code_short_name'] track by rgttype.code_id" required="required"></select>
 
                                 <label class="control-label vert-offset-top-1">Тип права по числу правообладателей:</label>
 
@@ -236,7 +243,7 @@
 
                         <div  ng-if="limitHide" class="form-group vert-offset-top-2" >
 
-                             <button class="astext"  ng-click = "operLimitationRight()" style="color:#005580"><h4><b>ограничение/обременение права</b></h4></button>
+                            <button class="astext"  ng-click = "operLimitationRight()" style="color:#005580"><h4><b>ограничение/обременение права</b></h4></button>
 
                         </div>
 
@@ -246,7 +253,8 @@
 
                         </div>
 
-                        <span ng-if="!limitHide" class="btn btn-default vert-offset-top-2"  ng-click="dispalyOperations('#operModal')">Операции   <blink  ng-if="true"> <span class="glyphicon glyphicon-exclamation-sign"></span></blink></span>
+                        <span ng-if="!limitHide" class="btn btn-default vert-offset-top-2" ng-click="dispalyOperations('#operModal')">Операции   <blink  ng-if="true"> <span class="glyphicon glyphicon-exclamation-sign"></span></blink></span>
+                        <span ng-if="!limitHide" class="btn btn-default vert-offset-top-2" ng-click="getParentOwner()">Прикрепленное право <span class="fa fa-sitemap"></span></span>
 
                         <div class="form-group vert-offset-top-2">
 
@@ -262,15 +270,15 @@
 
                     </div>
 
-               </div>
-
                 </div>
 
-              <!--------- RightOwner -------------->
+            </div>
 
-              <div class = "col-lg-6">
+            <!--------- RightOwner -------------->
 
-               <div ng-if="limitHide"  class="panel panel-default vert-offset-top-3">
+            <div class = "col-lg-6">
+
+                <div ng-if="limitHide"  class="panel panel-default vert-offset-top-3">
 
                     <div class="panel-heading fa fa-users">Правообладатели</div>
 
@@ -278,19 +286,19 @@
 
                         <div class="form-group vert-offset-top-1 vert-offset-bottom-2">
 
-                                <label class="control-label">Правообладатель:</label>
+                            <label class="control-label">Правообладатель:</label>
 
-                                <div class="input-group">
+                            <div class="input-group">
 
 
-                                    <textarea type="text" class="form-control"  placeholder="Субъект" rows="2" ng-model="form_edit_right.rightOwner.owner.fullname" disabled />
+                                <textarea type="text" class="form-control"  placeholder="Субъект" rows="2" ng-model="form_edit_right.rightOwner.owner.fullname" disabled />
 
-                                    <span class="input-group-addon right-span-addon" ><span class="glyphicon glyphicon-zoom-in" ng-click="sbjOpen()"></span></span>
-
-                                </div>
-
+                                <span class="input-group-addon right-span-addon" ><span class="glyphicon glyphicon-zoom-in" ng-click="sbjOpen()"></span></span>
 
                             </div>
+
+
+                        </div>
 
                         <div class="form-group vert-offset-top-3">
 
@@ -332,202 +340,205 @@
 
                         <div class="form-group vert-offset-top-2">
 
-                           <button class="astext vert-offset-top-3" ng-click = "operLimitationRightOwner()" style="color:#005580"><h4><b>ограничение/обременение доли</b></h4></button>
+                            <button class="astext vert-offset-top-3" ng-click = "operLimitationRightOwner()" style="color:#005580"><h4><b>ограничение/обременение доли</b></h4></button>
 
                         </div>
 
+
                         <span class="btn btn-default vert-offset-top-2" ng-click="dispalyOperations('#operModal')">Операции   <blink ng-if="true"> <span class="glyphicon glyphicon-exclamation-sign"></span></blink></span>
+
+                        <span class="btn btn-default vert-offset-top-2" ng-click="getParentOwner()">Право-родитель  <span class="fa fa-sitemap"></span></span>
 
 
                     </div>
 
                 </div>
 
-               <div class="col-lg-4"></div>
+                <div class="col-lg-4"></div>
 
-               </div>
+            </div>
 
         </div>
 
         <!------------------------ Transfer block ------------------------------------>
 
-         <div id="transfer" ng-class="getTabPaneClass(3)">
+        <div id="transfer" ng-class="getTabPaneClass(3)">
 
-           <div class = "container">
+            <div class = "container">
 
-             <!------------------------ From well -------------------------------------------->
+                <!------------------------ From well -------------------------------------------->
 
-              <div class="vert-offset-top-6 col-lg-12">
+                <div class="vert-offset-top-6 col-lg-12">
 
-               <div class="well well-sm col-lg-11" align="center">
+                    <div class="well well-sm col-lg-11" align="center">
 
-                   <button class="astext" ng-click="LoadBuffer()" style="color:#005580"><h4><b>Выбрать</b></h4></button>
+                        <button class="astext" ng-click="LoadBuffer()" style="color:#005580"><h4><b>Выбрать</b></h4></button>
 
-               </div>
+                    </div>
 
-             </div>
+                </div>
 
-              <div id="right_trans_panel" class="col-lg-6">
+                <div id="right_trans_panel" class="col-lg-6">
 
-                     <div ng-show="var.rightsOwnersTransformFrom.length">
+                    <div ng-show="var.rightsOwnersTransformFrom.length">
 
-                         <h4><b>От кого </b></h4>
+                        <h4><b>От кого </b></h4>
 
-                         <table class="table table-bordered table-hover vert-offset-top-2">
+                        <table class="table table-bordered table-hover vert-offset-top-2">
 
-                          <thead>
+                            <thead>
 
-                             <tr style="background-color:#f9f9f9">
+                            <tr style="background-color:#f9f9f9">
 
-                                 <th>id</th>
+                                <th>id</th>
 
-                                 <th>Вид права</th>
+                                <th>Вид права</th>
 
-                                 <th>Имя объекта</th>
+                                <th>Имя объекта</th>
 
-                                 <th>Тип объекта</th>
+                                <th>Тип объекта</th>
 
-                                 <th>Имя/название правообладателя</th>
+                                <th>Имя/название правообладателя</th>
 
-                                 <th >Доля в праве</th>
+                                <th >Доля в праве</th>
 
-                             </tr>
+                            </tr>
 
-                           <thead>
+                            <thead>
 
-                           <tbody>
+                            <tbody>
 
-                             <tr  ng-repeat="item in var.rightsOwnersTransformFrom" ng-click= "OnTransSelect(item,'FROM')" >
+                            <tr  ng-repeat="item in var.rightsOwnersTransformFrom" ng-click= "OnTransSelect(item,'FROM')" >
 
-                                 <td  width="fit-content">{{item.right_owner_id}}</td>
+                                <td  width="fit-content">{{item.right_owner_id}}</td>
 
-                                 <td  width="fit-content">{{var.rightTransform.right_type_name}}</td>
+                                <td  width="fit-content">{{var.rightTransform.right_type_name}}</td>
 
-                                 <td  width="fit-content">{{var.rightTransform.bindedObj.object_name}}</td>
+                                <td  width="fit-content">{{var.rightTransform.bindedObj.object_name}}</td>
 
-                                 <td  width="fit-content">{{var.rightTransform.bindedObj.objectType.code_name}}</td>
+                                <td  width="fit-content">{{var.rightTransform.bindedObj.objectType.code_name}}</td>
 
-                                 <td  width="fit-content">{{nullIfundefine(item.owner.fullname) == null ? BeautyCast(item.owner.surname, item.owner.firstname, item.owner.fathername) : item.owner.fullname}}</td>
+                                <td  width="fit-content">{{nullIfundefine(item.owner.fullname) == null ? BeautyCast(item.owner.surname, item.owner.firstname, item.owner.fathername) : item.owner.fullname}}</td>
 
-                                 <td  width="fit-content">{{BeautyFraction(item.numerator_part,item.denominator_part)}}</td>
+                                <td  width="fit-content">{{BeautyFraction(item.numerator_part,item.denominator_part)}}</td>
 
-                             </tr>
+                            </tr>
 
-                           </tbody>
+                            </tbody>
 
                         </table>
 
-                     <div class="col-lg-4"></div>
+                        <div class="col-lg-4"></div>
 
-                     <div class="col-lg-2">
+                        <div class="col-lg-2">
 
-                         <input type="image" src="{{transfer_img_left}}"  width="60" height="60"/>
+                            <input type="image" src="{{transfer_img_left}}"  width="60" height="60"/>
 
-                     </div>
+                        </div>
 
-                   </div>
+                    </div>
 
-                 </div>
+                </div>
 
-              <!------------------------------------------------------------------------------>
+                <!------------------------------------------------------------------------------>
 
-              <div class="col-lg-2"></div>
+                <div class="col-lg-2"></div>
 
-              <!------------------------ To well ---------------------------------------------->
+                <!------------------------ To well ---------------------------------------------->
 
-              <div class="col-lg-6">
+                <div class="col-lg-6">
 
-                 <div ng-show="var.rightsOwnersTransformTo.length">
+                    <div ng-show="var.rightsOwnersTransformTo.length">
 
-                     <h4><b>Кому</b></h4> <p style="color:darkred" ng-hide="var.rightsOwnersTransformFrom.length"> нет правообладателей с нулевой долей</p>
+                        <h4><b>Кому</b></h4> <p style="color:darkred" ng-hide="var.rightsOwnersTransformFrom.length"> нет правообладателей с нулевой долей</p>
 
-                     <table class="table table-bordered table-hover vert-offset-top-2">
+                        <table class="table table-bordered table-hover vert-offset-top-2">
 
-                        <thead>
+                            <thead>
 
-                          <tr style="background-color:#f9f9f9">
+                            <tr style="background-color:#f9f9f9">
 
-                              <th>id</th>
+                                <th>id</th>
 
-                              <th>Вид права</th>
+                                <th>Вид права</th>
 
-                              <th>Имя объекта</th>
+                                <th>Имя объекта</th>
 
-                              <th>Тип объекта</th>
+                                <th>Тип объекта</th>
 
-                              <th>Имя/название правообладателя</th>
+                                <th>Имя/название правообладателя</th>
 
-                              <th>Доля в праве</th>
+                                <th>Доля в праве</th>
 
-                          </tr>
+                            </tr>
 
-                        <thead>
+                            <thead>
 
-                          <tbody>
+                            <tbody>
 
-                          <tr ng-repeat="item in var.rightsOwnersTransformTo" ng-click= "OnTransSelect(item,'TO')" >
+                            <tr ng-repeat="item in var.rightsOwnersTransformTo" ng-click= "OnTransSelect(item,'TO')" >
 
-                              <td  width="fit-content">{{item.right_owner_id}}</td>
+                                <td  width="fit-content">{{item.right_owner_id}}</td>
 
-                              <td  width="fit-content">{{var.rightTransform.right_type_name}}</td>
+                                <td  width="fit-content">{{var.rightTransform.right_type_name}}</td>
 
-                              <td  width="fit-content">{{var.rightTransform.bindedObj.object_name}}</td>
+                                <td  width="fit-content">{{var.rightTransform.bindedObj.object_name}}</td>
 
-                              <td  width="fit-content">{{var.rightTransform.bindedObj.objectType.code_name}}</td>
+                                <td  width="fit-content">{{var.rightTransform.bindedObj.objectType.code_name}}</td>
 
-                              <td  width="fit-content">{{nullIfundefine(item.owner.fullname) == null ? BeautyCast(item.owner.surname, item.owner.firstname, item.owner.fathername) : item.owner.fullname}}</td>
+                                <td  width="fit-content">{{nullIfundefine(item.owner.fullname) == null ? BeautyCast(item.owner.surname, item.owner.firstname, item.owner.fathername) : item.owner.fullname}}</td>
 
-                              <td  width="fit-content">{{BeautyFraction(item.numerator_part,item.denominator_part)}}</td>
+                                <td  width="fit-content">{{BeautyFraction(item.numerator_part,item.denominator_part)}}</td>
 
-                          </tr>
+                            </tr>
 
-                          </tbody>
+                            </tbody>
 
-                      </table>
+                        </table>
 
-                     <div class="col-lg-5"></div>
+                        <div class="col-lg-5"></div>
 
-                     <div class="col-lg-2">
+                        <div class="col-lg-2">
 
-                         <input type="image" src="{{transfer_img_right}}" with="60" height="60"/>
+                            <input type="image" src="{{transfer_img_right}}" with="60" height="60"/>
 
-                     </div>
+                        </div>
 
-                  </div>
+                    </div>
 
-              </div>
+                </div>
 
-               <!------------------------------------------------------------------------------>
+                <!------------------------------------------------------------------------------>
 
             </div>
 
             <!------------------------ Mix part -------------------------------------------->
 
-           <div class="row">
+            <div class="row">
 
-               <div class="col-lg-3"></div>
+                <div class="col-lg-3"></div>
 
-               <div class="col-lg-12 vert-offset-top-2">
+                <div class="col-lg-12 vert-offset-top-2">
 
-                  <div class="panel panel-default">
+                    <div class="panel panel-default">
 
-                     <div  class="panel-body">
+                        <div  class="panel-body">
 
-                        <div class="right-mixtransfer-grid" kendo-grid="transTab" k-options="mixGridOption(var.mixTransformMap)" k-rebind="var.mixTransformMap"></div>
+                            <div ng-show="var.mixTransformMap.length" class="right-mixtransfer-grid" kendo-grid="transTab" k-options="mixGridOption(var.mixTransformMap)" ></div>
 
-                     </div>
+                        </div>
 
-                  </div>
+                    </div>
 
-               </div>
+                </div>
 
             </div>
 
-         </div>
+        </div>
 
         <!------------------------ Bargain block -------------------------------------------->
 
-         <div id="bargain" ng-class="getTabPaneClass(4)">Сделки</div>
+        <div id="bargain" ng-class="getTabPaneClass(4)">Сделки</div>
 
     </div>
 
@@ -545,7 +556,9 @@
 
 <div ng-include="'views/modrightoper.html'"></div>
 
-<div ng-include="'views/errorright.html'"></div>
+<div ng-include="'views/modrighttransgrunt.html'"></div>
+
+<div ng-include="'views/moderrorright.html'"></div>
 
 <div kendo-window="limwindow" k-visible="false" k-modal="true" k-content="'views/modlimitright.html'"> </div>
 
