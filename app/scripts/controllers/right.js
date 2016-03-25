@@ -1170,8 +1170,7 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
             $scope.fillDictName(dataItem);
 
-            if( idx != -1 ) { $scope.sel_buffer[idx] =  dataItem;}
-            else { $scope.sel_buffer.push(dataItem); }
+            if( idx != -1 ) { $scope.sel_buffer[idx] =  dataItem;} else { $scope.sel_buffer.push(dataItem); }
 
             $scope.var.rightsDataLimitFrom.push(dataItem);
 
@@ -2773,6 +2772,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         $scope.dict.curoprBase = '';
 
+        $scope.limitHide = true;
+
     };
 
     $scope.CleanForm = function(){
@@ -2954,6 +2955,13 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
         return ret_val;
     };
+
+    $scope.onSelect = function(e) {
+
+        var message = $.map(e.files, function(file) { return file.name; }).join(", ");
+        console.log("event :: select (" + message + ")");
+
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

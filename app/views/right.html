@@ -349,6 +349,8 @@
 
                         <span class="btn btn-default vert-offset-top-2" ng-click="getParentOwner()">Право-родитель  <span class="fa fa-sitemap"></span></span>
 
+                        <span class="btn btn-default vert-offset-top-2" ng-click="dispalyModal('#fileworker')">Документы  <span class="fa fa-files-o"></span></span>
+
 
                     </div>
 
@@ -538,7 +540,17 @@
 
         <!------------------------ Bargain block -------------------------------------------->
 
-        <div id="bargain" ng-class="getTabPaneClass(4)">Сделки</div>
+        <div id="bargain" ng-class="getTabPaneClass(4)">
+
+            <div>
+
+             <h4>Upload files</h4>
+
+             <input name="files" type="file" kendo-upload k-async="{ saveUrl: 'save', removeUrl: 'remove', autoUpload: true }" k-select="onSelect" />
+
+            </div>
+
+        </div>
 
     </div>
 
@@ -549,6 +561,8 @@
 <!--***********************************************modal block****************************************************************************************************-->
 
 <span kendo-notification="notif" k-options="notifOption" k-append-to="'#kg'"></span>
+
+<div ng-include="'views/modfileworker.html'"></div>
 
 <div ng-include="'views/modrighttransres.html'"></div>
 
