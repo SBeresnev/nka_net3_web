@@ -546,7 +546,11 @@
 
              <h4>Upload files</h4>
 
-             <input name="files" type="file" kendo-upload k-async="{ saveUrl: 'save', removeUrl: 'remove', autoUpload: true }" k-select="onSelect" />
+             <!--input id="files" type="file"  k-options = "uploadOption" kendo-upload  /-->
+
+                <input type="file" id="fileUpl" />
+
+                <button ng-click="uploadFile()">upload me</button>
 
             </div>
 

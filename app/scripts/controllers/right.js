@@ -339,6 +339,39 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     }; };
 
+    $scope.uploadOption = {
+
+        async: {
+
+            saveUrl: DOMAIN + "/nka_net3/doc/uploadDocument",
+
+            autoUpload: true
+
+        },
+
+        multiple: false,
+
+        select: function(e) {
+
+            e.data = {};
+
+            e.data["file"] = e.files[0];
+
+            e.data["doc_desc"] = JSON.stringify({
+                doc_id: "test",
+                entity_id: 5,
+                doc_type:124,
+                document_number:789,
+                document_date: new Date(),
+                discription_org: "NCI",
+                organisation: "NCI",
+                description_doc: "my_docum",
+                num:156
+            });
+
+    }
+
+}
     //////////////////////////////////common window////////////////////////////////////////////////////////////////////
 
     $scope.urlmodSbj = WEBDOM + '//#/subject/true';
@@ -372,6 +405,8 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
     $scope.notifOption = { autoHideAfter: 1000 };
 
     $scope.checked=Create2DArray(5);
+
+    $scope.file_to_upload = {};
 
 
     $scope.var = {
@@ -2539,6 +2574,61 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     };
 
+    ///////////////////////////// document upload /////////////////////////////////////////////////////////////////
+
+    $scope.uploadFile = function() {
+
+        $scope.file_to_upload = angular.element(document.querySelector('#fileUpl'))[0].files;
+
+        var data_f = new FormData();
+
+        var docdesc = {"doc_id":25935};
+
+        data_f.append("file", $scope.file_to_upload);
+
+        data_f.append("doc_desc", docdesc);
+
+       // data_f.append("doc_desc", doc_desc);
+
+       // console.log(data_f);
+
+       // var data = {"doc_desc":{"doc_id":456876} ,"file":$scope.file_to_upload};  Content-Type=multipart/form-data
+
+        $http.post(DOMAIN + "/nka_net3/doc/upload", data_f, { headers: {'Content-Type': undefined} ,transformRequest: angular.identity } ).success(function(data, status, headers){
+
+                console.log("Data");
+
+
+            }).error(function (data, status, header, config) {
+
+                $scope.var.loading = false;
+
+                $scope.ServerResponse = 'Error message: '+data + "\n\n\n\nstatus: " + status + "\n\n\n\nheaders: " + header + "\n\n\n\nconfig: " + config;
+
+                console.log("data");
+
+                console.log(data);
+
+                console.log("status");
+
+                console.log(status);
+
+                console.log("headers");
+
+                console.log(header);
+
+                console.log("config");
+
+                console.log(config);
+
+            });
+        ;
+
+
+
+
+    }
+
 
     ///////////////////////////// Service part /////////////////////////////////////////////////////////////////
 
@@ -2958,7 +3048,9 @@ angular.module('assetsApp').controller('RightCtrl', function ($scope, $http, $ti
 
     $scope.onSelect = function(e) {
 
+
         var message = $.map(e.files, function(file) { return file.name; }).join(", ");
+
         console.log("event :: select (" + message + ")");
 
     }
